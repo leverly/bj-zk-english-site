@@ -1089,3 +1089,9 @@ body.js-ready .reveal.out { opacity: 0; transform: translateY(14px); }
 }
 .trans p { margin-bottom: 10px; }
 .trans p:last-child { margin-bottom: 0; }
+
+/* 闪卡释义区容器（PET wordStudy 引擎依赖此节点插入释义） */
+.frev { width: 100%; }
+
+/* 每日目标区的小标签：不能复用 .quiz-count，否则会与闯关进度条的选择器撞车 */
+.goal-label { font-size: .82rem; color: var(--text-3); font-weight: 600; }

@@ -137,53 +137,78 @@
     document.dispatchEvent(new CustomEvent('zk:known', { detail: { reset: true } }));
   };
 
-  /* ---------------- 间隔重复（SM-2 简化版） ---------------- */
+  /* ---------------- 间隔重复（SM-2 简化版，语义对齐 PET 项目） ----------------
+     评分四档：0 = 忘了，1 = 有点模糊，2 = 记住了，3 = 秒杀很熟
+     字段：ease 难度因子 ｜ ivl 当前间隔（天）｜ due 下次到期时间 ｜ reps 复习次数
+           lapses 遗忘次数 ｜ ans/okc 准确率计数（「模糊」不计入）
+     ---------------- */
   var SRS_KEY = 'zk-srs-v1';
   var srs = load(SRS_KEY, {});
   var DAY = 86400000;
   Z.srsGet = function (w) { return srs[String(w).toLowerCase()] || null; };
   Z.srsAll = function () { return srs; };
   Z.srsDueCount = function (list) {
-    var now = Date.now(), n = 0;
-    (list || []).forEach(function (w) {
+    var now = Date.now();
+    if (!list) return Object.keys(srs).filter(function (k) { return (srs[k].due || 0) <= now; }).length;
+    return list.filter(function (w) {
       var r = srs[String(w.w || w).toLowerCase()];
-      if (!r || !r.due || r.due <= now) n++;
-    });
-    return n;
+      return !r || (r.due || 0) <= now;
+    }).length;
   };
   Z.srsStats = function () {
-    var now = Date.now(), total = 0, mature = 0, due = 0;
-    Object.keys(srs).forEach(function (k) {
+    var now = Date.now(), keys = Object.keys(srs);
+    var due = 0, learning = 0, mature = 0, sum = 0;
+    keys.forEach(function (k) {
       var r = srs[k];
-      total++;
-      if ((r.interval || 0) >= 21) mature++;
-      if (!r.due || r.due <= now) due++;
+      if (!r) return;
+      if ((r.due || 0) <= now) due++;
+      if ((r.ivl || 0) >= 21) mature++; else learning++;
+      sum += (r.reps || 0);
     });
-    return { total: total, mature: mature, due: due };
+    return { total: keys.length, due: due, learning: learning, mature: mature, reviews: sum };
   };
-  /**
-   * 评分：0 = 忘了，1 = 模糊，2 = 会了
-   * 忘了 → 10 分钟后再现；模糊 → 间隔不变；会了 → 按 ease 拉长
-   */
   Z.srsRate = function (w, grade) {
+    // 先记错题本：grade >= 2 才算答对
+    Z.wordAttempt(w, grade >= 2);
     var k = String(w).toLowerCase();
-    var r = srs[k] || { ease: 2.5, interval: 0, reps: 0 };
+    var r = srs[k] || { ease: 2.5, ivl: 0, due: 0, reps: 0, lapses: 0 };
     if (grade === 0) {
-      r.interval = 0; r.reps = 0; r.ease = Math.max(1.3, (r.ease || 2.5) - 0.2);
-      r.due = Date.now() + 10 * 60 * 1000;
-    } else if (grade === 1) {
-      r.reps = (r.reps || 0) + 1;
-      r.interval = r.interval || 1;
-      r.due = Date.now() + r.interval * DAY;
+      r.ease = Math.max(1.3, r.ease - 0.2);
+      r.ivl = 0;
+      r.lapses = (r.lapses || 0) + 1;
+      r.due = Date.now() + 10 * 60000;
     } else {
-      r.reps = (r.reps || 0) + 1;
-      r.ease = Math.min(3.0, (r.ease || 2.5) + 0.1);
-      r.interval = r.reps <= 1 ? 1 : r.reps === 2 ? 3 : r.reps === 3 ? 7 : Math.round((r.interval || 7) * r.ease);
-      r.due = Date.now() + r.interval * DAY;
+      if (grade === 1) r.ease = Math.max(1.3, r.ease - 0.15);
+      if (grade === 3) r.ease = Math.min(3.2, r.ease + 0.15);
+      if (r.reps === 0) r.ivl = grade === 1 ? 0.5 : grade === 2 ? 1 : 2;
+      else if (r.reps === 1) r.ivl = grade === 1 ? 1 : grade === 2 ? 3 : 5;
+      else r.ivl = Math.max(1, Math.round(r.ivl * r.ease * (grade === 1 ? 0.8 : grade === 3 ? 1.25 : 1)));
+      r.due = Date.now() + r.ivl * DAY;
+    }
+    r.reps = (r.reps || 0) + 1;
+    r.last = Date.now();
+    // 准确率计数：ans 累计作答，okc 累计答对；「有点模糊」(g=1) 不计入分子分母
+    if (grade !== 1) {
+      r.ans = (r.ans || 0) + 1;
+      if (grade >= 2) r.okc = (r.okc || 0) + 1;
     }
     srs[k] = r;
     store(SRS_KEY, srs);
+    Z.bumpDay('words', 1);
+    document.dispatchEvent(new CustomEvent('zk:srs', { detail: { word: w } }));
     return r;
+  };
+  /** 按给定词表统计背词准确率；不传则统计全部学过的词 */
+  Z.wordAccStats = function (list) {
+    var ans = 0, okc = 0;
+    var keys = list ? list.map(function (w) { return String(w.w || w).toLowerCase(); }) : Object.keys(srs);
+    keys.forEach(function (k) {
+      var r = srs[k];
+      if (!r) return;
+      ans += r.ans || 0;
+      okc += r.okc || 0;
+    });
+    return { answered: ans, correct: okc, rate: ans ? okc / ans : null };
   };
   Z.srsReset = function () {
     srs = {}; store(SRS_KEY, srs);
@@ -231,30 +256,52 @@
     return out;
   };
 
-  /* ---------------- 单词错题本 ---------------- */
+  /* ---------------- 单词错题本（语义对齐 PET：连对 2 次才移出） ---------------- */
   var WBOOK_KEY = 'zk-wordbook-v1';
   var wbook = load(WBOOK_KEY, {});
+  var MASTER_STREAK = 2;
   Z.wordBook = function () { return wbook; };
   Z.wordBookCount = function () { return Object.keys(wbook).length; };
+  Z.wordBookList = function () {
+    return Object.keys(wbook).map(function (k) {
+      var r = wbook[k];
+      return { w: k, wrong: r.wrong || 1, right: r.right || 0, last: r.last || 0, at: r.at || 0 };
+    }).sort(function (a, b) { return b.at - a.at; });
+  };
   Z.wordAttempt = function (w, ok) {
     var k = String(w).toLowerCase();
-    var r = wbook[k];
-    if (ok) {
-      // 只有「曾经答错」的词才进错题本；答对一次即移出
-      if (r) {
-        r.right = (r.right || 0) + 1;
-        r.ts = Date.now();
-        delete wbook[k];
-      }
-    } else {
-      r = r || { wrong: 0, right: 0 };
+    if (!ok) {
+      var r = wbook[k] || { wrong: 0, right: 0, at: 0 };
       r.wrong = (r.wrong || 0) + 1;
-      r.ts = Date.now();
+      r.right = 0;              // 答错即重置连对计数
+      r.at = Date.now();
+      r.last = r.at;
       wbook[k] = r;
+      store(WBOOK_KEY, wbook);
+      document.dispatchEvent(new CustomEvent('zk:wordbook', { detail: { word: w, ok: false } }));
+      return false;
     }
+    // 答对：只有原本在错题本里的词才累计，连对 MASTER_STREAK 次才移出
+    var e = wbook[k];
+    if (!e) return false;
+    e.right = (e.right || 0) + 1;
+    e.last = Date.now();
+    var mastered = e.right >= MASTER_STREAK;
+    if (mastered) delete wbook[k];
     store(WBOOK_KEY, wbook);
+    document.dispatchEvent(new CustomEvent('zk:wordbook', { detail: { word: w, ok: true, mastered: mastered } }));
+    return mastered;
+  };
+  Z.wordMaster = function (w) {
+    var k = String(w).toLowerCase();
+    if (!wbook[k]) return false;
+    delete wbook[k];
+    store(WBOOK_KEY, wbook);
+    document.dispatchEvent(new CustomEvent('zk:wordbook', { detail: { word: w, ok: true, mastered: true } }));
+    return true;
   };
   Z.wordBookReset = function () { wbook = {}; store(WBOOK_KEY, wbook); };
+  Z.MASTER_STREAK = MASTER_STREAK;
 
   /* ---------------- 语法题记录（含遗忘曲线排期） ---------------- */
   var QLOG_KEY = 'zk-qlog-v1';
@@ -872,4 +919,308 @@
     return a;
   }
   Z.shuffle = shuffle;
+
+  /* ==========================================================
+     背单词引擎（逐行对齐 PET 项目 P.wordStudy）
+     两种模式：choice 四选一 · recall 闪卡主动回忆
+     三种内容：mix 智能混合 · due 只复习到期 · new 只学新词
+     四档评分：0 忘了 / 1 有点模糊 / 2 记住了 / 3 秒杀很熟
+     ========================================================== */
+  Z.wordStudy = function (opts) {
+    var host = document.querySelector(opts.mount);
+    if (!host) return;
+    var pool = (opts.words || []).filter(function (w) { return w.w; });
+    if (!pool.length) { host.innerHTML = '<div class="empty"><b>没有可学的词</b></div>'; return; }
+    var mode = opts.mode || 'due';
+    var card = opts.card || 'choice';
+    var autoSayOn = opts.autoSay !== false;
+    var queue = [], idx = 0, revealed = false;
+    var sessionN = 0, sessionOk = 0, streak = 0, best = 0;
+    var answered = false, finished = false;
+    var autoNextTimer = null;
+    var pendingAdvance = false;
+    var AUTO_NEXT_MS = 780;
+
+    function advance() {
+      if (!pendingAdvance) return;
+      pendingAdvance = false;
+      clearTimeout(autoNextTimer);
+      autoNextTimer = null;
+      idx++;
+      draw();
+    }
+
+    function sampleByFrequency(list, n) {
+      if (n <= 0 || !list.length) return [];
+      var sorted = list.slice().sort(function (a, b) {
+        var fa = a.w.frq == null ? 1e9 : a.w.frq;
+        var fb = b.w.frq == null ? 1e9 : b.w.frq;
+        return fa - fb;
+      });
+      // 在词频最高的窗口内随机取，避免每次都同一批
+      var win = Math.max(n * 4, 80);
+      var sub = sorted.slice(0, win);
+      shuffle(sub);
+      return sub.slice(0, n);
+    }
+
+    function build() {
+      clearTimeout(autoNextTimer);
+      var now = Date.now();
+      var scored = pool.map(function (w) {
+        var r = Z.srsGet(w.w);
+        return { w: w, due: r ? r.due : 0, has: !!r, ivl: r ? (r.ivl || 0) : 0 };
+      });
+      if (mode === 'due') scored = scored.filter(function (s) { return !s.has || (s.due || 0) <= now; });
+      else if (mode === 'new') scored = scored.filter(function (s) { return !s.has; });
+
+      var limit = opts.limit || 20;
+      var dueList = scored.filter(function (s) { return s.has && (s.due || 0) <= now; })
+        .sort(function (a, b) { return (a.due || 0) - (b.due || 0); });
+      var newList = scored.filter(function (s) { return !s.has; });
+      var picked = [];
+
+      if (mode === 'due') {
+        picked = dueList.slice(0, limit);
+      } else if (mode === 'new') {
+        picked = sampleByFrequency(newList, limit);
+      } else {
+        // 智能混合：先排到期复习，不够再补新词
+        picked = dueList.slice(0, limit);
+        if (picked.length < limit) {
+          var room = limit - picked.length;
+          var takenKeys = {};
+          picked.forEach(function (s) { takenKeys[s.w.w] = 1; });
+          var extra = sampleByFrequency(newList.filter(function (s) { return !takenKeys[s.w.w]; }), room);
+          picked = picked.concat(extra);
+        }
+      }
+
+      queue = picked.map(function (s) { return s.w; });
+      shuffle(queue);
+      idx = 0; sessionN = 0; sessionOk = 0; streak = 0; best = 0; finished = false;
+      draw();
+    }
+
+    function header() {
+      return '<div class="quiz-top">' +
+        '<div class="quiz-progress"><i style="width:' + (queue.length ? idx / queue.length * 100 : 0) + '%"></i></div>' +
+        '<span class="quiz-count">' + Math.min(idx + 1, queue.length) + ' / ' + queue.length + '</span>' +
+        '<span class="combo-pill" id="qs">🔥 连击 ' + streak + '</span></div>';
+    }
+
+    function draw() {
+      if (!queue.length) return emptyState();
+      if (idx >= queue.length) return done();
+      revealed = false; answered = false; pendingAdvance = false;
+      var w = queue[idx];
+      host.innerHTML = card === 'choice' ? choiceView(w) : recallView(w);
+      bindKeys();
+    }
+
+    function emptyState() {
+      host.innerHTML = '<div class="qcard" style="text-align:center;justify-content:center">' +
+        '<div style="font-size:1.35rem;font-weight:700;margin-bottom:10px">🎉 今天到期的词全部复习完啦！</div>' +
+        '<div style="color:var(--text-2);font-size:.93rem;line-height:1.7">按艾宾浩斯遗忘曲线，今天已经达标。<br>如果想继续抢跑，可以切到「智能混合」学习一批新词。</div>' +
+        '<div style="margin-top:24px"><button class="btn primary" id="wsMix">切到混合模式学新词</button></div></div>';
+      var b = host.querySelector('#wsMix');
+      if (b) b.addEventListener('click', function () { mode = 'mix'; build(); });
+    }
+
+    /* ---- 闪卡模式：先回想，再翻卡自评 ---- */
+    function recallView(w) {
+      var canPlay = Z.hasAudio(w.w);
+      var h = '<div class="flash-shell">' + header();
+      h += '<div class="fcard">';
+      h += '<div class="fword">' + esc(w.w) +
+           (canPlay ? '<button class="say-btn" id="sayBtn" title="朗读" aria-label="朗读单词">🔊</button>' : '') +
+           '</div>';
+      if (w.ph) h += '<div class="fph">/' + esc(w.ph) + '/</div>';
+      if (w.posZh) h += '<div class="fpos">' + esc(w.posZh) + (w.t === 'phrase' ? ' · 短语' : '') + '</div>';
+      h += '<div id="frev"></div>';
+      h += '<div class="fhint">先在脑海里回想中文含义，再点击「查看释义」或按空格</div>';
+      h += '</div>';
+      h += '<div class="quiz-actions"><span class="spacer"></span><button class="btn primary" id="fshow">查看释义 (空格)</button></div>';
+      h += '</div>';
+      setTimeout(function () {
+        var say = host.querySelector('#sayBtn');
+        if (say) say.addEventListener('click', function (e) { e.stopPropagation(); Z.playWord(w.w); });
+        if (canPlay && autoSayOn) Z.playWord(w.w);
+        var b = host.querySelector('#fshow');
+        if (b) b.addEventListener('click', revealRecall);
+      }, 0);
+      return h;
+    }
+
+    function revealRecall() {
+      if (revealed) return;
+      revealed = true;
+      var w = queue[idx];
+      var h = '<div class="fzh">' + esc(w.zh || '（无释义）') + '</div>';
+      if (w.ex) h += '<div class="fex">' + esc(w.ex) + '</div>';
+      host.querySelector('#frev').innerHTML = h;
+      var hint = host.querySelector('.fhint');
+      if (hint) hint.style.display = 'none';
+      var act = host.querySelector('.quiz-actions');
+      act.innerHTML = '<div class="rate-row" style="width:100%">' +
+        '<button class="rate again" data-g="0"><b>忘了</b><small>10 分钟后再来</small></button>' +
+        '<button class="rate hard" data-g="1"><b>有点模糊</b><small>约半天后</small></button>' +
+        '<button class="rate good" data-g="2"><b>记住了</b><small>按遗忘曲线</small></button>' +
+        '<button class="rate easy" data-g="3"><b>秒杀很熟</b><small>拉长间隔</small></button></div>';
+      act.querySelectorAll('[data-g]').forEach(function (b) {
+        b.addEventListener('click', function () { rate(parseInt(b.getAttribute('data-g'), 10)); });
+      });
+    }
+
+    /* ---- 四选一模式：看英选义 ---- */
+    function choiceView(w) {
+      var ds = pickDistractors(pool, w, 3);
+      if (ds.length < 3) return recallView(w);
+      var choices = [w].concat(ds);
+      shuffle(choices);
+      var ans = choices.indexOf(w);
+      var h = '<div class="flash-shell">' + header();
+      var canPlay = Z.hasAudio(w.w);
+      h += '<div class="fcard" style="justify-content:flex-start;padding-top:32px;min-height:0">';
+      h += '<div class="fword" style="font-size:clamp(1.6rem,5vw,2.2rem)">' + esc(w.w) +
+           (canPlay ? '<button class="say-btn" id="sayBtn" title="朗读" aria-label="朗读单词">🔊</button>' : '') +
+           '</div>';
+      if (w.ph) h += '<div class="fph">/' + esc(w.ph) + '/</div>';
+      if (w.posZh) h += '<div class="fpos">' + esc(w.posZh) + '</div>';
+      h += '<div style="font-size:.84rem;color:var(--text-3);margin-top:14px">' +
+           (canPlay ? '听发音，选出最准确的中文释义' : '选出最准确的中文释义') + '</div></div>';
+      h += '<div class="qopts" style="margin-top:16px">';
+      choices.forEach(function (o, k) {
+        h += '<button class="qopt" data-k="' + k + '">' +
+             '<span class="key">' + 'ABCD'[k] + '</span><span>' + esc(o.zh || '') + '</span></button>';
+      });
+      h += '</div><div id="wfb"></div></div>';
+      setTimeout(function () {
+        var say = host.querySelector('#sayBtn');
+        if (say) say.addEventListener('click', function (e) { e.stopPropagation(); Z.playWord(w.w); });
+        if (canPlay && autoSayOn) Z.playWord(w.w);
+        host.querySelectorAll('.qopt').forEach(function (b) {
+          b.addEventListener('click', function () {
+            judgeChoice(w, parseInt(b.getAttribute('data-k'), 10), ans);
+          });
+        });
+      }, 0);
+      return h;
+    }
+
+    function judgeChoice(w, k, ans) {
+      if (answered) return;
+      answered = true;
+      var ok = k === ans;
+      host.querySelectorAll('.qopt').forEach(function (b) {
+        var bi = parseInt(b.getAttribute('data-k'), 10);
+        b.classList.add('locked');
+        if (bi === ans) b.classList.add('right');
+        else if (bi === k) b.classList.add('wrong');
+      });
+      if (ok) { streak++; if (streak > best) best = streak; Z.sfx('ok'); }
+      else { streak = 0; Z.sfx('bad'); }
+      var fb = host.querySelector('#wfb');
+      if (ok) {
+        fb.innerHTML = '<div class="feedback auto-next"><b>✓ 答对了！' +
+          (streak >= 3 ? ' 🔥 连击 ' + streak : '') + '</b>' +
+          esc(w.zh) + (w.posZh ? ' · ' + esc(w.posZh) : '') +
+          '<span class="auto-next-hint">自动进入下一词…</span></div>';
+      } else {
+        fb.innerHTML = '<div class="feedback bad"><b>✕ 正确释义：' + esc(w.zh) + '</b>' +
+          esc(w.w) + (w.ph ? ' /' + esc(w.ph) + '/' : '') + (w.posZh ? ' · ' + esc(w.posZh) : '') +
+          (w.ex ? '<div style="margin-top:6px;font-style:italic;font-size:.85rem">' + esc(w.ex) + '</div>' : '') +
+          '</div>' +
+          '<div class="quiz-actions"><span class="spacer"></span><button class="btn primary" id="wnext">记住了，下一词 →</button></div>';
+        var nx = fb.querySelector('#wnext');
+        nx.addEventListener('click', function () { idx++; draw(); });
+        nx.focus();
+      }
+      recordAndRate(w, ok ? 2 : 0, ok);
+      if (ok) {
+        pendingAdvance = true;
+        clearTimeout(autoNextTimer);
+        autoNextTimer = setTimeout(advance, AUTO_NEXT_MS);
+      }
+    }
+
+    function recordAndRate(w, g, countedOk) {
+      Z.srsRate(w.w, g);
+      // 背单词结果同步到词库「已掌握」：四选一按对错，闪卡按自评
+      // 闪卡的「有点模糊」(g=1) 不算掌握也不算答错，保持原状态
+      if (countedOk) Z.setKnown(w.w, true);
+      else if (g === 0) Z.setKnown(w.w, false);
+      sessionN++;
+      if (countedOk) sessionOk++;
+      if (opts.onRate) opts.onRate(w, g);
+      var st = host.querySelector('#qs');
+      if (st) st.textContent = '🔥 连击 ' + streak;
+    }
+
+    function rate(g) {
+      var w = queue[idx];
+      if (g >= 2) { streak++; if (streak > best) best = streak; Z.sfx('ok'); }
+      else { streak = 0; Z.sfx('bad'); }
+      recordAndRate(w, g, g >= 2);
+      if (g === 0) queue.push(w);   // 忘了的词本轮末尾再出现一次
+      idx++;
+      draw();
+    }
+
+    function bindKeys() {
+      if (host.__keys) return;
+      host.__keys = 1;
+      document.addEventListener('keydown', function (e) {
+        if (!document.body.contains(host) || finished) return;
+        var tag = (e.target.tagName || '').toLowerCase();
+        if (tag === 'input' || tag === 'textarea') return;
+        if (card === 'choice') {
+          if (/^[1-4]$/.test(e.key) && !answered) {
+            var b = host.querySelector('.qopt[data-k="' + (parseInt(e.key, 10) - 1) + '"]');
+            if (b) { e.preventDefault(); b.click(); }
+          } else if (e.key === 'Enter' && answered) {
+            if (pendingAdvance) { e.preventDefault(); advance(); }
+            else {
+              var nx = host.querySelector('#wnext');
+              if (nx) { e.preventDefault(); nx.click(); }
+            }
+          }
+          return;
+        }
+        if (e.key === ' ' || e.key === 'Enter') {
+          e.preventDefault();
+          if (!revealed) revealRecall(); else rate(2);
+        } else if (revealed && /^[1-4]$/.test(e.key)) {
+          rate(parseInt(e.key, 10) - 1);
+        }
+      });
+    }
+
+    function done() {
+      finished = true;
+      pendingAdvance = false;
+      clearTimeout(autoNextTimer);
+      autoNextTimer = null;
+      Z.sfx('win');
+      var st = Z.srsStats();
+      var pct = sessionN ? Math.round(sessionOk / sessionN * 100) : 100;
+      host.innerHTML = '<div class="qcard" style="text-align:center;justify-content:center">' +
+        '<div class="kicker">本轮闯关完成</div>' +
+        '<div style="font-size:1.2rem;font-weight:700;margin-bottom:4px">' + (pct >= 85 ? '🎉 太棒了，词感超稳！' : '💪 坚持复习，越背越牢！') + '</div>' +
+        '<div style="font-family:var(--display);font-size:2.9rem;font-weight:800;color:var(--accent);margin:8px 0">' + sessionOk +
+          '<span style="font-size:1.3rem;color:var(--text-3)"> / ' + sessionN + '</span></div>' +
+        '<div style="color:var(--text-2)">个词已记住 · 最高连击 <b>' + best + '</b><br>' +
+          '词库累计已学 ' + st.total + ' 词，今日还剩 ' + st.due + ' 个待复习</div>' +
+        '<div style="margin-top:26px;display:flex;gap:10px;justify-content:center;flex-wrap:wrap">' +
+          '<button class="btn primary" id="wagain">再来一轮</button>' +
+          '<a class="btn soft" href="review.html">顺手练一组语法</a>' +
+          '<a class="btn ghost" href="' + (opts.backHref || 'index.html') + '">返回</a>' +
+        '</div></div>';
+      host.querySelector('#wagain').addEventListener('click', build);
+      if (opts.onFinish) opts.onFinish({ ok: sessionOk, total: sessionN, best: best });
+    }
+
+    build();
+    return { rebuild: build };
+  };
 })();

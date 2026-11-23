@@ -599,8 +599,8 @@ function buildQuiz() {
   const body = `
 <div class="page-head">
   <div class="crumb"><a href="index.html">首页</a> / 背单词</div>
-  <h1>按遗忘曲线背单词</h1>
-  <p class="lede">按 <b>艾宾浩斯遗忘曲线</b> 科学排期：答错 10 分钟后再现，答稳了自动拉长间隔（1 天 → 3 天 → 7 天 → 21 天+）。给英文选中文，每题自动朗读。</p>
+  <h1>听音闯关背单词</h1>
+  <p class="lede">按 <b>艾宾浩斯遗忘曲线</b> 科学排期：答错 10 分钟后再现，答稳了自动拉长间隔（0.5 天 → 1 天 → 3 天 → 7 天 → 21 天+）。支持四选一与闪卡两种模式，每题自动朗读。</p>
 </div>
 
 <section class="section" style="margin-top:22px">
@@ -608,22 +608,8 @@ function buildQuiz() {
     <div class="k"><b id="kLeft">—</b><span>尚未学习</span></div>
     <div class="k"><b id="kTotal">—</b><span>已学词数（牢固 <b id="kMature" style="display:inline;font-size:1em;color:var(--ok)">0</b>）</span></div>
     <div class="k"><b id="kDue" style="color:var(--accent)">—</b><span>今日待复习</span></div>
-    <div class="k"><b id="kAcc">—</b><span>背词准确率</span></div>
+    <div class="k"><b id="kAcc">—</b><span id="kAccSub">背词准确率</span></div>
     <div class="k"><b id="kScope">—</b><span>本范围总词量</span></div>
-  </div>
-</section>
-
-<section class="section" style="margin-top:16px">
-  <div class="scope-bar" style="margin-top:0">
-    <div class="scope-bar-label">选择背词范围</div>
-    <div class="chips" id="scopeBar">
-      <button class="chip on" data-s="all">全部词条 <b>${STATS.total}</b></button>
-      <button class="chip" data-s="core">核心高频 <b>${STATS.core}</b></button>
-      <button class="chip" data-s="mid">中频主力 <b>${STATS.mid}</b></button>
-      <button class="chip" data-s="ext">拓展词 <b>${STATS.ext}</b></button>
-      <button class="chip" data-s="phrase">只背短语 <b>${STATS.phrases}</b></button>
-    </div>
-    <p class="scope-bar-hint" id="scopeHint">全部 ${STATS.total} 条词表与短语，覆盖最全</p>
   </div>
 </section>
 
@@ -635,7 +621,7 @@ function buildQuiz() {
     </div>
     <div class="bar"><i id="kBar" style="width:0%"></i></div>
     <div class="chips" style="margin-top:14px" id="goalChips">
-      <span class="quiz-count" style="margin-right:6px">每日目标</span>
+      <span class="goal-label" style="margin-right:6px">每日目标</span>
       <button class="chip" data-goal="10">10 词</button>
       <button class="chip on" data-goal="20">20 词</button>
       <button class="chip" data-goal="30">30 词</button>
@@ -644,180 +630,217 @@ function buildQuiz() {
   </div>
 </section>
 
-<section class="section" style="margin-top:20px">
-  <div id="quizMount"></div>
+<section class="section" style="margin-top:26px" id="setup">
+  <div class="card setup-card">
+    <div class="setup-head">
+      <h3>开始本轮闯关</h3>
+      <div class="setup-actions">
+        <button class="btn primary" id="startBtn">开始背单词 →</button>
+        <button class="btn ghost sm" id="resetBtn">重置进度</button>
+      </div>
+    </div>
+
+    <div class="setup-grid">
+      <div class="setup-group wide">
+        <div class="kicker">词库范围</div>
+        <div class="chips" id="scopeBar">
+          <button class="chip on" data-s="all">全部词条 <b>${STATS.total}</b></button>
+          <button class="chip" data-s="core">核心高频 <b>${STATS.core}</b></button>
+          <button class="chip" data-s="mid">中频主力 <b>${STATS.mid}</b></button>
+          <button class="chip" data-s="ext">拓展词 <b>${STATS.ext}</b></button>
+          <button class="chip" data-s="phrase">只背短语 <b>${STATS.phrases}</b></button>
+        </div>
+        <p class="setup-hint" id="scopeHint">全部 ${STATS.total} 条词表与短语，覆盖最全</p>
+      </div>
+
+      <div class="setup-group">
+        <div class="kicker">学习模式</div>
+        <div class="chips" id="cardChips">
+          <button class="chip on" data-c="choice">四选一 · 看英选义</button>
+          <button class="chip" data-c="recall">闪卡 · 主动回忆</button>
+        </div>
+        <p class="setup-hint" id="cardHint">听音看词选中文，系统自动判分，最易上手</p>
+      </div>
+
+      <div class="setup-group">
+        <div class="kicker">学习内容</div>
+        <div class="chips" id="modeChips">
+          <button class="chip on" data-m="mix">智能混合</button>
+          <button class="chip" data-m="due">只复习到期</button>
+          <button class="chip" data-m="new">只学新词</button>
+        </div>
+        <p class="setup-hint" id="modeHint">到期复习 + 适量新词，兼顾巩固与推进</p>
+      </div>
+
+      <div class="setup-group">
+        <div class="kicker">朗读与音效</div>
+        <div class="chips" id="sayChips">
+          <button class="chip on" data-say="on">自动朗读</button>
+          <button class="chip" data-say="off">静音（手动点 🔊）</button>
+          <button class="chip on" id="sfxToggle">提示音：开</button>
+        </div>
+        <p class="setup-hint" id="sayHint">每题出现自动朗读，耳朵眼睛一起记</p>
+      </div>
+
+      <div class="setup-group">
+        <div class="kicker">本轮词数</div>
+        <p class="setup-hint" style="margin-top:0">每轮出 <b id="lenEcho">20</b> 词，与上方「每日目标」保持一致</p>
+      </div>
+    </div>
+
+    <div class="note setup-note">
+      电脑快捷键：<b>1–4</b> 选答案、<b>空格</b>翻卡、<b>Enter</b> 下一词。答错的词会自动收进<a href="wrong.html">错题本</a>。
+    </div>
+  </div>
 </section>
+
+<section class="section" id="zone" style="display:none"><div id="fc"></div></section>
 `;
   const script = `
-ZK.ready(function(){
-  var WORDS = ZK_DATA.WORDS;
-  var scope = 'all', pool = [], queue = [], idx = 0, answered = false, correct = 0, total = 0;
+const { WORDS } = window.ZK_DATA;
+const Z = window.ZK;
+let mode = 'mix', src = 'all', card = 'choice';
+let autoSay = (function () {
+  try { var v = localStorage.getItem('zk-autosay'); return v === null ? true : v === '1'; } catch (e) { return true; }
+})();
 
-  function inScope(w){
-    if (scope === 'core') return w.tag === 'core';
-    if (scope === 'mid') return w.tag === 'mid';
-    if (scope === 'ext') return w.tag === 'ext';
-    if (scope === 'phrase') return w.t === 'phrase';
-    return true;
+function poolOf() {
+  return src === 'phrase' ? WORDS.filter(w => w.t === 'phrase')
+       : src === 'all' ? WORDS
+       : WORDS.filter(w => w.tag === src);
+}
+
+function refreshKv() {
+  const pool = poolOf();
+  const all = Z.srsAll ? Z.srsAll() : {};
+  const now = Date.now();
+  let learned = 0, due = 0, mature = 0, left = 0;
+  pool.forEach(w => {
+    const r = all[w.w.toLowerCase()];
+    if (!r) { left++; return; }
+    learned++;
+    if ((r.due || 0) <= now) due++;
+    if ((r.ivl || 0) >= 21) mature++;
+  });
+  const set = (id, v) => { const e = document.querySelector(id); if (e) e.textContent = v; };
+  set('#kScope', pool.length);
+  set('#kLeft', left);
+  set('#kTotal', learned);
+  set('#kMature', mature);
+  set('#kDue', due);
+
+  const acc = Z.wordAccStats ? Z.wordAccStats(pool) : { answered: 0, rate: null };
+  set('#kAcc', acc.rate === null ? '—' : Math.round(acc.rate * 100) + '%');
+  const accSub = document.querySelector('#kAccSub');
+  if (accSub) accSub.textContent = acc.answered ? '背词准确率（' + acc.answered + ' 次作答）' : '背词准确率';
+  const accEl = document.querySelector('#kAcc');
+  if (accEl) {
+    accEl.style.color = acc.rate === null ? '' : acc.rate >= 0.8 ? 'var(--ok)' : acc.rate >= 0.6 ? 'var(--gold)' : 'var(--rose)';
   }
-  function refreshKv(){
-    var scoped = WORDS.filter(inScope);
-    var st = ZK.srsStats();
-    var learnedInScope = scoped.filter(function(w){ return ZK.srsGet(w.w); }).length;
-    document.getElementById('kLeft').textContent = scoped.length - learnedInScope;
-    document.getElementById('kTotal').textContent = learnedInScope;
-    document.getElementById('kMature').textContent = scoped.filter(function(w){ var r=ZK.srsGet(w.w); return r && (r.interval||0) >= 21; }).length;
-    document.getElementById('kDue').textContent = ZK.srsDueCount(scoped);
-    document.getElementById('kScope').textContent = scoped.length;
-    var acc = total ? Math.round(correct/total*100) : 0;
-    document.getElementById('kAcc').textContent = total ? acc + '%' : '—';
-    document.getElementById('kToday').textContent = ZK.todayWords();
-    document.getElementById('kGoal').textContent = ZK.goal();
-    document.getElementById('kPct').textContent = ZK.todayPct() + '%';
-    document.getElementById('kBar').style.width = ZK.todayPct() + '%';
-    document.getElementById('kStreak').textContent = ZK.streak();
+}
+refreshKv();
+document.addEventListener('zk:srs', refreshKv);
+
+function refreshDaily() {
+  const set = (id, v) => { const e = document.querySelector(id); if (e) e.textContent = v; };
+  set('#kToday', Z.todayWords());
+  set('#kGoal', Z.goal());
+  set('#kStreak', Z.streak());
+  const pct = Z.todayPct();
+  set('#kPct', pct + '%');
+  const bar = document.querySelector('#kBar');
+  if (bar) bar.style.width = pct + '%';
+  document.querySelectorAll('#goalChips .chip').forEach(c => {
+    c.classList.toggle('on', parseInt(c.getAttribute('data-goal'), 10) === Z.goal());
+  });
+  set('#lenEcho', Z.goal());
+}
+refreshDaily();
+document.addEventListener('zk:day', refreshDaily);
+document.querySelectorAll('#goalChips .chip').forEach(c => {
+  c.addEventListener('click', () => { Z.setGoal(c.getAttribute('data-goal')); refreshDaily(); });
+});
+
+function pick(sel, attr, cb) {
+  document.querySelectorAll(sel + ' .chip[' + attr + ']').forEach(c => c.addEventListener('click', () => {
+    document.querySelectorAll(sel + ' .chip[' + attr + ']').forEach(x => x.classList.remove('on'));
+    c.classList.add('on'); cb(c.getAttribute(attr));
+  }));
+}
+const HINTS = {
+  card: {
+    choice: '听音看词选中文，系统自动判分，最易上手',
+    recall: '先看英文独立回想，再翻卡自评掌握程度，记忆更深刻'
+  },
+  mode: {
+    mix: '到期复习 + 适量新词，兼顾巩固与推进',
+    due: '只复习今天到期的词，专心把旧词钉牢',
+    new: '只学还没背过的新词，适合周末集中抢进度'
+  },
+  src: {
+    core: '先拿下卷面最高频的核心词，性价比最高',
+    mid: '阅读与写作的核心主力词，稳步提分',
+    ext: '低频拓展词，考前冲刺时再补齐',
+    all: '全部词表与短语，覆盖最全',
+    phrase: '高频固定搭配与短语，专攻单选与完形'
   }
+};
+function setHint(id, text) { const el = document.querySelector('#' + id); if (el) el.textContent = text; }
 
-  /** 选词：到期复习优先，其次新词；同档内按词频优先 + 窗口随机 */
-  function buildQueue(){
-    var scoped = WORDS.filter(inScope).filter(function(w){ return w.zh; });
-    var now = Date.now();
-    var due = [], fresh = [];
-    scoped.forEach(function(w){
-      var r = ZK.srsGet(w.w);
-      if (!r) fresh.push(w);
-      else if (!r.due || r.due <= now) due.push(w);
-    });
-    function pick(arr, n){
-      // 先按词频排序取前 n*3 个作为候选窗口，再随机打乱，避免每次都同一批
-      var sorted = arr.slice().sort(function(a,b){ return (a.frq||999999)-(b.frq||999999); });
-      var win = sorted.slice(0, Math.max(n*3, n));
-      return ZK.shuffle(win).slice(0, n);
-    }
-    var need = ZK.goal();
-    var out = pick(due, need);
-    if (out.length < need) out = out.concat(pick(fresh, need - out.length));
-    if (!out.length) out = pick(scoped, need);
-    return out;
-  }
+pick('#cardChips', 'data-c', v => { card = v; setHint('cardHint', HINTS.card[v]); });
+pick('#modeChips', 'data-m', v => { mode = v; setHint('modeHint', HINTS.mode[v]); refreshKv(); });
 
-  function startRound(){
-    queue = buildQueue();
-    idx = 0; correct = 0; total = 0;
-    draw();
-  }
+document.querySelectorAll('#sayChips .chip[data-say]').forEach(c => {
+  if ((c.getAttribute('data-say') === 'on') !== autoSay) c.classList.remove('on');
+  else c.classList.add('on');
+  c.addEventListener('click', () => {
+    document.querySelectorAll('#sayChips .chip[data-say]').forEach(x => x.classList.remove('on'));
+    c.classList.add('on');
+    autoSay = c.getAttribute('data-say') === 'on';
+    try { localStorage.setItem('zk-autosay', autoSay ? '1' : '0'); } catch (e) {}
+    setHint('sayHint', autoSay ? '每题出现自动朗读，耳朵眼睛一起记' : '静音模式；想听发音时点单词旁的 🔊');
+  });
+});
 
-  function draw(){
-    var host = document.getElementById('quizMount');
-    if (!queue.length) {
-      host.innerHTML = '<div class="empty"><b>这个范围暂时没有可背的词</b>换个范围试试</div>';
-      return;
-    }
-    if (idx >= queue.length) return finish();
-    answered = false;
-    var w = queue[idx];
-    var distractors = ZK.pickDistractors(WORDS.filter(function(x){ return x.zh && x.w !== w.w; }), w, 3);
-    var opts = ZK.shuffle([w].concat(distractors));
-    var ansIdx = opts.indexOf(w);
+const sfxBtn = document.querySelector('#sfxToggle');
+function syncSfx() {
+  if (!sfxBtn) return;
+  const on = Z.sfxEnabled();
+  sfxBtn.classList.toggle('on', on);
+  sfxBtn.textContent = on ? '提示音：开' : '提示音：关';
+}
+syncSfx();
+if (sfxBtn) sfxBtn.addEventListener('click', () => { Z.setSfx(!Z.sfxEnabled()); syncSfx(); });
 
-    var h = '<div class="quiz-shell"><div class="quiz-top">' +
-      '<div class="quiz-progress"><i style="width:' + (idx/queue.length*100) + '%"></i></div>' +
-      '<span class="quiz-count">' + (idx+1) + ' / ' + queue.length + '</span>' +
-      '<button class="btn xs ghost" id="sayBtn">🔊 再听一遍</button>' +
-      '</div><div class="qcard">' +
-      '<div class="qmeta"><span class="qtype">' + (w.t === 'phrase' ? '短语' : w.posZh) + '</span></div>' +
-      '<div class="qstem" style="font-family:var(--en);font-size:1.6rem;font-weight:700">' + ZK.esc(w.w) + '</div>' +
-      (w.ph ? '<div class="note" style="margin-top:4px">/' + ZK.esc(w.ph) + '/</div>' : '') +
-      '<div class="qopts">' + opts.map(function(o,k){
-        return '<button class="qopt" data-k="'+k+'"><span class="key">'+'ABCD'[k]+'</span><span>'+ZK.esc(o.zh)+'</span></button>';
-      }).join('') + '</div>' +
-      '<div id="qfb"></div></div></div>';
-    host.innerHTML = h;
-
-    ZK.playWord(w.w, { times: 2 });
-    host.querySelector('#sayBtn').addEventListener('click', function(){ ZK.playWord(w.w, { times: 1 }); });
-
-    host.querySelectorAll('.qopt').forEach(function(b){
-      b.addEventListener('click', function(){
-        if (answered) return;
-        answered = true;
-        var k = parseInt(b.getAttribute('data-k'), 10);
-        var ok = k === ansIdx;
-        host.querySelectorAll('.qopt').forEach(function(x){
-          var xi = parseInt(x.getAttribute('data-k'), 10);
-          x.classList.add('locked');
-          if (xi === ansIdx) x.classList.add('right');
-          else if (xi === k) x.classList.add('wrong');
-        });
-        total++; if (ok) correct++;
-        ZK.srsRate(w.w, ok ? 2 : 0);
-        ZK.wordAttempt(w.w, ok);
-        if (ok) ZK.setKnown(w.w, true); else ZK.setKnown(w.w, false);
-        ZK.bumpDay('words', 1);
-        ZK.sfx(ok ? 'ok' : 'bad');
-        var fb = document.getElementById('qfb');
-        fb.innerHTML = '<div class="feedback ' + (ok?'auto-next':'bad') + '"><b>' +
-          (ok ? '✓ 正确！' : '✕ 记错了，正确释义：' + ZK.esc(w.zh)) + '</b>' +
-          (w.ex ? '<div style="margin-top:6px;color:var(--text-2);font-family:var(--en)">' + ZK.esc(w.ex) + '</div>' : '') +
-          '</div>';
-        refreshKv();
-        setTimeout(function(){ idx++; draw(); }, ok ? 620 : 1500);
-      });
-    });
-  }
-
-  function finish(){
-    ZK.sfx('win');
-    var rate = total ? Math.round(correct/total*100) : 0;
-    document.getElementById('quizMount').innerHTML =
-      '<div class="qcard" style="text-align:center;justify-content:center">' +
-      '<div class="kicker">本轮背词完成</div>' +
-      '<div style="font-family:var(--display);font-size:3rem;font-weight:800;color:var(--accent);margin:6px 0">' + rate + '<span style="font-size:1.2rem">%</span></div>' +
-      '<div style="color:var(--text-2)">答对 <b>' + correct + ' / ' + total + '</b> 词</div>' +
-      '<div style="margin-top:24px;display:flex;gap:10px;justify-content:center;flex-wrap:wrap">' +
-      '<button class="btn primary" id="again">再来一轮</button>' +
-      '<a class="btn soft" href="wrong.html">看错题本</a>' +
-      '<a class="btn ghost" href="review.html">去练语法</a></div></div>';
-    document.getElementById('again').addEventListener('click', startRound);
-    refreshKv();
-  }
-
-  document.querySelectorAll('#scopeBar .chip').forEach(function(c){
-    c.addEventListener('click', function(){
-      document.querySelectorAll('#scopeBar .chip').forEach(function(x){ x.classList.remove('on'); });
+(function initScope() {
+  document.querySelectorAll('#scopeBar .chip').forEach(c => {
+    c.classList.toggle('on', c.getAttribute('data-s') === src);
+    c.addEventListener('click', () => {
+      document.querySelectorAll('#scopeBar .chip').forEach(x => x.classList.remove('on'));
       c.classList.add('on');
-      scope = c.getAttribute('data-s');
-      var hint = document.getElementById('scopeHint');
-      var map = { all:'全部词表与短语，覆盖最全', core:'卷面最高频的核心词，先啃这批', mid:'阅读与写作的主力词', ext:'低频词，认识即可', phrase:'高频短语，单选与完形的提分点' };
-      if (hint) hint.textContent = map[scope] || '';
+      src = c.getAttribute('data-s');
+      setHint('scopeHint', HINTS.src[src]);
       refreshKv();
-      startRound();
     });
   });
+  setHint('scopeHint', HINTS.src[src]);
+})();
 
-  document.querySelectorAll('#goalChips .chip').forEach(function(c){
-    c.addEventListener('click', function(){
-      document.querySelectorAll('#goalChips .chip').forEach(function(x){ x.classList.remove('on'); });
-      c.classList.add('on');
-      ZK.setGoal(parseInt(c.getAttribute('data-goal'), 10));
-      refreshKv();
-      startRound();
-    });
-  });
+document.querySelector('#startBtn').addEventListener('click', () => {
+  document.querySelector('#setup').style.display = 'none';
+  document.querySelector('#zone').style.display = '';
+  Z.wordStudy({ mount: '#fc', words: poolOf(), mode, card, limit: Z.goal(), backHref: 'quiz.html', autoSay });
+  const zone = document.querySelector('#zone');
+  window.scrollTo({ top: Math.max(0, zone.getBoundingClientRect().top + window.scrollY - 80), behavior: 'smooth' });
+});
 
-  // 同步已保存的目标
-  var g = ZK.goal();
-  document.querySelectorAll('#goalChips .chip').forEach(function(c){
-    c.classList.toggle('on', parseInt(c.getAttribute('data-goal'),10) === g);
-  });
-
-  refreshKv();
-  startRound();
+document.querySelector('#resetBtn').addEventListener('click', () => {
+  if (confirm('确定清空所有背单词进度？此操作无法撤销。')) { Z.srsReset(); Z.clearKnown(); refreshKv(); Z.toast('已重置背单词进度'); }
 });
 `;
   write('quiz.html', page({
     title: '背单词 · 遗忘曲线闯关',
-    desc: `用艾宾浩斯遗忘曲线背 ${STATS.total} 条北京中考英语词条，支持四选一闯关与自动朗读。`,
+    desc: `用艾宾浩斯遗忘曲线背 ${STATS.total} 条北京中考英语词条，支持四选一与闪卡双模式、自动朗读。`,
     active: 'words-study', body, script, dataKeys: ['WORDS'],
   }));
 }
