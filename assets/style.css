@@ -1186,3 +1186,78 @@ body.js-ready .reveal.out { opacity: 0; transform: translateY(14px); }
   .stage-dots { order: 3; flex-basis: 100%; }
   .method-card { padding: 18px 16px; }
 }
+
+/* ==========================================================
+   阅读页三级导航：类型卡 → 篇章卡 → 单篇练习
+   ========================================================== */
+
+/* 一级：类型卡 */
+.level-cards { align-items: stretch; }
+.level-card {
+  position: relative; text-align: left; cursor: pointer;
+  padding: 22px 20px 18px; display: flex; flex-direction: column; gap: 8px;
+  font: inherit; color: var(--text);
+  border: 1px solid var(--border); background: var(--surface);
+  border-radius: var(--r); transition: transform .18s var(--ease), box-shadow .18s, border-color .18s;
+}
+.level-card:hover {
+  transform: translateY(-3px); box-shadow: var(--shadow-3);
+  border-color: color-mix(in srgb, var(--accent) 40%, transparent);
+}
+.level-badge {
+  position: absolute; top: 16px; right: 16px;
+  width: 30px; height: 30px; border-radius: 9px;
+  display: grid; place-items: center;
+  font-family: var(--display); font-weight: 800; font-size: .95rem;
+  color: #fff; background: var(--accent-grad);
+  box-shadow: var(--shadow-accent);
+}
+.level-card h3 { font-size: 1.02rem; margin: 0; padding-right: 36px; }
+.level-card .desc { font-size: .85rem; color: var(--text-2); line-height: 1.65; margin: 0; flex: 1 1 auto; }
+.level-card .meta { font-size: .78rem; color: var(--text-3); }
+.level-go {
+  font-size: .82rem; font-weight: 700; color: var(--accent); margin-top: 2px;
+}
+
+/* 二级：篇章卡 */
+.passage-cards { align-items: stretch; }
+.passage-card {
+  position: relative; text-align: left; cursor: pointer;
+  padding: 20px; display: flex; flex-direction: column; gap: 8px;
+  font: inherit; color: var(--text);
+  border: 1px solid var(--border); background: var(--surface);
+  border-radius: var(--r); transition: transform .18s var(--ease), box-shadow .18s, border-color .18s;
+}
+.passage-card:hover {
+  transform: translateY(-3px); box-shadow: var(--shadow-3);
+  border-color: color-mix(in srgb, var(--accent) 40%, transparent);
+}
+.passage-no {
+  font-size: .74rem; font-weight: 700; color: var(--accent);
+  background: var(--accent-soft); padding: 2px 9px; border-radius: var(--r-pill);
+  align-self: flex-start;
+}
+.passage-card h3 { font-size: 1rem; margin: 0; font-family: var(--en); }
+.passage-card .desc { font-size: .84rem; color: var(--text-2); line-height: 1.65; margin: 0; flex: 1 1 auto; }
+.passage-card .meta { font-size: .78rem; color: var(--text-3); }
+
+/* 篇内顶部导航条 */
+.passage-nav {
+  display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
+  margin-bottom: 14px;
+}
+.passage-pos { font-size: .84rem; color: var(--text-2); font-weight: 600; }
+.passage-pager { margin-left: auto; display: flex; gap: 8px; }
+.passage-pager .btn:disabled { opacity: .38; cursor: not-allowed; }
+
+/* 单篇页里的方法卡更紧凑 */
+.method-card.compact { margin-bottom: 18px; padding: 18px 20px; }
+.method-card.compact .method-steps { gap: 9px; }
+
+@media (max-width: 900px) {
+  .level-cards { grid-template-columns: repeat(2, 1fr) !important; }
+}
+@media (max-width: 560px) {
+  .level-cards { grid-template-columns: 1fr !important; }
+  .passage-cards { grid-template-columns: 1fr !important; }
+}

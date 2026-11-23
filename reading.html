@@ -9,7 +9,7 @@
 <meta property="og:title" content="阅读理解与阅读表达 · 30 分 · 北京中考领航">
 <meta property="og:description" content="北京中考英语阅读理解 68 题与阅读表达 40 题，四类文章各有解题方法与原文定位解析。">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%232563eb'/%3E%3Cstop offset='1' stop-color='%234f46e5'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='32' height='32' rx='9' fill='url(%23g)'/%3E%3Ctext x='16' y='22' font-family='system-ui,sans-serif' font-size='14' font-weight='800' fill='%23fff' text-anchor='middle'%3E%E4%B8%AD%3C/text%3E%3C/svg%3E">
-<link rel="stylesheet" href="assets/style.css?v=738a4871">
+<link rel="stylesheet" href="assets/style.css?v=c7d6eccf">
 <script>try{var m=JSON.parse(localStorage.getItem('zk-theme-manual')||'null');var h=new Date().getHours();var t=(m==='light'||m==='dark')?m:((h>=19||h<6)?'dark':'light');document.documentElement.setAttribute('data-theme',t);}catch(e){var h2=new Date().getHours();document.documentElement.setAttribute('data-theme',(h2>=19||h2<6)?'dark':'light');}</script>
 </head>
 <body data-base="">
@@ -33,13 +33,13 @@
 <main class="main">
 <div class="wrap">
 
-<div class="page-head">
+<div class="page-head reader-head">
   <div class="crumb"><a href="index.html">首页</a> / 阅读理解</div>
   <h1>阅读理解与阅读表达</h1>
-  <p class="lede">北京卷第三部分阅读理解 <b>13 小题 × 2 分 = 26 分</b>，第四部分阅读表达 <b>4 小题 × 1 分 = 4 分</b>，合计 <b>30 分</b>，是笔试里分值最高的板块。四类文章读法不同，下面按 A/B/C/D 分别给出解题方法，每类 4 篇练习。</p>
+  <p class="lede">北京卷第三部分阅读理解 <b>13 小题 × 2 分 = 26 分</b>，第四部分阅读表达 <b>4 小题 × 1 分 = 4 分</b>，合计 <b>30 分</b>，是笔试里分值最高的板块。四类文章读法不同，先选类型，再选篇章。</p>
 </div>
 
-<section class="section" style="margin-top:22px">
+<section class="section reader-stats" style="margin-top:22px">
   <div class="kv">
     <div class="k"><b data-count="16">16</b><span>阅读篇目</span></div>
     <div class="k"><b data-count="68">68</b><span>选择题</span></div>
@@ -48,26 +48,213 @@
   </div>
 </section>
 
-<section class="section" style="margin-top:20px">
-  <div class="card">
-    <h3>📖 四类文章，四种读法</h3>
-    <div class="strategy-grid">
-      <div class="strategy-item"><b>A 篇 · 应用文</b><span>信息查找型 —— 答案就在原文里，考的是「找得快、看得准」</span></div><div class="strategy-item"><b>B 篇 · 记叙文</b><span>故事型 —— 考的是「谁做了什么、态度怎么变」</span></div><div class="strategy-item"><b>C 篇 · 说明文</b><span>科普型 —— 考的是「原因、数据、结论」</span></div><div class="strategy-item"><b>D 篇 · 议论文</b><span>观点型 —— 考的是「谁说的、作者站哪边」</span></div>
+<!-- ========== 第一级：类型选择 ========== -->
+<section class="section reader-home" id="readerHome">
+  <div class="section-head">
+    <div class="section-head-left">
+      <span class="kicker">第一步 · 选类型</span>
+      <h2>四类文章，四种读法</h2>
+      <span class="sub">每类 4 篇，选一个类型开始</span>
     </div>
+  </div>
+  <div class="grid c4 level-cards">
+    <button class="card level-card" type="button" data-open-level="A">
+        <div class="level-badge">A</div>
+        <h3>📋 应用文</h3>
+        <p class="desc">信息查找型 —— 答案就在原文里，考的是「找得快、看得准」</p>
+        <div class="meta">4 篇 · 24 题</div>
+        <span class="level-go">开始 →</span>
+      </button><button class="card level-card" type="button" data-open-level="B">
+        <div class="level-badge">B</div>
+        <h3>📖 记叙文</h3>
+        <p class="desc">故事型 —— 考的是「谁做了什么、态度怎么变」</p>
+        <div class="meta">4 篇 · 24 题</div>
+        <span class="level-go">开始 →</span>
+      </button><button class="card level-card" type="button" data-open-level="C">
+        <div class="level-badge">C</div>
+        <h3>🔬 说明文</h3>
+        <p class="desc">科普型 —— 考的是「原因、数据、结论」</p>
+        <div class="meta">4 篇 · 24 题</div>
+        <span class="level-go">开始 →</span>
+      </button><button class="card level-card" type="button" data-open-level="D">
+        <div class="level-badge">D</div>
+        <h3>💬 议论文</h3>
+        <p class="desc">观点型 —— 考的是「谁说的、作者站哪边」</p>
+        <div class="meta">4 篇 · 36 题</div>
+        <span class="level-go">开始 →</span>
+      </button>
   </div>
 </section>
 
-<section class="section" style="margin-top:30px">
-      <div class="section-head">
-        <div class="section-head-left">
-          <span class="kicker">📋 A 篇 · 应用文</span>
-          <h2>信息查找型 —— 答案就在原文里，考的是「找得快、看得准」</h2>
-          <span class="sub">共 4 篇 · 16 题</span>
-        </div>
+<!-- ========== 第二级：篇章选择 ========== -->
+<section class="section reader-level" data-level="A" hidden>
+    <div class="passage-nav">
+      <button class="btn ghost sm" type="button" data-back-home>← 返回类型列表</button>
+    </div>
+    <div class="section-head" style="margin-top:10px">
+      <div class="section-head-left">
+        <span class="kicker">📋 A 篇 · 应用文</span>
+        <h2>信息查找型 —— 答案就在原文里，考的是「找得快、看得准」</h2>
+        <span class="sub">共 4 篇 · 点开一篇开始练</span>
+      </div>
+    </div>
+    <div class="grid c2 passage-cards">
+      <button class="card passage-card" type="button" data-open-passage="s1-a">
+          <span class="passage-no">第 1 篇</span>
+          <h3>City Library Summer Programme</h3>
+          <p class="desc">信息查找题：先读题干，再回原文定位，不必逐句翻译。</p>
+          <div class="meta">4 题 · 共 4 题</div>
+          <span class="level-go">开始练习 →</span>
+        </button><button class="card passage-card" type="button" data-open-passage="s2-a">
+          <span class="passage-no">第 2 篇</span>
+          <h3>Volunteers Wanted for the City Marathon</h3>
+          <p class="desc">A 篇信息查找：注意表格中的时间、条件与联系方式，警惕「时间张冠李戴」。</p>
+          <div class="meta">4 题 · 共 4 题</div>
+          <span class="level-go">开始练习 →</span>
+        </button><button class="card passage-card" type="button" data-open-passage="s3-a">
+          <span class="passage-no">第 3 篇</span>
+          <h3>School Clubs Open Day</h3>
+          <p class="desc">A 篇应用文：海报类信息查找。先扫标题与表格结构，再按题干关键词定位，不要从头读。</p>
+          <div class="meta">4 题 + 阅读表达 4 · 共 8 题</div>
+          <span class="level-go">开始练习 →</span>
+        </button><button class="card passage-card" type="button" data-open-passage="s4-a">
+          <span class="passage-no">第 4 篇</span>
+          <h3>A Day Trip to the Science Museum</h3>
+          <p class="desc">A 篇应用文：行程表类。注意时间顺序与「先后关系」，这类题最爱考「几点做什么」。</p>
+          <div class="meta">4 题 + 阅读表达 4 · 共 8 题</div>
+          <span class="level-go">开始练习 →</span>
+        </button>
+    </div>
+  </section><section class="section reader-level" data-level="B" hidden>
+    <div class="passage-nav">
+      <button class="btn ghost sm" type="button" data-back-home>← 返回类型列表</button>
+    </div>
+    <div class="section-head" style="margin-top:10px">
+      <div class="section-head-left">
+        <span class="kicker">📖 B 篇 · 记叙文</span>
+        <h2>故事型 —— 考的是「谁做了什么、态度怎么变」</h2>
+        <span class="sub">共 4 篇 · 点开一篇开始练</span>
+      </div>
+    </div>
+    <div class="grid c2 passage-cards">
+      <button class="card passage-card" type="button" data-open-passage="s1-b">
+          <span class="passage-no">第 1 篇</span>
+          <h3>The Week I Learned to Cook</h3>
+          <p class="desc">记叙文：注意时间顺序与「我」的态度变化，这类题常考情感转折。</p>
+          <div class="meta">4 题 · 共 4 题</div>
+          <span class="level-go">开始练习 →</span>
+        </button><button class="card passage-card" type="button" data-open-passage="s2-b">
+          <span class="passage-no">第 2 篇</span>
+          <h3>The Garden on the Roof</h3>
+          <p class="desc">B 篇记叙文：注意「起初怀疑 → 后来改变」的态度变化，这类题常考作者观点转变。</p>
+          <div class="meta">4 题 · 共 4 题</div>
+          <span class="level-go">开始练习 →</span>
+        </button><button class="card passage-card" type="button" data-open-passage="s3-b">
+          <span class="passage-no">第 3 篇</span>
+          <h3>The Day I Lost the Race</h3>
+          <p class="desc">B 篇记叙文：成长类。注意「结果输了但收获了什么」，这类文章的主旨题答案往往不是表面结果。</p>
+          <div class="meta">4 题 + 阅读表达 4 · 共 8 题</div>
+          <span class="level-go">开始练习 →</span>
+        </button><button class="card passage-card" type="button" data-open-passage="s4-b">
+          <span class="passage-no">第 4 篇</span>
+          <h3>My Grandfather&#39;s Letters</h3>
+          <p class="desc">B 篇记叙文：亲情类。注意「物件」贯穿全文的作用，这类题常考「某个东西象征什么」。</p>
+          <div class="meta">4 题 + 阅读表达 4 · 共 8 题</div>
+          <span class="level-go">开始练习 →</span>
+        </button>
+    </div>
+  </section><section class="section reader-level" data-level="C" hidden>
+    <div class="passage-nav">
+      <button class="btn ghost sm" type="button" data-back-home>← 返回类型列表</button>
+    </div>
+    <div class="section-head" style="margin-top:10px">
+      <div class="section-head-left">
+        <span class="kicker">🔬 C 篇 · 说明文</span>
+        <h2>科普型 —— 考的是「原因、数据、结论」</h2>
+        <span class="sub">共 4 篇 · 点开一篇开始练</span>
+      </div>
+    </div>
+    <div class="grid c2 passage-cards">
+      <button class="card passage-card" type="button" data-open-passage="s1-c">
+          <span class="passage-no">第 1 篇</span>
+          <h3>Why Do We Yawn?</h3>
+          <p class="desc">说明文：抓段落主旨与数据，注意「研究发现」类表述。</p>
+          <div class="meta">4 题 · 共 4 题</div>
+          <span class="level-go">开始练习 →</span>
+        </button><button class="card passage-card" type="button" data-open-passage="s2-c">
+          <span class="passage-no">第 2 篇</span>
+          <h3>The Secret of Honey</h3>
+          <p class="desc">C 篇说明文：注意数字与「因果链」，常考「为什么能…」。</p>
+          <div class="meta">4 题 · 共 4 题</div>
+          <span class="level-go">开始练习 →</span>
+        </button><button class="card passage-card" type="button" data-open-passage="s3-c">
+          <span class="passage-no">第 3 篇</span>
+          <h3>How Do Chameleons Change Colour?</h3>
+          <p class="desc">C 篇说明文：科普类。注意「常见误解 → 科学解释」的结构，这类文章最爱考「以下哪个说法是错的」。</p>
+          <div class="meta">4 题 + 阅读表达 4 · 共 8 题</div>
+          <span class="level-go">开始练习 →</span>
+        </button><button class="card passage-card" type="button" data-open-passage="s4-c">
+          <span class="passage-no">第 4 篇</span>
+          <h3>Why Do We Forget Names?</h3>
+          <p class="desc">C 篇说明文：心理科普。注意「列举原因」的结构，这类题常考「以下哪项是原因之一」。</p>
+          <div class="meta">4 题 + 阅读表达 4 · 共 8 题</div>
+          <span class="level-go">开始练习 →</span>
+        </button>
+    </div>
+  </section><section class="section reader-level" data-level="D" hidden>
+    <div class="passage-nav">
+      <button class="btn ghost sm" type="button" data-back-home>← 返回类型列表</button>
+    </div>
+    <div class="section-head" style="margin-top:10px">
+      <div class="section-head-left">
+        <span class="kicker">💬 D 篇 · 议论文</span>
+        <h2>观点型 —— 考的是「谁说的、作者站哪边」</h2>
+        <span class="sub">共 4 篇 · 点开一篇开始练</span>
+      </div>
+    </div>
+    <div class="grid c2 passage-cards">
+      <button class="card passage-card" type="button" data-open-passage="s1-d">
+          <span class="passage-no">第 1 篇</span>
+          <h3>Should Schools Start Later?</h3>
+          <p class="desc">议论文：区分「支持者观点」「反对者观点」与「作者观点」，这三者常被混考。</p>
+          <div class="meta">5 题 + 阅读表达 4 · 共 9 题</div>
+          <span class="level-go">开始练习 →</span>
+        </button><button class="card passage-card" type="button" data-open-passage="s2-d">
+          <span class="passage-no">第 2 篇</span>
+          <h3>Are Smartphones Bad for Students?</h3>
+          <p class="desc">D 篇议论文：作者观点常藏在「让步」之后（Although… / Of course… 后面才是重点）。</p>
+          <div class="meta">5 题 + 阅读表达 4 · 共 9 题</div>
+          <span class="level-go">开始练习 →</span>
+        </button><button class="card passage-card" type="button" data-open-passage="s3-d">
+          <span class="passage-no">第 3 篇</span>
+          <h3>Should Students Learn to Code?</h3>
+          <p class="desc">D 篇议论文：注意「双方都有道理」的写法，作者可能给出折中观点。警惕绝对化选项（all / never / only）。</p>
+          <div class="meta">5 题 + 阅读表达 4 · 共 9 题</div>
+          <span class="level-go">开始练习 →</span>
+        </button><button class="card passage-card" type="button" data-open-passage="s4-d">
+          <span class="passage-no">第 4 篇</span>
+          <h3>Is It Worth Recycling?</h3>
+          <p class="desc">D 篇议论文：环境议题。注意作者如何处理「反方有理」的部分——承认部分合理但仍坚持主张。</p>
+          <div class="meta">5 题 + 阅读表达 4 · 共 9 题</div>
+          <span class="level-go">开始练习 →</span>
+        </button>
+    </div>
+  </section>
+
+<!-- ========== 第三级：单篇练习 ========== -->
+<div class="reader-passage" hidden>
+  <div class="passage-page" data-lv="A" data-pid="s1-a">
+      <div class="passage-nav">
+        <button class="btn ghost sm" type="button" data-back-level>← 返回 A 篇列表</button>
+        <span class="passage-pos">📋 A 篇 · 第 1 / 4 篇</span>
+        <span class="passage-pager">
+          <button class="btn xs ghost" type="button" data-prev-passage disabled>← 上一篇</button>
+          <button class="btn xs ghost" type="button" data-next-passage >下一篇 →</button>
+        </span>
       </div>
 
-      <div class="card method-card">
-        <div class="method-title">📋 应用文的读法 · 4 篇练习</div>
+      <div class="card method-card compact">
+        <div class="method-title">📋 应用文的读法</div>
         <ol class="method-steps">
           <li><b>先看题干，划出关键词</b><span>不要从第一句读起。先扫题干里问的是「谁 / 什么时间 / 什么条件」，圈出关键词。</span></li><li><b>带着关键词扫读原文</b><span>眼睛只找那个词或它的同义表达，找到就停下来精读那一两句。</span></li><li><b>警惕四类陷阱</b><span>① 时间张冠李戴（把集合时间当发车时间）；② 条件互换（把 A 社团的要求安到 B）；③ 范围扩大（原文说「一种」选项说「所有」）；④ 方向反了（把「免费」说成「要付费」）。</span></li>
         </ol>
@@ -141,7 +328,26 @@ All money will go to a children&#39;s hospital.</p></div>
           <button class="btn primary sm stage-next" type="button">下一题 →</button>
         </div>
       </div>
-    </div><div class="card article-card reading-stage" id="s2-a">
+    </div>
+    </div><div class="passage-page" data-lv="A" data-pid="s2-a">
+      <div class="passage-nav">
+        <button class="btn ghost sm" type="button" data-back-level>← 返回 A 篇列表</button>
+        <span class="passage-pos">📋 A 篇 · 第 2 / 4 篇</span>
+        <span class="passage-pager">
+          <button class="btn xs ghost" type="button" data-prev-passage >← 上一篇</button>
+          <button class="btn xs ghost" type="button" data-next-passage >下一篇 →</button>
+        </span>
+      </div>
+
+      <div class="card method-card compact">
+        <div class="method-title">📋 应用文的读法</div>
+        <ol class="method-steps">
+          <li><b>先看题干，划出关键词</b><span>不要从第一句读起。先扫题干里问的是「谁 / 什么时间 / 什么条件」，圈出关键词。</span></li><li><b>带着关键词扫读原文</b><span>眼睛只找那个词或它的同义表达，找到就停下来精读那一两句。</span></li><li><b>警惕四类陷阱</b><span>① 时间张冠李戴（把集合时间当发车时间）；② 条件互换（把 A 社团的要求安到 B）；③ 范围扩大（原文说「一种」选项说「所有」）；④ 方向反了（把「免费」说成「要付费」）。</span></li>
+        </ol>
+        <div class="method-trap">⚠ A 篇每题 2 分，错 1 题等于丢一道写作的 1/5。信息题最忌「凭印象选」，必须回原文核对。</div>
+      </div>
+
+      <div class="card article-card reading-stage" id="s2-a">
       <div class="article-head">
         <div>
           <h3>Volunteers Wanted for the City Marathon</h3>
@@ -200,7 +406,26 @@ If you have questions, call Ms Chen at 8765-4321 (weekdays 9:00 a.m. – 5:00 p.
           <button class="btn primary sm stage-next" type="button">下一题 →</button>
         </div>
       </div>
-    </div><div class="card article-card reading-stage" id="s3-a">
+    </div>
+    </div><div class="passage-page" data-lv="A" data-pid="s3-a">
+      <div class="passage-nav">
+        <button class="btn ghost sm" type="button" data-back-level>← 返回 A 篇列表</button>
+        <span class="passage-pos">📋 A 篇 · 第 3 / 4 篇</span>
+        <span class="passage-pager">
+          <button class="btn xs ghost" type="button" data-prev-passage >← 上一篇</button>
+          <button class="btn xs ghost" type="button" data-next-passage >下一篇 →</button>
+        </span>
+      </div>
+
+      <div class="card method-card compact">
+        <div class="method-title">📋 应用文的读法</div>
+        <ol class="method-steps">
+          <li><b>先看题干，划出关键词</b><span>不要从第一句读起。先扫题干里问的是「谁 / 什么时间 / 什么条件」，圈出关键词。</span></li><li><b>带着关键词扫读原文</b><span>眼睛只找那个词或它的同义表达，找到就停下来精读那一两句。</span></li><li><b>警惕四类陷阱</b><span>① 时间张冠李戴（把集合时间当发车时间）；② 条件互换（把 A 社团的要求安到 B）；③ 范围扩大（原文说「一种」选项说「所有」）；④ 方向反了（把「免费」说成「要付费」）。</span></li>
+        </ol>
+        <div class="method-trap">⚠ A 篇每题 2 分，错 1 题等于丢一道写作的 1/5。信息题最忌「凭印象选」，必须回原文核对。</div>
+      </div>
+
+      <div class="card article-card reading-stage" id="s3-a">
       <div class="article-head">
         <div>
           <h3>School Clubs Open Day</h3>
@@ -294,7 +519,26 @@ You need to read a short passage before you come — pick it up in Room 105.</p>
           <button class="btn primary sm stage-next" type="button">下一题 →</button>
         </div>
       </div>
-    </div><div class="card article-card reading-stage" id="s4-a">
+    </div>
+    </div><div class="passage-page" data-lv="A" data-pid="s4-a">
+      <div class="passage-nav">
+        <button class="btn ghost sm" type="button" data-back-level>← 返回 A 篇列表</button>
+        <span class="passage-pos">📋 A 篇 · 第 4 / 4 篇</span>
+        <span class="passage-pager">
+          <button class="btn xs ghost" type="button" data-prev-passage >← 上一篇</button>
+          <button class="btn xs ghost" type="button" data-next-passage disabled>下一篇 →</button>
+        </span>
+      </div>
+
+      <div class="card method-card compact">
+        <div class="method-title">📋 应用文的读法</div>
+        <ol class="method-steps">
+          <li><b>先看题干，划出关键词</b><span>不要从第一句读起。先扫题干里问的是「谁 / 什么时间 / 什么条件」，圈出关键词。</span></li><li><b>带着关键词扫读原文</b><span>眼睛只找那个词或它的同义表达，找到就停下来精读那一两句。</span></li><li><b>警惕四类陷阱</b><span>① 时间张冠李戴（把集合时间当发车时间）；② 条件互换（把 A 社团的要求安到 B）；③ 范围扩大（原文说「一种」选项说「所有」）；④ 方向反了（把「免费」说成「要付费」）。</span></li>
+        </ol>
+        <div class="method-trap">⚠ A 篇每题 2 分，错 1 题等于丢一道写作的 1/5。信息题最忌「凭印象选」，必须回原文核对。</div>
+      </div>
+
+      <div class="card article-card reading-stage" id="s4-a">
       <div class="article-head">
         <div>
           <h3>A Day Trip to the Science Museum</h3>
@@ -388,17 +632,18 @@ Friday, October 18</p><p class="passage-p">7:40  Meet at the school gate. Do not
         </div>
       </div>
     </div>
-    </section><section class="section" style="margin-top:30px">
-      <div class="section-head">
-        <div class="section-head-left">
-          <span class="kicker">📖 B 篇 · 记叙文</span>
-          <h2>故事型 —— 考的是「谁做了什么、态度怎么变」</h2>
-          <span class="sub">共 4 篇 · 16 题</span>
-        </div>
+    </div><div class="passage-page" data-lv="B" data-pid="s1-b">
+      <div class="passage-nav">
+        <button class="btn ghost sm" type="button" data-back-level>← 返回 B 篇列表</button>
+        <span class="passage-pos">📖 B 篇 · 第 1 / 4 篇</span>
+        <span class="passage-pager">
+          <button class="btn xs ghost" type="button" data-prev-passage disabled>← 上一篇</button>
+          <button class="btn xs ghost" type="button" data-next-passage >下一篇 →</button>
+        </span>
       </div>
 
-      <div class="card method-card">
-        <div class="method-title">📖 记叙文的读法 · 4 篇练习</div>
+      <div class="card method-card compact">
+        <div class="method-title">📖 记叙文的读法</div>
         <ol class="method-steps">
           <li><b>先抓时间线</b><span>把「起初 → 后来 → 最后」三个节点找出来。记叙文的题目几乎都挂在这条线上。</span></li><li><b>盯住转折词</b><span>but / however / then / suddenly 后面往往是关键：人物态度变了、事情转向了。</span></li><li><b>分清「事实」与「感受」</b><span>细节题问事实（几点、多少、做了什么）；主旨题问感受与收获。别把「他哭了」当成「他很生气」。</span></li>
         </ol>
@@ -453,7 +698,26 @@ Friday, October 18</p><p class="passage-p">7:40  Meet at the school gate. Do not
           <button class="btn primary sm stage-next" type="button">下一题 →</button>
         </div>
       </div>
-    </div><div class="card article-card reading-stage" id="s2-b">
+    </div>
+    </div><div class="passage-page" data-lv="B" data-pid="s2-b">
+      <div class="passage-nav">
+        <button class="btn ghost sm" type="button" data-back-level>← 返回 B 篇列表</button>
+        <span class="passage-pos">📖 B 篇 · 第 2 / 4 篇</span>
+        <span class="passage-pager">
+          <button class="btn xs ghost" type="button" data-prev-passage >← 上一篇</button>
+          <button class="btn xs ghost" type="button" data-next-passage >下一篇 →</button>
+        </span>
+      </div>
+
+      <div class="card method-card compact">
+        <div class="method-title">📖 记叙文的读法</div>
+        <ol class="method-steps">
+          <li><b>先抓时间线</b><span>把「起初 → 后来 → 最后」三个节点找出来。记叙文的题目几乎都挂在这条线上。</span></li><li><b>盯住转折词</b><span>but / however / then / suddenly 后面往往是关键：人物态度变了、事情转向了。</span></li><li><b>分清「事实」与「感受」</b><span>细节题问事实（几点、多少、做了什么）；主旨题问感受与收获。别把「他哭了」当成「他很生气」。</span></li>
+        </ol>
+        <div class="method-trap">⚠ 主旨题的答案常常不是「表面结果」。比如「输了比赛」但主旨是「学会了跌倒后怎么做」——这类题要看结尾句。</div>
+      </div>
+
+      <div class="card article-card reading-stage" id="s2-b">
       <div class="article-head">
         <div>
           <h3>The Garden on the Roof</h3>
@@ -501,7 +765,26 @@ Friday, October 18</p><p class="passage-p">7:40  Meet at the school gate. Do not
           <button class="btn primary sm stage-next" type="button">下一题 →</button>
         </div>
       </div>
-    </div><div class="card article-card reading-stage" id="s3-b">
+    </div>
+    </div><div class="passage-page" data-lv="B" data-pid="s3-b">
+      <div class="passage-nav">
+        <button class="btn ghost sm" type="button" data-back-level>← 返回 B 篇列表</button>
+        <span class="passage-pos">📖 B 篇 · 第 3 / 4 篇</span>
+        <span class="passage-pager">
+          <button class="btn xs ghost" type="button" data-prev-passage >← 上一篇</button>
+          <button class="btn xs ghost" type="button" data-next-passage >下一篇 →</button>
+        </span>
+      </div>
+
+      <div class="card method-card compact">
+        <div class="method-title">📖 记叙文的读法</div>
+        <ol class="method-steps">
+          <li><b>先抓时间线</b><span>把「起初 → 后来 → 最后」三个节点找出来。记叙文的题目几乎都挂在这条线上。</span></li><li><b>盯住转折词</b><span>but / however / then / suddenly 后面往往是关键：人物态度变了、事情转向了。</span></li><li><b>分清「事实」与「感受」</b><span>细节题问事实（几点、多少、做了什么）；主旨题问感受与收获。别把「他哭了」当成「他很生气」。</span></li>
+        </ol>
+        <div class="method-trap">⚠ 主旨题的答案常常不是「表面结果」。比如「输了比赛」但主旨是「学会了跌倒后怎么做」——这类题要看结尾句。</div>
+      </div>
+
+      <div class="card article-card reading-stage" id="s3-b">
       <div class="article-head">
         <div>
           <h3>The Day I Lost the Race</h3>
@@ -581,7 +864,26 @@ Friday, October 18</p><p class="passage-p">7:40  Meet at the school gate. Do not
           <button class="btn primary sm stage-next" type="button">下一题 →</button>
         </div>
       </div>
-    </div><div class="card article-card reading-stage" id="s4-b">
+    </div>
+    </div><div class="passage-page" data-lv="B" data-pid="s4-b">
+      <div class="passage-nav">
+        <button class="btn ghost sm" type="button" data-back-level>← 返回 B 篇列表</button>
+        <span class="passage-pos">📖 B 篇 · 第 4 / 4 篇</span>
+        <span class="passage-pager">
+          <button class="btn xs ghost" type="button" data-prev-passage >← 上一篇</button>
+          <button class="btn xs ghost" type="button" data-next-passage disabled>下一篇 →</button>
+        </span>
+      </div>
+
+      <div class="card method-card compact">
+        <div class="method-title">📖 记叙文的读法</div>
+        <ol class="method-steps">
+          <li><b>先抓时间线</b><span>把「起初 → 后来 → 最后」三个节点找出来。记叙文的题目几乎都挂在这条线上。</span></li><li><b>盯住转折词</b><span>but / however / then / suddenly 后面往往是关键：人物态度变了、事情转向了。</span></li><li><b>分清「事实」与「感受」</b><span>细节题问事实（几点、多少、做了什么）；主旨题问感受与收获。别把「他哭了」当成「他很生气」。</span></li>
+        </ol>
+        <div class="method-trap">⚠ 主旨题的答案常常不是「表面结果」。比如「输了比赛」但主旨是「学会了跌倒后怎么做」——这类题要看结尾句。</div>
+      </div>
+
+      <div class="card article-card reading-stage" id="s4-b">
       <div class="article-head">
         <div>
           <h3>My Grandfather&#39;s Letters</h3>
@@ -662,17 +964,18 @@ Friday, October 18</p><p class="passage-p">7:40  Meet at the school gate. Do not
         </div>
       </div>
     </div>
-    </section><section class="section" style="margin-top:30px">
-      <div class="section-head">
-        <div class="section-head-left">
-          <span class="kicker">🔬 C 篇 · 说明文</span>
-          <h2>科普型 —— 考的是「原因、数据、结论」</h2>
-          <span class="sub">共 4 篇 · 16 题</span>
-        </div>
+    </div><div class="passage-page" data-lv="C" data-pid="s1-c">
+      <div class="passage-nav">
+        <button class="btn ghost sm" type="button" data-back-level>← 返回 C 篇列表</button>
+        <span class="passage-pos">🔬 C 篇 · 第 1 / 4 篇</span>
+        <span class="passage-pager">
+          <button class="btn xs ghost" type="button" data-prev-passage disabled>← 上一篇</button>
+          <button class="btn xs ghost" type="button" data-next-passage >下一篇 →</button>
+        </span>
       </div>
 
-      <div class="card method-card">
-        <div class="method-title">🔬 说明文的读法 · 4 篇练习</div>
+      <div class="card method-card compact">
+        <div class="method-title">🔬 说明文的读法</div>
         <ol class="method-steps">
           <li><b>找每段的主旨句</b><span>说明文段落通常第一句就是主旨。先读每段第一句，串起来就是全文框架。</span></li><li><b>因果题回原文找 because</b><span>问「为什么」的题，答案一定在 because / this is why / the reason is 后面。</span></li><li><b>数字题直接定位</b><span>百分比、年份、数量这类题，扫数字比读句子快得多。</span></li><li><b>注意「旧说法 vs 新研究」</b><span>科普文常先摆一个「人们以为」，再推翻它。问「以下哪个说法是错的」时，被推翻的那个就是答案。</span></li>
         </ol>
@@ -727,7 +1030,26 @@ Friday, October 18</p><p class="passage-p">7:40  Meet at the school gate. Do not
           <button class="btn primary sm stage-next" type="button">下一题 →</button>
         </div>
       </div>
-    </div><div class="card article-card reading-stage" id="s2-c">
+    </div>
+    </div><div class="passage-page" data-lv="C" data-pid="s2-c">
+      <div class="passage-nav">
+        <button class="btn ghost sm" type="button" data-back-level>← 返回 C 篇列表</button>
+        <span class="passage-pos">🔬 C 篇 · 第 2 / 4 篇</span>
+        <span class="passage-pager">
+          <button class="btn xs ghost" type="button" data-prev-passage >← 上一篇</button>
+          <button class="btn xs ghost" type="button" data-next-passage >下一篇 →</button>
+        </span>
+      </div>
+
+      <div class="card method-card compact">
+        <div class="method-title">🔬 说明文的读法</div>
+        <ol class="method-steps">
+          <li><b>找每段的主旨句</b><span>说明文段落通常第一句就是主旨。先读每段第一句，串起来就是全文框架。</span></li><li><b>因果题回原文找 because</b><span>问「为什么」的题，答案一定在 because / this is why / the reason is 后面。</span></li><li><b>数字题直接定位</b><span>百分比、年份、数量这类题，扫数字比读句子快得多。</span></li><li><b>注意「旧说法 vs 新研究」</b><span>科普文常先摆一个「人们以为」，再推翻它。问「以下哪个说法是错的」时，被推翻的那个就是答案。</span></li>
+        </ol>
+        <div class="method-trap">⚠ 「以下哪项 NOT」这类题要看清 not / except。很多失分不是不懂，是漏看了否定词。</div>
+      </div>
+
+      <div class="card article-card reading-stage" id="s2-c">
       <div class="article-head">
         <div>
           <h3>The Secret of Honey</h3>
@@ -775,7 +1097,26 @@ Friday, October 18</p><p class="passage-p">7:40  Meet at the school gate. Do not
           <button class="btn primary sm stage-next" type="button">下一题 →</button>
         </div>
       </div>
-    </div><div class="card article-card reading-stage" id="s3-c">
+    </div>
+    </div><div class="passage-page" data-lv="C" data-pid="s3-c">
+      <div class="passage-nav">
+        <button class="btn ghost sm" type="button" data-back-level>← 返回 C 篇列表</button>
+        <span class="passage-pos">🔬 C 篇 · 第 3 / 4 篇</span>
+        <span class="passage-pager">
+          <button class="btn xs ghost" type="button" data-prev-passage >← 上一篇</button>
+          <button class="btn xs ghost" type="button" data-next-passage >下一篇 →</button>
+        </span>
+      </div>
+
+      <div class="card method-card compact">
+        <div class="method-title">🔬 说明文的读法</div>
+        <ol class="method-steps">
+          <li><b>找每段的主旨句</b><span>说明文段落通常第一句就是主旨。先读每段第一句，串起来就是全文框架。</span></li><li><b>因果题回原文找 because</b><span>问「为什么」的题，答案一定在 because / this is why / the reason is 后面。</span></li><li><b>数字题直接定位</b><span>百分比、年份、数量这类题，扫数字比读句子快得多。</span></li><li><b>注意「旧说法 vs 新研究」</b><span>科普文常先摆一个「人们以为」，再推翻它。问「以下哪个说法是错的」时，被推翻的那个就是答案。</span></li>
+        </ol>
+        <div class="method-trap">⚠ 「以下哪项 NOT」这类题要看清 not / except。很多失分不是不懂，是漏看了否定词。</div>
+      </div>
+
+      <div class="card article-card reading-stage" id="s3-c">
       <div class="article-head">
         <div>
           <h3>How Do Chameleons Change Colour?</h3>
@@ -855,7 +1196,26 @@ Friday, October 18</p><p class="passage-p">7:40  Meet at the school gate. Do not
           <button class="btn primary sm stage-next" type="button">下一题 →</button>
         </div>
       </div>
-    </div><div class="card article-card reading-stage" id="s4-c">
+    </div>
+    </div><div class="passage-page" data-lv="C" data-pid="s4-c">
+      <div class="passage-nav">
+        <button class="btn ghost sm" type="button" data-back-level>← 返回 C 篇列表</button>
+        <span class="passage-pos">🔬 C 篇 · 第 4 / 4 篇</span>
+        <span class="passage-pager">
+          <button class="btn xs ghost" type="button" data-prev-passage >← 上一篇</button>
+          <button class="btn xs ghost" type="button" data-next-passage disabled>下一篇 →</button>
+        </span>
+      </div>
+
+      <div class="card method-card compact">
+        <div class="method-title">🔬 说明文的读法</div>
+        <ol class="method-steps">
+          <li><b>找每段的主旨句</b><span>说明文段落通常第一句就是主旨。先读每段第一句，串起来就是全文框架。</span></li><li><b>因果题回原文找 because</b><span>问「为什么」的题，答案一定在 because / this is why / the reason is 后面。</span></li><li><b>数字题直接定位</b><span>百分比、年份、数量这类题，扫数字比读句子快得多。</span></li><li><b>注意「旧说法 vs 新研究」</b><span>科普文常先摆一个「人们以为」，再推翻它。问「以下哪个说法是错的」时，被推翻的那个就是答案。</span></li>
+        </ol>
+        <div class="method-trap">⚠ 「以下哪项 NOT」这类题要看清 not / except。很多失分不是不懂，是漏看了否定词。</div>
+      </div>
+
+      <div class="card article-card reading-stage" id="s4-c">
       <div class="article-head">
         <div>
           <h3>Why Do We Forget Names?</h3>
@@ -936,17 +1296,18 @@ Friday, October 18</p><p class="passage-p">7:40  Meet at the school gate. Do not
         </div>
       </div>
     </div>
-    </section><section class="section" style="margin-top:30px">
-      <div class="section-head">
-        <div class="section-head-left">
-          <span class="kicker">💬 D 篇 · 议论文</span>
-          <h2>观点型 —— 考的是「谁说的、作者站哪边」</h2>
-          <span class="sub">共 4 篇 · 20 题</span>
-        </div>
+    </div><div class="passage-page" data-lv="D" data-pid="s1-d">
+      <div class="passage-nav">
+        <button class="btn ghost sm" type="button" data-back-level>← 返回 D 篇列表</button>
+        <span class="passage-pos">💬 D 篇 · 第 1 / 4 篇</span>
+        <span class="passage-pager">
+          <button class="btn xs ghost" type="button" data-prev-passage disabled>← 上一篇</button>
+          <button class="btn xs ghost" type="button" data-next-passage >下一篇 →</button>
+        </span>
       </div>
 
-      <div class="card method-card">
-        <div class="method-title">💬 议论文的读法 · 4 篇练习</div>
+      <div class="card method-card compact">
+        <div class="method-title">💬 议论文的读法</div>
         <ol class="method-steps">
           <li><b>先分清三种声音</b><span>① 支持者的观点（Supporters say…）；② 反对者的观点（Critics say…）；③ 作者自己的观点（In my opinion / I think…）。这三者常被混考。</span></li><li><b>作者观点常在让步之后</b><span>Although… / Of course… / These are serious points, but… 这些之后才是作者真正想说的。</span></li><li><b>警惕绝对化选项</b><span>all / never / only / always / must 这类词几乎都是错的——议论文很少有绝对结论。</span></li><li><b>注意类比句的作用</b><span>作者打比方（如「不必人人学小提琴」）是为了说明道理，题目会问「为什么要提这个」。</span></li>
         </ol>
@@ -1037,7 +1398,26 @@ Friday, October 18</p><p class="passage-p">7:40  Meet at the school gate. Do not
           <button class="btn primary sm stage-next" type="button">下一题 →</button>
         </div>
       </div>
-    </div><div class="card article-card reading-stage" id="s2-d">
+    </div>
+    </div><div class="passage-page" data-lv="D" data-pid="s2-d">
+      <div class="passage-nav">
+        <button class="btn ghost sm" type="button" data-back-level>← 返回 D 篇列表</button>
+        <span class="passage-pos">💬 D 篇 · 第 2 / 4 篇</span>
+        <span class="passage-pager">
+          <button class="btn xs ghost" type="button" data-prev-passage >← 上一篇</button>
+          <button class="btn xs ghost" type="button" data-next-passage >下一篇 →</button>
+        </span>
+      </div>
+
+      <div class="card method-card compact">
+        <div class="method-title">💬 议论文的读法</div>
+        <ol class="method-steps">
+          <li><b>先分清三种声音</b><span>① 支持者的观点（Supporters say…）；② 反对者的观点（Critics say…）；③ 作者自己的观点（In my opinion / I think…）。这三者常被混考。</span></li><li><b>作者观点常在让步之后</b><span>Although… / Of course… / These are serious points, but… 这些之后才是作者真正想说的。</span></li><li><b>警惕绝对化选项</b><span>all / never / only / always / must 这类词几乎都是错的——议论文很少有绝对结论。</span></li><li><b>注意类比句的作用</b><span>作者打比方（如「不必人人学小提琴」）是为了说明道理，题目会问「为什么要提这个」。</span></li>
+        </ol>
+        <div class="method-trap">⚠ D 篇最容易错的是「把作者观点当成他人观点」。看到 In my view / My own view 就标记下来，那是作者。</div>
+      </div>
+
+      <div class="card article-card reading-stage" id="s2-d">
       <div class="article-head">
         <div>
           <h3>Are Smartphones Bad for Students?</h3>
@@ -1121,7 +1501,26 @@ Friday, October 18</p><p class="passage-p">7:40  Meet at the school gate. Do not
           <button class="btn primary sm stage-next" type="button">下一题 →</button>
         </div>
       </div>
-    </div><div class="card article-card reading-stage" id="s3-d">
+    </div>
+    </div><div class="passage-page" data-lv="D" data-pid="s3-d">
+      <div class="passage-nav">
+        <button class="btn ghost sm" type="button" data-back-level>← 返回 D 篇列表</button>
+        <span class="passage-pos">💬 D 篇 · 第 3 / 4 篇</span>
+        <span class="passage-pager">
+          <button class="btn xs ghost" type="button" data-prev-passage >← 上一篇</button>
+          <button class="btn xs ghost" type="button" data-next-passage >下一篇 →</button>
+        </span>
+      </div>
+
+      <div class="card method-card compact">
+        <div class="method-title">💬 议论文的读法</div>
+        <ol class="method-steps">
+          <li><b>先分清三种声音</b><span>① 支持者的观点（Supporters say…）；② 反对者的观点（Critics say…）；③ 作者自己的观点（In my opinion / I think…）。这三者常被混考。</span></li><li><b>作者观点常在让步之后</b><span>Although… / Of course… / These are serious points, but… 这些之后才是作者真正想说的。</span></li><li><b>警惕绝对化选项</b><span>all / never / only / always / must 这类词几乎都是错的——议论文很少有绝对结论。</span></li><li><b>注意类比句的作用</b><span>作者打比方（如「不必人人学小提琴」）是为了说明道理，题目会问「为什么要提这个」。</span></li>
+        </ol>
+        <div class="method-trap">⚠ D 篇最容易错的是「把作者观点当成他人观点」。看到 In my view / My own view 就标记下来，那是作者。</div>
+      </div>
+
+      <div class="card article-card reading-stage" id="s3-d">
       <div class="article-head">
         <div>
           <h3>Should Students Learn to Code?</h3>
@@ -1205,7 +1604,26 @@ Friday, October 18</p><p class="passage-p">7:40  Meet at the school gate. Do not
           <button class="btn primary sm stage-next" type="button">下一题 →</button>
         </div>
       </div>
-    </div><div class="card article-card reading-stage" id="s4-d">
+    </div>
+    </div><div class="passage-page" data-lv="D" data-pid="s4-d">
+      <div class="passage-nav">
+        <button class="btn ghost sm" type="button" data-back-level>← 返回 D 篇列表</button>
+        <span class="passage-pos">💬 D 篇 · 第 4 / 4 篇</span>
+        <span class="passage-pager">
+          <button class="btn xs ghost" type="button" data-prev-passage >← 上一篇</button>
+          <button class="btn xs ghost" type="button" data-next-passage disabled>下一篇 →</button>
+        </span>
+      </div>
+
+      <div class="card method-card compact">
+        <div class="method-title">💬 议论文的读法</div>
+        <ol class="method-steps">
+          <li><b>先分清三种声音</b><span>① 支持者的观点（Supporters say…）；② 反对者的观点（Critics say…）；③ 作者自己的观点（In my opinion / I think…）。这三者常被混考。</span></li><li><b>作者观点常在让步之后</b><span>Although… / Of course… / These are serious points, but… 这些之后才是作者真正想说的。</span></li><li><b>警惕绝对化选项</b><span>all / never / only / always / must 这类词几乎都是错的——议论文很少有绝对结论。</span></li><li><b>注意类比句的作用</b><span>作者打比方（如「不必人人学小提琴」）是为了说明道理，题目会问「为什么要提这个」。</span></li>
+        </ol>
+        <div class="method-trap">⚠ D 篇最容易错的是「把作者观点当成他人观点」。看到 In my view / My own view 就标记下来，那是作者。</div>
+      </div>
+
+      <div class="card article-card reading-stage" id="s4-d">
       <div class="article-head">
         <div>
           <h3>Is It Worth Recycling?</h3>
@@ -1290,9 +1708,10 @@ Friday, October 18</p><p class="passage-p">7:40  Meet at the school gate. Do not
         </div>
       </div>
     </div>
-    </section>
+    </div>
+</div>
 
-<section class="section">
+<section class="section reader-foot">
   <div class="card">
     <h3>⏱ 应试提醒</h3>
     <p class="desc" style="margin-top:8px">阅读理解每题 2 分，是笔试单题分值最高的题型。做完必须回到原文核对：<b>细节题</b>找到定位句再选；<b>推理题</b>确认依据在原文（不能凭常识）；<b>主旨题</b>看首末段与每段首句；<b>词义猜测题</b>看上下文同义或反义线索。阅读表达必须用<b>完整英文句子</b>作答，只写关键词会扣分。</p>
@@ -1487,6 +1906,120 @@ ZK.ready(function(){
       btn.textContent = hidden ? '收起原文' : '展开原文';
     });
   });
+
+  /* ==========================================================
+     三级导航：类型列表 → 篇章列表 → 单篇练习
+     用 URL hash 记住位置，刷新/分享能回到同一篇
+     ========================================================== */
+  var home = document.getElementById('readerHome');
+  var levelEls = [].slice.call(document.querySelectorAll('.reader-level'));
+  var pageEls = [].slice.call(document.querySelectorAll('.passage-page'));
+  var passageWrap = document.querySelector('.reader-passage');
+  var footEl = document.querySelector('.reader-foot');
+
+  function showHome(scroll){
+    home.hidden = false;
+    levelEls.forEach(function(el){ el.hidden = true; });
+    if (passageWrap) passageWrap.hidden = true;
+    if (footEl) footEl.hidden = false;
+    setChrome(true);
+    if (scroll) window.scrollTo(0, 0);
+  }
+
+  // 进入二级/三级后收起大标题与统计卡，把首屏让给内容
+  var headEl = document.querySelector('.reader-head');
+  var statsEl = document.querySelector('.reader-stats');
+  function setChrome(show){
+    if (headEl) headEl.style.display = show ? '' : 'none';
+    if (statsEl) statsEl.style.display = show ? '' : 'none';
+  }
+
+  function showLevel(lv, scroll){
+    home.hidden = true;
+    levelEls.forEach(function(el){ el.hidden = el.getAttribute('data-level') !== lv; });
+    if (passageWrap) passageWrap.hidden = true;
+    if (footEl) footEl.hidden = true;
+    setChrome(false);
+    if (scroll) window.scrollTo(0, 0);
+  }
+
+  function showPassage(pid, scroll){
+    home.hidden = true;
+    levelEls.forEach(function(el){ el.hidden = true; });
+    if (passageWrap) passageWrap.hidden = false;
+    if (footEl) footEl.hidden = true;
+    setChrome(false);
+    pageEls.forEach(function(el){ el.hidden = el.getAttribute('data-pid') !== pid; });
+    if (scroll) {
+      // 用 instant 滚动，避免 smooth 与截图/自动化冲突
+      var prev = document.documentElement.style.scrollBehavior;
+      document.documentElement.style.scrollBehavior = 'auto';
+      window.scrollTo(0, 0);
+      document.documentElement.style.scrollBehavior = prev;
+    }
+  }
+
+  /* 从 hash 恢复：#level=B / #p=s1-b */
+  function route(){
+    var h = (location.hash || '').replace('#', '');
+    var mLevel = h.match(/^level=([ABCD])$/);
+    // 不用 w：模板字符串会把反斜杠吃掉，导致正则变成 [w-]，匹配不到 s2-b
+    var mPass = h.match(/^p=([A-Za-z0-9_-]+)$/);
+    if (mPass) {
+      var page = pageEls.find(function(el){ return el.getAttribute('data-pid') === mPass[1]; });
+      if (page) { showPassage(mPass[1], false); return; }
+    }
+    if (mLevel) { showLevel(mLevel[1], false); return; }
+    showHome(false);
+  }
+
+  document.querySelectorAll('[data-open-level]').forEach(function(b){
+    b.addEventListener('click', function(){
+      var lv = b.getAttribute('data-open-level');
+      location.hash = 'level=' + lv;
+      showLevel(lv, true);
+    });
+  });
+
+  document.querySelectorAll('[data-open-passage]').forEach(function(b){
+    b.addEventListener('click', function(){
+      var pid = b.getAttribute('data-open-passage');
+      location.hash = 'p=' + pid;
+      showPassage(pid, true);
+    });
+  });
+
+  document.querySelectorAll('[data-back-home]').forEach(function(b){
+    b.addEventListener('click', function(){ location.hash = ''; showHome(true); });
+  });
+
+  document.querySelectorAll('[data-back-level]').forEach(function(b){
+    b.addEventListener('click', function(){
+      var page = b.closest('.passage-page');
+      var lv = page.getAttribute('data-lv');
+      location.hash = 'level=' + lv;
+      showLevel(lv, true);
+    });
+  });
+
+  /* 篇内上一篇/下一篇 */
+  document.querySelectorAll('.passage-page').forEach(function(page){
+    var lv = page.getAttribute('data-lv');
+    var pid = page.getAttribute('data-pid');
+    var sibs = pageEls.filter(function(el){ return el.getAttribute('data-lv') === lv; });
+    var idx = sibs.findIndex(function(el){ return el.getAttribute('data-pid') === pid; });
+    var prev = page.querySelector('[data-prev-passage]');
+    var next = page.querySelector('[data-next-passage]');
+    if (prev) prev.addEventListener('click', function(){
+      if (idx > 0) { var id = sibs[idx - 1].getAttribute('data-pid'); location.hash = 'p=' + id; showPassage(id, true); }
+    });
+    if (next) next.addEventListener('click', function(){
+      if (idx < sibs.length - 1) { var id = sibs[idx + 1].getAttribute('data-pid'); location.hash = 'p=' + id; showPassage(id, true); }
+    });
+  });
+
+  window.addEventListener('hashchange', route);
+  route();
 });
 </script>
 </body>

@@ -1348,38 +1348,42 @@ function buildReading() {
     </div>`;
   };
 
-  const levelSection = (lv) => {
+  /* 单篇：方法卡 + 答题舞台，进入后只显示这一篇 */
+  const passagePage = (p, lv) => {
     const m = READING_METHODS[lv];
-    const list = PASSAGES.filter((p) => p.level === lv);
-    return `<section class="section" style="margin-top:30px">
-      <div class="section-head">
-        <div class="section-head-left">
-          <span class="kicker">${m.icon} ${lv} 篇 · ${m.name}</span>
-          <h2>${m.tagline}</h2>
-          <span class="sub">共 ${list.length} 篇 · ${list.reduce((s, p) => s + p.questions.length, 0)} 题</span>
-        </div>
+    const siblings = PASSAGES.filter((x) => x.level === lv);
+    const idx = siblings.findIndex((x) => x.id === p.id);
+    const totalItems = p.questions.length + (p.express || []).length;
+    return `<div class="passage-page" data-lv="${lv}" data-pid="${p.id}">
+      <div class="passage-nav">
+        <button class="btn ghost sm" type="button" data-back-level>← 返回 ${lv} 篇列表</button>
+        <span class="passage-pos">${m.icon} ${lv} 篇 · 第 ${idx + 1} / ${siblings.length} 篇</span>
+        <span class="passage-pager">
+          <button class="btn xs ghost" type="button" data-prev-passage ${idx === 0 ? 'disabled' : ''}>← 上一篇</button>
+          <button class="btn xs ghost" type="button" data-next-passage ${idx === siblings.length - 1 ? 'disabled' : ''}>下一篇 →</button>
+        </span>
       </div>
 
-      <div class="card method-card">
-        <div class="method-title">${m.icon} ${m.name}的读法 · ${list.length} 篇练习</div>
+      <div class="card method-card compact">
+        <div class="method-title">${m.icon} ${m.name}的读法</div>
         <ol class="method-steps">
           ${m.steps.map((st) => `<li><b>${esc(st.t)}</b><span>${esc(st.d)}</span></li>`).join('')}
         </ol>
         <div class="method-trap">⚠ ${esc(m.trap)}</div>
       </div>
 
-      ${list.map(passageHtml).join('')}
-    </section>`;
+      ${passageHtml(p)}
+    </div>`;
   };
 
   const body = `
-<div class="page-head">
+<div class="page-head reader-head">
   <div class="crumb"><a href="index.html">首页</a> / 阅读理解</div>
   <h1>阅读理解与阅读表达</h1>
-  <p class="lede">北京卷第三部分阅读理解 <b>13 小题 × 2 分 = 26 分</b>，第四部分阅读表达 <b>4 小题 × 1 分 = 4 分</b>，合计 <b>30 分</b>，是笔试里分值最高的板块。四类文章读法不同，下面按 A/B/C/D 分别给出解题方法，每类 ${PASSAGES.filter((p) => p.level === 'A').length} 篇练习。</p>
+  <p class="lede">北京卷第三部分阅读理解 <b>13 小题 × 2 分 = 26 分</b>，第四部分阅读表达 <b>4 小题 × 1 分 = 4 分</b>，合计 <b>30 分</b>，是笔试里分值最高的板块。四类文章读法不同，先选类型，再选篇章。</p>
 </div>
 
-<section class="section" style="margin-top:22px">
+<section class="section reader-stats" style="margin-top:22px">
   <div class="kv">
     <div class="k"><b data-count="${PASSAGES.length}">${PASSAGES.length}</b><span>阅读篇目</span></div>
     <div class="k"><b data-count="${totalQ}">${totalQ}</b><span>选择题</span></div>
@@ -1388,21 +1392,67 @@ function buildReading() {
   </div>
 </section>
 
-<section class="section" style="margin-top:20px">
-  <div class="card">
-    <h3>📖 四类文章，四种读法</h3>
-    <div class="strategy-grid">
-      ${levels.map((lv) => {
-        const m = READING_METHODS[lv];
-        return `<div class="strategy-item"><b>${lv} 篇 · ${m.name}</b><span>${esc(m.tagline)}</span></div>`;
-      }).join('')}
+<!-- ========== 第一级：类型选择 ========== -->
+<section class="section reader-home" id="readerHome">
+  <div class="section-head">
+    <div class="section-head-left">
+      <span class="kicker">第一步 · 选类型</span>
+      <h2>四类文章，四种读法</h2>
+      <span class="sub">每类 ${PASSAGES.filter((p) => p.level === 'A').length} 篇，选一个类型开始</span>
     </div>
+  </div>
+  <div class="grid c4 level-cards">
+    ${levels.map((lv) => {
+      const m = READING_METHODS[lv];
+      const list = PASSAGES.filter((p) => p.level === lv);
+      const qn = list.reduce((s, p) => s + p.questions.length + (p.express || []).length, 0);
+      return `<button class="card level-card" type="button" data-open-level="${lv}">
+        <div class="level-badge">${lv}</div>
+        <h3>${m.icon} ${m.name}</h3>
+        <p class="desc">${esc(m.tagline)}</p>
+        <div class="meta">${list.length} 篇 · ${qn} 题</div>
+        <span class="level-go">开始 →</span>
+      </button>`;
+    }).join('')}
   </div>
 </section>
 
-${levels.map(levelSection).join('')}
+<!-- ========== 第二级：篇章选择 ========== -->
+${levels.map((lv) => {
+  const m = READING_METHODS[lv];
+  const list = PASSAGES.filter((p) => p.level === lv);
+  return `<section class="section reader-level" data-level="${lv}" hidden>
+    <div class="passage-nav">
+      <button class="btn ghost sm" type="button" data-back-home>← 返回类型列表</button>
+    </div>
+    <div class="section-head" style="margin-top:10px">
+      <div class="section-head-left">
+        <span class="kicker">${m.icon} ${lv} 篇 · ${m.name}</span>
+        <h2>${esc(m.tagline)}</h2>
+        <span class="sub">共 ${list.length} 篇 · 点开一篇开始练</span>
+      </div>
+    </div>
+    <div class="grid c2 passage-cards">
+      ${list.map((p, i) => {
+        const total = p.questions.length + (p.express || []).length;
+        return `<button class="card passage-card" type="button" data-open-passage="${p.id}">
+          <span class="passage-no">第 ${i + 1} 篇</span>
+          <h3>${esc(p.title)}</h3>
+          <p class="desc">${esc(p.intro)}</p>
+          <div class="meta">${p.questions.length} 题${(p.express || []).length ? ' + 阅读表达 ' + p.express.length : ''} · 共 ${total} 题</div>
+          <span class="level-go">开始练习 →</span>
+        </button>`;
+      }).join('')}
+    </div>
+  </section>`;
+}).join('')}
 
-<section class="section">
+<!-- ========== 第三级：单篇练习 ========== -->
+<div class="reader-passage" hidden>
+  ${levels.map((lv) => PASSAGES.filter((p) => p.level === lv).map((p) => passagePage(p, lv)).join('')).join('')}
+</div>
+
+<section class="section reader-foot">
   <div class="card">
     <h3>⏱ 应试提醒</h3>
     <p class="desc" style="margin-top:8px">阅读理解每题 2 分，是笔试单题分值最高的题型。做完必须回到原文核对：<b>细节题</b>找到定位句再选；<b>推理题</b>确认依据在原文（不能凭常识）；<b>主旨题</b>看首末段与每段首句；<b>词义猜测题</b>看上下文同义或反义线索。阅读表达必须用<b>完整英文句子</b>作答，只写关键词会扣分。</p>
@@ -1559,6 +1609,120 @@ ZK.ready(function(){
       btn.textContent = hidden ? '收起原文' : '展开原文';
     });
   });
+
+  /* ==========================================================
+     三级导航：类型列表 → 篇章列表 → 单篇练习
+     用 URL hash 记住位置，刷新/分享能回到同一篇
+     ========================================================== */
+  var home = document.getElementById('readerHome');
+  var levelEls = [].slice.call(document.querySelectorAll('.reader-level'));
+  var pageEls = [].slice.call(document.querySelectorAll('.passage-page'));
+  var passageWrap = document.querySelector('.reader-passage');
+  var footEl = document.querySelector('.reader-foot');
+
+  function showHome(scroll){
+    home.hidden = false;
+    levelEls.forEach(function(el){ el.hidden = true; });
+    if (passageWrap) passageWrap.hidden = true;
+    if (footEl) footEl.hidden = false;
+    setChrome(true);
+    if (scroll) window.scrollTo(0, 0);
+  }
+
+  // 进入二级/三级后收起大标题与统计卡，把首屏让给内容
+  var headEl = document.querySelector('.reader-head');
+  var statsEl = document.querySelector('.reader-stats');
+  function setChrome(show){
+    if (headEl) headEl.style.display = show ? '' : 'none';
+    if (statsEl) statsEl.style.display = show ? '' : 'none';
+  }
+
+  function showLevel(lv, scroll){
+    home.hidden = true;
+    levelEls.forEach(function(el){ el.hidden = el.getAttribute('data-level') !== lv; });
+    if (passageWrap) passageWrap.hidden = true;
+    if (footEl) footEl.hidden = true;
+    setChrome(false);
+    if (scroll) window.scrollTo(0, 0);
+  }
+
+  function showPassage(pid, scroll){
+    home.hidden = true;
+    levelEls.forEach(function(el){ el.hidden = true; });
+    if (passageWrap) passageWrap.hidden = false;
+    if (footEl) footEl.hidden = true;
+    setChrome(false);
+    pageEls.forEach(function(el){ el.hidden = el.getAttribute('data-pid') !== pid; });
+    if (scroll) {
+      // 用 instant 滚动，避免 smooth 与截图/自动化冲突
+      var prev = document.documentElement.style.scrollBehavior;
+      document.documentElement.style.scrollBehavior = 'auto';
+      window.scrollTo(0, 0);
+      document.documentElement.style.scrollBehavior = prev;
+    }
+  }
+
+  /* 从 hash 恢复：#level=B / #p=s1-b */
+  function route(){
+    var h = (location.hash || '').replace('#', '');
+    var mLevel = h.match(/^level=([ABCD])$/);
+    // 不用 \w：模板字符串会把反斜杠吃掉，导致正则变成 [w-]，匹配不到 s2-b
+    var mPass = h.match(/^p=([A-Za-z0-9_-]+)$/);
+    if (mPass) {
+      var page = pageEls.find(function(el){ return el.getAttribute('data-pid') === mPass[1]; });
+      if (page) { showPassage(mPass[1], false); return; }
+    }
+    if (mLevel) { showLevel(mLevel[1], false); return; }
+    showHome(false);
+  }
+
+  document.querySelectorAll('[data-open-level]').forEach(function(b){
+    b.addEventListener('click', function(){
+      var lv = b.getAttribute('data-open-level');
+      location.hash = 'level=' + lv;
+      showLevel(lv, true);
+    });
+  });
+
+  document.querySelectorAll('[data-open-passage]').forEach(function(b){
+    b.addEventListener('click', function(){
+      var pid = b.getAttribute('data-open-passage');
+      location.hash = 'p=' + pid;
+      showPassage(pid, true);
+    });
+  });
+
+  document.querySelectorAll('[data-back-home]').forEach(function(b){
+    b.addEventListener('click', function(){ location.hash = ''; showHome(true); });
+  });
+
+  document.querySelectorAll('[data-back-level]').forEach(function(b){
+    b.addEventListener('click', function(){
+      var page = b.closest('.passage-page');
+      var lv = page.getAttribute('data-lv');
+      location.hash = 'level=' + lv;
+      showLevel(lv, true);
+    });
+  });
+
+  /* 篇内上一篇/下一篇 */
+  document.querySelectorAll('.passage-page').forEach(function(page){
+    var lv = page.getAttribute('data-lv');
+    var pid = page.getAttribute('data-pid');
+    var sibs = pageEls.filter(function(el){ return el.getAttribute('data-lv') === lv; });
+    var idx = sibs.findIndex(function(el){ return el.getAttribute('data-pid') === pid; });
+    var prev = page.querySelector('[data-prev-passage]');
+    var next = page.querySelector('[data-next-passage]');
+    if (prev) prev.addEventListener('click', function(){
+      if (idx > 0) { var id = sibs[idx - 1].getAttribute('data-pid'); location.hash = 'p=' + id; showPassage(id, true); }
+    });
+    if (next) next.addEventListener('click', function(){
+      if (idx < sibs.length - 1) { var id = sibs[idx + 1].getAttribute('data-pid'); location.hash = 'p=' + id; showPassage(id, true); }
+    });
+  });
+
+  window.addEventListener('hashchange', route);
+  route();
 });
 `;
 
