@@ -279,18 +279,6 @@ ${script ? `${inlineData(keys, dataExtra, audio)}<script>${script}</script>` : '
    1. 首页
    ========================================================== */
 function buildHome() {
-  const themeCards = THEME_SORTED.slice(0, 6).map((t) => `<a class="card" href="themes/${t.id}.html">
-    <div class="card-ico">${t.icon}</div>
-    <h3>${esc(t.name)}</h3>
-    <div class="meta">${t.n} 个词条 · ${esc(t.group)}</div>
-  </a>`).join('');
-
-  const grammarCards = GRAMMAR.slice(0, 6).map((g) => `<a class="card" href="grammar/${g.id}.html">
-    <div class="card-ico purple">${g.icon}</div>
-    <h3>${esc(g.name)}</h3>
-    <div class="meta">${g.topics.length} 个考点 · ${g.topics.reduce((s, t) => s + t.traps.length, 0)} 条易错对比</div>
-  </a>`).join('');
-
   const body = `
 <section class="hero">
   <div class="hero-split">
@@ -363,7 +351,7 @@ function buildHome() {
   </div>
 </section>
 
-<!-- ========== 为什么背了单词还是提不上去：三个问题 → 三个机制 ========== -->
+<!-- ========== 为什么背了单词还是提不上去：三个问题 → 三个机制 + 与普通题库的区别 ========== -->
 <section class="section reveal" id="why">
   <div class="section-head">
     <div class="section-head-left">
@@ -410,17 +398,8 @@ function buildHome() {
       </div>
     </div>
   </div>
-</section>
 
-<!-- ========== 与普通题库的区别 ========== -->
-<section class="section reveal" id="diff">
-  <div class="section-head">
-    <div class="section-head-left">
-      <span class="kicker">与普通题库的区别</span>
-      <h2>同样是刷题，练完拿到的东西不一样</h2>
-    </div>
-  </div>
-  <div class="tbl-wrap">
+  <div class="tbl-wrap" style="margin-top:32px">
     <table class="gtable diff-table">
       <thead><tr><th style="width:20%"></th><th style="width:36%">普通题库</th><th style="width:44%">本站</th></tr></thead>
       <tbody>
@@ -463,20 +442,26 @@ function buildHome() {
   </div>
 </section>
 
-<!-- ========== 卷面覆盖地图：一次讲清 60 分怎么分、每一块在哪练、哪块本站不含 ========== -->
-<section class="section reveal">
+<!-- ========== 60 分地图：卷面分值 → 四条主线 → 提分优先级，三合一 ========== -->
+<section class="section reveal" id="map">
   <div class="section-head">
     <div class="section-head-left">
-      <span class="kicker">卷面覆盖地图</span>
+      <span class="kicker">卷面地图</span>
       <h2>北京卷 100 分，本站覆盖笔试 60 分</h2>
       <span class="sub">每一块都标出对应分值、练什么、练多少；不含的部分也写清楚原因，不制造「全都包了」的错觉</span>
     </div>
   </div>
   <div class="coverage-list">
+    <a class="coverage-row on" href="quiz.html">
+      <span class="cv-score cv-unit-word">${STATS.total}</span>
+      <span class="cv-part">词汇地基</span>
+      <span class="cv-note">四条主线的第一环 · 词不认识，后面全卡住<span class="cv-own">本站：${STATS.total} 条课标词条（核心 ${STATS.core} / 中频 ${STATS.mid} / 拓展 ${STATS.ext}）+ ${STATS.phrases} 条高频短语，${THEME_SORTED.length} 个主题语境</span></span>
+      <span class="cv-flag">✓ 已覆盖</span>
+    </a>
     <a class="coverage-row on" href="review.html">
       <span class="cv-score">12</span>
       <span class="cv-part">单项填空</span>
-      <span class="cv-note">卷面 12 小题 × 1 分 · 考语法规则与词汇辨析<span class="cv-own">本站：${Q_STATS.total} 道精练，覆盖全部 ${GRAMMAR_STATS.topics} 个考点</span></span>
+      <span class="cv-note">卷面 12 小题 × 1 分 · 考语法规则与词汇辨析<span class="cv-own">本站：${Q_STATS.total} 道精练，覆盖全部 ${GRAMMAR_STATS.topics} 个考点 · ${GRAMMAR_STATS.families} 大语法族 ${GRAMMAR_STATS.traps} 组易错对比</span></span>
       <span class="cv-flag">✓ 已覆盖</span>
     </a>
     <a class="coverage-row on" href="reading/cz.html">
@@ -488,7 +473,7 @@ function buildHome() {
     <a class="coverage-row on" href="reading/a.html">
       <span class="cv-score">26</span>
       <span class="cv-part">阅读理解</span>
-      <span class="cv-note">卷面 13 小题 × 2 分 · 单题分值最高<span class="cv-own">本站：${PASSAGES.length} 篇 ${READ_Q} 题，应用文/记叙文/说明文/议论文分读法</span></span>
+      <span class="cv-note">卷面 13 小题 × 2 分 · 单题分值最高<span class="cv-own">本站：${PASSAGES.length} 篇 ${READ_Q} 题，应用文/记叙文/说明文/议论文分读法，每题三层解析</span></span>
       <span class="cv-flag">✓ 已覆盖</span>
     </a>
     <a class="coverage-row on" href="reading.html">
@@ -500,7 +485,7 @@ function buildHome() {
     <a class="coverage-row on" href="writing.html">
       <span class="cv-score">10</span>
       <span class="cv-part">书面表达</span>
-      <span class="cv-note">卷面 1 题 10 分 · 要求 80–100 词<span class="cv-own">本站：三条提分线 + 五步法 + ${WRITING_STRUCTURES.length} 类模板 + ${WRITING_PHRASE_N} 句句型库 + ${WRITING_N} 篇范文</span></span>
+      <span class="cv-note">卷面 1 题 10 分 · 要求 80–100 词<span class="cv-own">本站：五步法 + ${WRITING_STRUCTURES.length} 类模板 + ${WRITING_PHRASE_N} 句句型库 + ${WRITING_TRAPS.length} 个失分点 + ${WRITING_N} 篇范文</span></span>
       <span class="cv-flag">✓ 已覆盖</span>
     </a>
     <div class="coverage-row off">
@@ -515,107 +500,11 @@ function buildHome() {
     <span class="cv-bar"><i style="width:60%"></i></span>
     <span>60%</span>
   </div>
-</section>
 
-<!-- ========== 四条主线：词汇 → 语法 → 篇章 → 写作，每条对应卷面上的真实分值 ========== -->
-<section class="section reveal">
-  <div class="section-head">
-    <div class="section-head-left">
-      <span class="kicker">四条主线</span>
-      <h2>先打地基，再练语篇，最后能写</h2>
-      <span class="sub">顺序不是随便排的：词不认识读不懂句，语法不过关写不对句，篇章不练拿不到 38 分，写作不练丢满 10 分</span>
-    </div>
-  </div>
-  <div class="grid c2 track-grid">
-    <a class="card track-card" href="quiz.html">
-      <div class="track-head">
-        <span class="track-ico blue">📚</span>
-        <div>
-          <span class="track-step">主线一 · 词汇</span>
-          <h3>先把词认熟，卷面才读得动</h3>
-        </div>
-      </div>
-      <p class="desc">${STATS.total} 条课标词条（含 ${STATS.phrases} 条高频短语），按语料词频分三档。遗忘曲线自动排期，答错 10 分钟复现，先拿下卷面最常出现的 ${STATS.core} 个核心高频词。</p>
-      <div class="track-meta">
-        <span>核心 ${STATS.core}</span><span>中频 ${STATS.mid}</span><span>拓展 ${STATS.ext}</span><span>${THEME_SORTED.length} 个主题语境</span>
-      </div>
-      <span class="track-go">背单词 · 全量词表 →</span>
-    </a>
-    <a class="card track-card" href="grammar.html">
-      <div class="track-head">
-        <span class="track-ico purple">📐</span>
-        <div>
-          <span class="track-step">主线二 · 语法</span>
-          <h3>把规则用对，单选和写作都不丢</h3>
-        </div>
-      </div>
-      <p class="desc">${GRAMMAR_STATS.families} 大语法族、${GRAMMAR_STATS.topics} 个考点，从名词冠词、九种时态、被动语态、非谓语到三大从句与情景交际。每考点配规则表 + ${GRAMMAR_STATS.traps} 组 ✕ 错句 / ✓ 对句对比。</p>
-      <div class="track-meta">
-        <span>${GRAMMAR_STATS.topics} 考点</span><span>${GRAMMAR_STATS.traps} 条易错对比</span><span>${GRAMMAR_STATS.examples} 个例句</span><span>${Q_STATS.total} 道精练</span>
-      </div>
-      <span class="track-go">语法体系 · 考点刷题 →</span>
-    </a>
-    <a class="card track-card" href="reading.html">
-      <div class="track-head">
-        <span class="track-ico ok">📖</span>
-        <div>
-          <span class="track-step">主线三 · 篇章</span>
-          <h3>在语篇里判断，拿下 38 分</h3>
-        </div>
-      </div>
-      <p class="desc">阅读 ${PASSAGES.length} 篇 ${READ_Q} 题（A/B/C/D 四类各配读法卡）+ 阅读表达 ${EXPRESS_Q} 题，另设<b>完形填空独立模块</b>（${CLOZE.length} 篇 ${CLOZE_N} 空）。每题给<b>原文定位句</b>、<b>为什么对</b>、<b>错项为什么错</b>三层解析。</p>
-      <div class="track-meta">
-        <span>${PASSAGE_N} 篇</span><span>${READING_ITEM_N} 题</span><span>A–D 四类</span><span>完形独立</span><span>对应 38 分</span>
-      </div>
-      <span class="track-go">学阅读 · 三级分页 →</span>
-    </a>
-    <a class="card track-card" href="writing.html">
-      <div class="track-head">
-        <span class="track-ico gold">✒️</span>
-        <div>
-          <span class="track-step">主线四 · 写作</span>
-          <h3>把想法写出来，10 分稳拿</h3>
-        </div>
-      </div>
-      <p class="desc">唯一能完全由自己控制得分的题型。先讲<b>五步写作法</b>（审题 → 定时态人称 → 搭框架 → 套句式 → 查三样），再给 ${WRITING_STRUCTURES.length} 类文体模板、${WRITING_PHRASE_N} 句句型库与 ${WRITING_TRAPS.length} 个高频失分点，最后配 <b>${WRITING_N} 篇完整高分范文</b>逐句拆解。</p>
-      <div class="track-meta">
-        <span>${WRITING_STRUCTURES.length} 类模板</span><span>${WRITING_PHRASE_N} 句句型</span><span>${WRITING_TRAPS.length} 个失分点</span><span>${WRITING_N} 篇范文</span><span>对应 10 分</span>
-      </div>
-      <span class="track-go">书面表达 · 方法与练习 →</span>
-    </a>
-  </div>
-</section>
-
-<section class="section reveal">
-  <div class="section-head">
-    <div class="section-head-left">
-      <span class="kicker">高频场景词库</span>
-      <h2>按 ${THEME_SORTED.length} 个主题语境成组记词</h2>
-      <span class="sub">北京卷阅读与写作总是围绕同一主题出词，按主题记效率翻倍</span>
-    </div>
-    <a class="btn sm soft" href="themes/index.html">查看全部 ${THEME_SORTED.length} 个主题 →</a>
-  </div>
-  <div class="grid c3">${themeCards}</div>
-</section>
-
-<section class="section reveal">
-  <div class="section-head">
-    <div class="section-head-left">
-      <span class="kicker">语法避坑图谱</span>
-      <h2>按 ${GRAMMAR_STATS.families} 大语法族逐个击破</h2>
-      <span class="sub">直击单项填空与书面表达的丢分重灾区</span>
-    </div>
-    <a class="btn sm soft" href="grammar.html">进入完整语法体系 →</a>
-  </div>
-  <div class="grid c3">${grammarCards}</div>
-</section>
-
-<!-- ========== 提分路径：60 分不是均匀分布的 ========== -->
-<section class="section reveal" id="tiers">
-  <div class="section-head">
+  <div class="section-head" style="margin-top:44px">
     <div class="section-head-left">
       <span class="kicker">提分路径</span>
-      <h2>笔试 60 分不是均匀分布的</h2>
+      <h2>60 分不是均匀分布的</h2>
       <span class="sub">三块的性价比完全不同：送分区靠词汇，中档区靠语法与读法，高分区分在阅读推断与写作亮点上</span>
     </div>
   </div>
@@ -644,7 +533,7 @@ function buildHome() {
   </div>
 </section>
 
-<!-- ========== 三步上手 ========== -->
+<!-- ========== 从这里开始：三步上手 + 底部 CTA ========== -->
 <section class="section reveal" id="start">
   <div class="section-head">
     <div class="section-head-left">
@@ -688,63 +577,23 @@ function buildHome() {
   </div>
 </section>
 
-<!-- ========== 支撑工具：不产生新知识，但决定每天能不能坚持 ========== -->
-<section class="section reveal">
+<!-- ========== 边界与常见问题：边界并入 FAQ 上方，FAQ 默认全部折叠 ========== -->
+<section class="section reveal" id="faq">
   <div class="section-head">
     <div class="section-head-left">
-      <span class="kicker">支撑工具</span>
-      <h2>练完之后，靠这三样把进度管住</h2>
-      <span class="sub">错题不清就会一直错，数据不看就不知道差在哪，口径不明就不知道哪些该信</span>
-    </div>
-  </div>
-  <div class="grid c3">
-    <a class="card tool-card" href="wrong.html">
-      <div class="card-ico rose">🎯</div>
-      <h3>错题本</h3>
-      <p class="desc">单词与语法题的错题自动收纳，按收录时间倒序混排成一个列表、分页浏览。单词需连对 2 次才移出，语法题答对一次即出册，并按遗忘曲线排期重做。</p>
-      <div class="meta" style="margin-top:12px">单词 + 语法错题一处管理 · 可重做</div>
-    </a>
-    <a class="card tool-card" href="content.html">
-      <div class="card-ico gold">📋</div>
-      <h3>内容说明</h3>
-      <p class="desc">词表从哪来、题是怎么出的、哪些口径是启发式推断、有哪些已知限制——都写在这里，方便判断哪些可以信、哪些要自己再核对。</p>
-      <div class="meta" style="margin-top:12px">数据来源 · 口径说明 · 已知限制</div>
-    </a>
-    <a class="card tool-card" href="stats.html">
-      <div class="card-ico ok">📊</div>
-      <h3>学习数据</h3>
-      <p class="desc">已掌握词条、记忆库规模、7 日学习量、各考点正确率诊断一目了然。学习记录存本地，支持一键导出档案换设备恢复。</p>
-      <div class="meta" style="margin-top:12px">7 日趋势 · 考点诊断 · 档案备份</div>
-    </a>
-  </div>
-</section>
-
-<!-- ========== 边界：明确不做什么 ========== -->
-<section class="section reveal" id="honest">
-  <div class="section-head">
-    <div class="section-head-left">
-      <span class="kicker">边界</span>
-      <h2>本站不做什么</h2>
+      <span class="kicker">边界与常见问题</span>
+      <h2>本站不做什么，以及你可能想了解的</h2>
       <span class="sub">把做不到的部分写清楚，比含糊说「全都覆盖」更值得信任</span>
     </div>
   </div>
-  <div class="honest-list">
+  <div class="honest-list" style="margin-bottom:26px">
     <div><b>不含听说机考 40 分</b><span>需要专用音频素材与录音评测，纯静态站做不了，建议用北京教育考试院官方体验系统。</span></div>
     <div><b>不做作文自动批改</b><span>AI 判作文一旦判错，信任就崩了。给方法、模板与范文，写完对照评分要点自查。</span></div>
     <div><b>不做视频课</b><span>只做「练」这一环，不做「讲」。想听课请配合学校老师或网课。</span></div>
     <div><b>题目为原创</b><span>按北京卷题型结构编写，不是真题搬运，避免版权问题与网络流传版本的错误。</span></div>
   </div>
-</section>
-
-<section class="section reveal" id="faq">
-  <div class="section-head">
-    <div class="section-head-left">
-      <span class="kicker">常见问题</span>
-      <h2>关于北京中考领航，你可能想了解</h2>
-    </div>
-  </div>
-  <div class="faq-list">
-    <details class="faq-item" open>
+  <div class="faq-list cols2">
+    <details class="faq-item">
       <summary>这套系统适合几年级？北京中考英语有什么特点？</summary>
       <p>适合初中 7–9 年级、准备参加北京市初中学业水平考试（中考）的学生。北京卷最鲜明的特点是<b>「笔试 + 听说机考」两考分离</b>，英语总分 100 分里听说机考单独占 40 分，且通常有两次机会取高分——这意味着<b>笔试部分的每一分都更值钱</b>。本站把笔试 60 分的五类题型全部做成可练的题目：词汇与语法打底，完形、阅读、阅读表达、写作按题型专项突破。</p>
     </details>
@@ -2792,229 +2641,388 @@ document.querySelector('#resetBtn').addEventListener('click', () => {
 function buildWrong() {
   const body = `
 <div class="page-head">
-  <div class="crumb"><a href="index.html">首页</a> / 错题本</div>
-  <h1>错题本</h1>
-  <p class="lede">单词与语法题的错题都收在这里，<b>按收录时间倒序混排成一个列表</b>，分页浏览。单词需连对 2 次才移出；语法题答对一次即出册，并按遗忘曲线排期复习。<br><span style="color:var(--text-3);font-size:.92em">阅读、完形、阅读表达的错题不收录——这些题脱离原文没法单独复习，回对应篇章页重做。</span></p>
+  <div class="crumb"><a href="index.html">首页</a> / 智能错题本</div>
+  <h1>智能错题本</h1>
+  <p class="lede">做错的<b>单词和语法题</b>都会自动收录。单词需<b>连续答对 2 次</b>才移出，语法题答对一次即出册。可以搜索、按每页 10 / 20 / 50 条翻页、整页重做，也能一键打印 A4 错题纸做纸质复盘。<br><span style="color:var(--text-3);font-size:.92em">阅读、完形、阅读表达的错题不收录——这些题脱离原文没法单独复习，回对应篇章页重做。</span></p>
 </div>
 
 <section class="section" style="margin-top:22px">
-  <div class="kv">
-    <div class="k"><b id="kWn" style="color:var(--rose)">0</b><span>单词错题</span></div>
-    <div class="k"><b id="kGn" style="color:var(--rose)">0</b><span>语法错题</span></div>
-    <div class="k"><b id="kAll">0</b><span>合计</span></div>
-  </div>
-</section>
-
-<section class="section" style="margin-top:24px">
-  <div class="section-head">
-    <div class="section-head-left">
-      <h2 style="font-size:1.15rem">全部错题</h2>
-      <span class="sub">最近错的排在最前 · 点「重做」立即重练，答对即移出</span>
-    </div>
-    <div style="display:flex;gap:8px;flex-wrap:wrap">
-      <button class="btn ghost sm" id="clearW">清空单词错题</button>
-      <button class="btn ghost sm" id="clearG">清空语法错题</button>
-    </div>
+  <div class="chips" id="tabs">
+    <button class="chip" data-tab="word">单词错题 <span id="nWord">0</span></button>
+    <button class="chip" data-tab="gram">语法错题 <span id="nGram">0</span></button>
   </div>
   <div class="toolbar" style="margin-top:16px">
-    <div class="chips" id="kindChips">
-      <button class="chip on" data-kind="all">全部 <b id="cAll">0</b></button>
-      <button class="chip" data-kind="word">单词 <b id="cWord">0</b></button>
-      <button class="chip" data-kind="grammar">语法题 <b id="cGram">0</b></button>
-    </div>
+    <input class="field" id="wq" type="search" placeholder="在错题本里搜索单词、释义或题干…" autocomplete="off">
+    <select class="field" id="psize" style="max-width:130px;padding:8px 10px;font-size:.84rem">
+      <option value="10">每页 10 条</option>
+      <option value="20">每页 20 条</option>
+      <option value="50">每页 50 条</option>
+    </select>
+    <button class="btn primary sm" id="redoBtn">重做本页</button>
+    <button class="btn soft sm" id="printBtn">🖨️ 打印错题纸</button>
+    <button class="btn ghost sm" id="clearBtn">清空本类</button>
   </div>
-  <div id="mixed"></div>
+  <div class="note" id="wbHint" style="margin-bottom:16px">共 <b>0</b> 条</div>
+  <div id="wbList"></div>
+  <div class="pager" id="wbPager"></div>
+  <div class="empty" id="wbEmpty" style="display:none">
+    <b>🎉 错题本是空的</b>去<a href="quiz.html">背单词</a>或<a href="review.html">练语法</a>，做错的会自动收进来方便复盘
+  </div>
 </section>
 
-<section class="section" style="margin-top:28px">
-  <div id="redoMount"></div>
+<section class="section" id="redoZone" style="display:none">
+  <div class="section-head">
+    <div class="section-head-left">
+      <span class="kicker">重做</span>
+      <h2 style="font-size:1.15rem">本页错题重做</h2>
+      <span class="sub" id="redoInfo"></span>
+    </div>
+  </div>
+  <div id="redoHost"></div>
+</section>
+
+<section class="section" id="printZone">
+  <div id="printList" class="print-list"></div>
 </section>
 `;
   const script = `
 ZK.ready(function(){
   var WORDS = ZK_DATA.WORDS;
   var Q = ZK_DATA.QUESTIONS;
-  var PAGE_SIZE = 10;
+  var GRAMMAR = ZK_DATA.GRAMMAR;
 
-  var byWord = {};
-  WORDS.forEach(function(w){ byWord[w.w.toLowerCase()] = w; });
-  var byQ = {};
-  Q.forEach(function(q){ byQ[q.id] = q; });
+  var WBYW = new Map(WORDS.map(function(w){ return [w.w.toLowerCase(), w]; }));
+  var QBYID = new Map(Q.map(function(q){ return [q.id, q]; }));
+  var TNAME = new Map();
+  GRAMMAR.forEach(function(g){ g.topics.forEach(function(t){ TNAME.set(t.id, t.name); }); });
 
-  /* 旧版本把阅读、完形、阅读表达也收进了错题本（id 形如 s1-a-3 / s1-a-e2 / cloze-1-2）。
+  /* 旧版本把阅读、完形、阅读表达也收进了错题本（id 形如 s1-a-3 / cloze-1-2）。
      这些题脱离原文没法复习，加载时一次性剪掉，之后只收语法题。 */
   var validQ = {};
   Q.forEach(function(q){ validQ[q.id] = 1; });
   ZK.pruneWrongBook(Object.keys(validQ));
 
-  var kind = 'all', page = 0;
+  var PSIZE_KEY = 'zk-wb-psize';
+  var PAGE_SIZE = parseInt(localStorage.getItem(PSIZE_KEY) || '10', 10);
+  if ([10, 20, 50].indexOf(PAGE_SIZE) < 0) PAGE_SIZE = 10;
 
-  function collect(){
-    var items = [];
-    var wb = ZK.wordBook();
-    Object.keys(wb).forEach(function(k){
-      var w = byWord[k];
-      if (!w) return;
-      items.push({ kind:'word', at: (wb[k] && wb[k].at) || 0, word:w, rec: wb[k] });
+  /* ?tab=gram 可直接打开语法错题，便于从「练语法」页的错题入口跳进来 */
+  var tabParam = new URLSearchParams(location.search).get('tab');
+  var tab = (tabParam === 'gram' || tabParam === 'word') ? tabParam : 'word';
+  var page = 0, query = '';
+
+  /* ---------- 数据收集 ---------- */
+  function wordItems(){
+    return ZK.wordBookList().map(function(x){
+      return { kind:'word', key:x.w, rec:x, meta: WBYW.get(x.w) || {} };
     });
-    ZK.wrongIds().forEach(function(id){
-      var q = byQ[id];
-      if (!q) return;
-      items.push({ kind:'grammar', at: ZK.wrongAt(id), q:q });
-    });
-    items.sort(function(a, b){ return (b.at || 0) - (a.at || 0); });
-    return items;
+  }
+  function gramItems(){
+    return ZK.wrongIds().map(function(id){
+      var q = QBYID.get(id);
+      if (!q) return null;
+      return { kind:'gram', key:id, at: ZK.wrongAt(id), q:q, topicName: TNAME.get(q.topic) || '' };
+    }).filter(Boolean);
+  }
+  function currentItems(){
+    var arr = tab === 'word' ? wordItems() : gramItems();
+    if (query) {
+      var t = query.toLowerCase();
+      arr = arr.filter(function(it){
+        var hay = it.kind === 'word'
+          ? (it.key + ' ' + (it.meta.zh||'') + ' ' + (it.meta.posZh||''))
+          : (it.q.stem + ' ' + (it.q.why||'') + ' ' + it.topicName);
+        return hay.toLowerCase().indexOf(t) >= 0;
+      });
+    }
+    return arr;
   }
 
+  /* ---------- 行渲染 ---------- */
   function wordRow(it){
-    var w = it.word, r = it.rec || {};
-    return '<div class="wrow" data-w="'+ZK.esc(w.w)+'">' +
-      '<span class="w-cell"><button class="w-say" data-say="'+ZK.esc(w.w)+'" title="朗读">🔊</button>' +
-      '<span class="w">'+ZK.esc(w.w)+(w.ph?'<span class="ph">/'+ZK.esc(w.ph)+'/</span>':'')+'</span></span>' +
-      '<span class="pos">'+ZK.esc(w.posZh||'')+'</span>' +
-      '<span class="zh">'+ZK.esc(w.zh)+'</span>' +
-      '<span class="w-right"><span class="flag tag-b3">错 '+(r.wrong||1)+' 次</span></span></div>';
+    var m = it.meta;
+    var origWord = m.w || it.key;
+    var right = it.rec.right || 0;
+    return '<div class="wrow wb-row" data-key="'+ZK.esc(it.key)+'">' +
+      '<span class="w-cell">' +
+        '<button class="w-say" data-say="'+ZK.esc(origWord)+'" title="听英音">🔊</button>' +
+        '<span class="w">'+ZK.esc(origWord)+(m.ph?'<span class="ph">/'+ZK.esc(m.ph)+'/</span>':'')+'</span>' +
+      '</span>' +
+      '<span class="pos">'+ZK.esc(m.posZh||'')+'</span>' +
+      '<span class="zh">'+ZK.esc(m.zh||'（无释义）')+'</span>' +
+      '<span class="flag">错 '+(it.rec.wrong||1)+' 次 · 连对 '+right+'/'+ZK.MASTER_STREAK+'</span>' +
+      '<span class="wb-actions"><button class="btn xs" data-master="'+ZK.esc(it.key)+'">✓ 已掌握</button></span>' +
+    '</div>';
   }
 
-  function qCard(it){
+  function gramRow(it){
     var q = it.q;
-    var stem = ZK.esc(q.stem).replace(/___/g, '<span class="blank">　</span>');
+    var typeName = q.type === 'correct' ? '改错' : q.type === 'fill' ? '语法填空' : '单项填空';
     var ans = q.type === 'fill' ? q.answer : (q.options ? q.options[q.answer] : '');
-    var opts = q.options
-      ? '<div class="note" style="margin-top:8px">选项：' + q.options.map(function(o,k){ return 'ABCD'[k]+'. '+ZK.esc(o); }).join(' · ') + '</div>'
-      : '';
-    return '<div class="card wrong-card" style="margin-bottom:12px;padding:18px 20px">' +
-      '<div class="qstem" style="font-size:.95rem;margin-bottom:0">'+stem+'</div>' +
-      opts +
-      '<div class="note" style="margin-top:6px;color:var(--ok)">参考答案：'+ZK.esc(ans)+'</div>' +
-      '<div class="note" style="margin-top:6px">'+ZK.esc(q.why)+'</div>' +
-      '<div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap">' +
-      '<button class="btn primary sm" data-redo="'+ZK.esc(q.id)+'">重做这题</button>' +
-      '<button class="btn ghost sm" data-drop="'+ZK.esc(q.id)+'">移出错题本</button>' +
-      '</div></div>';
+    return '<div class="wb-gram" data-key="'+ZK.esc(it.key)+'">' +
+      '<div class="qmeta">' +
+        '<span class="qtype">'+typeName+'</span>' +
+        '<span class="flag">'+ZK.esc(it.topicName)+'</span>' +
+      '</div>' +
+      '<div class="wb-stem">'+ZK.esc(q.stem).replace(/___/g,'<span class="blank">　</span>')+'</div>' +
+      '<div class="wb-actions"><button class="btn xs" data-master="'+ZK.esc(it.key)+'">✓ 已掌握</button></div>' +
+      (q.options ? '<div class="wb-opts">'+q.options.map(function(o,k){ return '<span class="wb-opt">'+'ABCD'[k]+'. '+ZK.esc(o)+'</span>'; }).join('')+'</div>' : '') +
+      '<div class="wb-ans"><b>正确答案：</b><span>'+ZK.esc(ans)+'</span></div>' +
+      '<div class="wb-why">'+ZK.esc(q.why)+'</div>' +
+    '</div>';
   }
 
-  function pagerHtml(pageNo, total){
-    var h = '<div class="pager">';
-    h += '<button data-pg="'+(pageNo-1)+'"'+(pageNo===0?' disabled':'')+'>‹</button>';
-    var pages = [];
-    if (total <= 9) { for (var i=0;i<total;i++) pages.push(i); }
-    else {
-      pages = [0];
-      if (pageNo > 2) pages.push('…');
-      for (var j=Math.max(1,pageNo-1); j<=Math.min(total-2,pageNo+1); j++) pages.push(j);
-      if (pageNo < total-3) pages.push('…');
-      pages.push(total-1);
-    }
-    pages.forEach(function(p){
-      if (p === '…') h += '<span class="pager dots">…</span>';
-      else h += '<button data-pg="'+p+'"'+(p===pageNo?' class="on"':'')+'>'+(p+1)+'</button>';
-    });
-    h += '<button data-pg="'+(pageNo+1)+'"'+(pageNo===total-1?' disabled':'')+'>›</button>';
-    h += '</div>';
-    return h;
+  /* ---------- 打印区（全部条目，不受分页限制） ---------- */
+  function drawPrint(){
+    var items = currentItems();
+    var host = document.getElementById('printList');
+    if (!items.length) { host.innerHTML = '<div class="empty"><b>当前标签页没有错题</b>没有可打印的内容</div>'; return; }
+    var title = tab === 'word' ? '单词错题' : '语法错题';
+    host.innerHTML = '<div class="print-head"><b>北京中考领航 · 智能错题本</b>' +
+      '<span>'+title+' · 共 '+items.length+' 条 · '+new Date().toLocaleDateString('zh-CN')+'</span></div>' +
+      (tab === 'word'
+        ? '<div class="wordlist">'+items.map(wordRow).join('')+'</div>'
+        : items.map(gramRow).join(''));
   }
 
+  /* ---------- 主渲染 ---------- */
   function draw(){
-    var all = collect();
-    var nWord = all.filter(function(x){ return x.kind === 'word'; }).length;
-    var nGram = all.length - nWord;
-
-    document.getElementById('kWn').textContent = nWord;
-    document.getElementById('kGn').textContent = nGram;
-    document.getElementById('kAll').textContent = all.length;
-    document.getElementById('cAll').textContent = all.length;
-    document.getElementById('cWord').textContent = nWord;
-    document.getElementById('cGram').textContent = nGram;
-
-    var list = kind === 'all' ? all : all.filter(function(x){ return x.kind === kind; });
-    var host = document.getElementById('mixed');
-
-    if (!list.length) {
-      host.innerHTML = all.length
-        ? '<div class="empty"><b>这一类暂时没有错题</b>换个筛选看看，或者去<a href="quiz.html">背单词</a>、<a href="review.html">练语法</a></div>'
-        : '<div class="empty"><b>错题本还是空的</b>去<a href="quiz.html">背单词</a>或<a href="review.html">练语法</a>，答错的会自动收进来</div>';
-      return;
-    }
-
-    var total = Math.ceil(list.length / PAGE_SIZE);
+    var items = currentItems();
+    var all = tab === 'word' ? wordItems() : gramItems();
+    var total = Math.max(1, Math.ceil(items.length / PAGE_SIZE));
     if (page >= total) page = total - 1;
     if (page < 0) page = 0;
-    var slice = list.slice(page * PAGE_SIZE, (page + 1) * PAGE_SIZE);
+    var slice = items.slice(page * PAGE_SIZE, (page + 1) * PAGE_SIZE);
 
-    /* 单词行连着排进同一个 .wordlist 容器，题目卡片夹在中间时先收口再开新的 */
-    var html = '', open = false;
-    slice.forEach(function(it){
-      if (it.kind === 'word') {
-        if (!open) { html += '<div class="wordlist" style="margin-bottom:12px">'; open = true; }
-        html += wordRow(it);
-      } else {
-        if (open) { html += '</div>'; open = false; }
-        html += qCard(it);
+    document.getElementById('nWord').textContent = ZK.wordBookCount();
+    document.getElementById('nGram').textContent = gramItems().length;
+
+    var host = document.getElementById('wbList');
+    var empty = document.getElementById('wbEmpty');
+    var pager = document.getElementById('wbPager');
+    var redoBtn = document.getElementById('redoBtn');
+    var clearBtn = document.getElementById('clearBtn');
+    var printBtn = document.getElementById('printBtn');
+    var hint = document.getElementById('wbHint');
+
+    if (!items.length) {
+      host.innerHTML = ''; pager.innerHTML = '';
+      empty.style.display = '';
+      redoBtn.disabled = true; clearBtn.disabled = true; printBtn.disabled = true;
+      hint.innerHTML = all.length
+        ? '共 <b>0</b> 条匹配（已筛选，本类总计 ' + all.length + ' 条）'
+        : '共 <b>0</b> 条';
+      drawPrint();
+      return;
+    }
+    empty.style.display = 'none';
+    redoBtn.disabled = false; clearBtn.disabled = false; printBtn.disabled = false;
+    hint.innerHTML = '共 <b>' + items.length + '</b> 条' +
+      (items.length !== all.length ? '（已筛选，本类总计 ' + all.length + ' 条）' : '') +
+      ' · 第 ' + (page + 1) + ' / ' + total + ' 页';
+
+    host.innerHTML = tab === 'word'
+      ? '<div class="wordlist">' + slice.map(wordRow).join('') + '</div>'
+      : slice.map(gramRow).join('');
+
+    var html = '<button data-pg="' + (page - 1) + '"' + (page === 0 ? ' disabled' : '') + '>‹</button>';
+    for (var i = 0; i < total; i++) {
+      if (total > 9 && i > 1 && i < total - 2 && Math.abs(i - page) > 1) {
+        if (i === 2 || i === total - 3) html += '<span class="pager dots">…</span>';
+        continue;
       }
+      html += '<button data-pg="' + i + '"' + (i === page ? ' class="on"' : '') + '>' + (i + 1) + '</button>';
+    }
+    html += '<button data-pg="' + (page + 1) + '"' + (page === total - 1 ? ' disabled' : '') + '>›</button>';
+    pager.innerHTML = html;
+
+    pager.querySelectorAll('[data-pg]').forEach(function(b){
+      b.addEventListener('click', function(){
+        var p = parseInt(b.getAttribute('data-pg'), 10);
+        if (!isNaN(p)) { page = p; draw(); window.scrollTo({ top: 180, behavior: 'smooth' }); }
+      });
     });
-    if (open) html += '</div>';
-
-    html += pagerHtml(page, total);
-    html += '<div class="note" style="margin-top:14px">共 <b>' + list.length + '</b> 条' +
-      (list.length !== all.length ? '（已筛选，总计 ' + all.length + '）' : '') +
-      ' · 第 ' + (page + 1) + ' / ' + total + ' 页</div>';
-    host.innerHTML = html;
-
     host.querySelectorAll('[data-say]').forEach(function(b){
-      b.addEventListener('click', function(){ ZK.playWord(b.getAttribute('data-say'), { times:1 }); });
-    });
-    host.querySelectorAll('[data-pg]').forEach(function(b){
-      b.addEventListener('click', function(){ page = parseInt(b.getAttribute('data-pg'), 10); draw(); });
-    });
-    host.querySelectorAll('[data-redo]').forEach(function(b){
-      b.addEventListener('click', function(){
-        var q = byQ[b.getAttribute('data-redo')];
-        if (!q) return;
-        var mount = document.getElementById('redoMount');
-        mount.innerHTML = '<div class="section-head" style="margin-top:0"><div class="section-head-left"><span class="kicker">重做</span><h2 style="font-size:1.15rem">立即重练这一题</h2></div></div><div id="redoBox"></div>';
-        ZK.quiz({ mount:'#redoBox', questions:[q], shuffle:false,
-          onAnswer: function(){ draw(); },
-          onFinish: function(){ setTimeout(draw, 300); },
-        });
-        mount.scrollIntoView({behavior:'smooth'});
+      b.addEventListener('click', function(e){
+        e.stopPropagation();
+        ZK.playWord(b.getAttribute('data-say'), { times: 1 });
       });
     });
-    host.querySelectorAll('[data-drop]').forEach(function(b){
+    host.querySelectorAll('[data-master]').forEach(function(b){
       b.addEventListener('click', function(){
-        ZK.qClearWrong(b.getAttribute('data-drop'));
-        draw();
+        var key = b.getAttribute('data-master');
+        if (tab === 'word') ZK.wordMaster(key); else ZK.qClearWrong(key);
         ZK.toast('已移出错题本');
+        draw();
       });
     });
+    drawPrint();
   }
 
-  document.querySelectorAll('#kindChips .chip').forEach(function(c){
+  /* ---------- 标签页 / 搜索 / 每页条数 ---------- */
+  /* 高亮与 tab 对齐（含 ?tab=gram 直接进入的情况） */
+  document.querySelectorAll('#tabs .chip').forEach(function(c){
+    c.classList.toggle('on', c.getAttribute('data-tab') === tab);
     c.addEventListener('click', function(){
-      document.querySelectorAll('#kindChips .chip').forEach(function(x){ x.classList.remove('on'); });
+      document.querySelectorAll('#tabs .chip').forEach(function(x){ x.classList.remove('on'); });
       c.classList.add('on');
-      kind = c.getAttribute('data-kind');
+      tab = c.getAttribute('data-tab');
       page = 0;
+      document.getElementById('redoZone').style.display = 'none';
       draw();
     });
   });
 
-  document.getElementById('clearW').addEventListener('click', function(){
-    if (!window.confirm('确定清空全部单词错题？')) return;
-    ZK.wordBookReset(); draw(); ZK.toast('已清空单词错题');
+  document.getElementById('wq').addEventListener('input', function(e){
+    query = e.target.value.trim();
+    page = 0;
+    draw();
   });
-  document.getElementById('clearG').addEventListener('click', function(){
-    if (!window.confirm('确定清空全部语法错题？')) return;
-    ZK.qClearAllWrong(); draw(); ZK.toast('已清空语法错题');
+
+  var psizeSel = document.getElementById('psize');
+  psizeSel.value = String(PAGE_SIZE);
+  psizeSel.addEventListener('change', function(){
+    PAGE_SIZE = parseInt(psizeSel.value, 10);
+    try { localStorage.setItem(PSIZE_KEY, String(PAGE_SIZE)); } catch (e) {}
+    page = 0;
+    draw();
   });
+
+  /* ---------- 打印 ---------- */
+  document.getElementById('printBtn').addEventListener('click', function(){
+    drawPrint();
+    window.print();
+  });
+
+  /* ---------- 清空 ---------- */
+  document.getElementById('clearBtn').addEventListener('click', function(){
+    var label = tab === 'word' ? '单词错题' : '语法错题';
+    if (!window.confirm('确定清空全部' + label + '？此操作不可撤销。')) return;
+    if (tab === 'word') ZK.wordBookReset(); else ZK.qClearAllWrong();
+    page = 0;
+    draw();
+    ZK.toast('已清空' + label);
+  });
+
+  /* ---------- 重做本页 ---------- */
+  document.getElementById('redoBtn').addEventListener('click', function(){
+    var items = currentItems();
+    var slice = items.slice(page * PAGE_SIZE, (page + 1) * PAGE_SIZE);
+    if (!slice.length) return;
+    var zone = document.getElementById('redoZone');
+    zone.style.display = '';
+    document.getElementById('redoInfo').textContent = '本页 ' + slice.length + ' 题 · 答对即推进掌握进度';
+    if (tab === 'word') redoWords(slice); else redoGram(slice);
+    zone.scrollIntoView({ block: 'start', behavior: 'smooth' });
+  });
+
+  function redoWords(slice){
+    var host = document.getElementById('redoHost');
+    var i = 0, done = 0, released = 0;
+    var autoNextTimer = null;
+    var AUTO_NEXT_MS = 780;
+
+    function finish(){
+      ZK.sfx('win');
+      host.innerHTML = '<div class="qcard" style="text-align:center">' +
+        '<div style="font-size:1.45rem;font-weight:700">🎉 本页错词重做完成</div>' +
+        '<div style="color:var(--text-2);margin-top:8px">答对 ' + done + ' / ' + slice.length +
+        ' · 其中 ' + released + ' 个已移出错题本</div>' +
+        '<div style="margin-top:20px"><button class="btn primary" id="rdAgain">返回错题本</button></div></div>';
+      host.querySelector('#rdAgain').addEventListener('click', function(){
+        document.getElementById('redoZone').style.display = 'none';
+        draw();
+      });
+    }
+
+    function step(){
+      clearTimeout(autoNextTimer);
+      autoNextTimer = null;
+      if (i >= slice.length) { finish(); return; }
+
+      var w = slice[i].meta;
+      if (!w || !w.w) { i++; step(); return; }
+      var ds = ZK.pickDistractors(WORDS, w, 3);
+      if (ds.length < 3) { i++; step(); return; }
+      var opts = [w].concat(ds);
+      ZK.shuffle(opts);
+      var ans = opts.indexOf(w);
+
+      host.innerHTML = '<div class="flash-shell">' +
+        '<div class="quiz-top"><div class="quiz-progress"><i style="width:' + (i / slice.length * 100) + '%"></i></div>' +
+        '<span class="quiz-count">' + (i + 1) + ' / ' + slice.length + '</span></div>' +
+        '<div class="fcard" style="justify-content:flex-start;padding-top:30px;min-height:0">' +
+          '<div class="fword" style="font-size:clamp(1.6rem,5vw,2.1rem)">' + ZK.esc(w.w) + '</div>' +
+          '<div style="font-size:.84rem;color:var(--text-3);margin-top:10px">选出正确的中文释义</div></div>' +
+        '<div class="qopts" style="margin-top:14px">' +
+          opts.map(function(o, k){
+            return '<button class="qopt" data-k="' + k + '"><span class="key">' + 'ABCD'[k] + '</span><span>' +
+              ZK.esc(o.zh || '') + '</span></button>';
+          }).join('') +
+        '</div><div id="rfb"></div></div>';
+
+      var answered = false;
+      host.querySelectorAll('.qopt').forEach(function(b){
+        b.addEventListener('click', function(){
+          if (answered) return;
+          answered = true;
+          var k = parseInt(b.getAttribute('data-k'), 10);
+          var ok = k === ans;
+          ZK.sfx(ok ? 'ok' : 'bad');
+          host.querySelectorAll('.qopt').forEach(function(x){
+            var xi = parseInt(x.getAttribute('data-k'), 10);
+            x.classList.add('locked');
+            if (xi === ans) x.classList.add('right');
+            else if (xi === k) x.classList.add('wrong');
+          });
+          var mastered = ZK.wordAttempt(w.w, ok);
+          if (ok) { done++; if (mastered) released++; }
+          var fb = host.querySelector('#rfb');
+          if (ok) {
+            var cur = (ZK.wordBook()[w.w.toLowerCase()] || {});
+            var need = ZK.MASTER_STREAK - (cur.right || 0);
+            fb.innerHTML = '<div class="feedback auto-next"><b>✓ 对了！' +
+              (mastered ? '已移出错题本' : '再对 ' + need + ' 次即移出') + '</b>' +
+              ZK.esc(w.w) + ' · ' + ZK.esc(w.posZh || '') +
+              '<span class="auto-next-hint">即将进入下一题…</span></div>';
+            clearTimeout(autoNextTimer);
+            autoNextTimer = setTimeout(function(){
+              if (!document.body.contains(host)) return;
+              i++; step();
+            }, AUTO_NEXT_MS);
+          } else {
+            fb.innerHTML = '<div class="feedback bad"><b>✕ 正确答案：' + ZK.esc(w.zh) + '</b>' +
+              ZK.esc(w.w) + ' · ' + ZK.esc(w.posZh || '') + '</div>' +
+              '<div class="quiz-actions"><span class="spacer"></span>' +
+              '<button class="btn primary" id="rn">下一题 →</button></div>';
+            fb.querySelector('#rn').addEventListener('click', function(){ i++; step(); });
+          }
+        });
+      });
+    }
+    step();
+  }
+
+  function redoGram(slice){
+    ZK.quiz({
+      mount: '#redoHost',
+      questions: slice.map(function(it){ return it.q; }),
+      shuffle: true,
+      reviewHref: '',
+      onRestart: function(){
+        document.getElementById('redoZone').style.display = 'none';
+        draw();
+      },
+    });
+  }
 
   draw();
 });
 `;
   write('wrong.html', page({
-    title: '错题本',
-    desc: '北京中考英语单词与语法错题本，按收录时间混排成一个列表、分页浏览，支持重做与自动移出。',
-    active: 'wrong', body, script, dataKeys: ['WORDS', 'QUESTIONS'],
+    title: '智能错题本 · 重做与打印复习纸',
+    desc: '自动收纳单词与语法错题，支持搜索、分页、整页重做、英音朗读与 A4 错题纸打印。',
+    active: 'wrong', body, script, dataKeys: ['WORDS', 'QUESTIONS', 'GRAMMAR'],
     audioTexts: WORDS.map((w) => w.w),
   }));
 }

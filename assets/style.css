@@ -380,6 +380,9 @@ a.card:hover { transform: translateY(-3px); box-shadow: var(--shadow-3); border-
 
 /* FAQ 手风琴 */
 .faq-list { display: grid; gap: 10px; }
+/* 折叠态走两列，9 条 FAQ 从 680px 压到约 300px；展开的项占满整行，答案不用挤在半栏里读 */
+.faq-list.cols2 { grid-template-columns: 1fr 1fr; align-items: start; }
+.faq-list.cols2 .faq-item[open] { grid-column: 1 / -1; }
 .faq-item {
   border: 1px solid var(--border); border-radius: var(--r);
   background: var(--surface); overflow: hidden;
@@ -392,6 +395,7 @@ a.card:hover { transform: translateY(-3px); box-shadow: var(--shadow-3); border-
 .faq-item summary::after { content: "+"; font-size: 1.2rem; color: var(--accent); font-weight: 500; transition: transform .2s; }
 .faq-item[open] summary::after { transform: rotate(45deg); }
 .faq-item p { padding: 0 20px 18px; margin: 0; font-size: .9rem; color: var(--text-2); line-height: 1.72; }
+@media (max-width: 760px) { .faq-list.cols2 { grid-template-columns: 1fr; } }
 
 /* ---------------- 单词行 ---------------- */
 .wordlist { border: 1px solid var(--border); border-radius: var(--r); overflow: hidden; background: var(--surface); box-shadow: var(--shadow-1); }
@@ -820,6 +824,23 @@ table.gtable td:first-child { font-weight: 600; }
 .wb-gram .qmeta { grid-column: 1 / -1; margin-bottom: 0; }
 .wb-stem { font-family: var(--en); font-size: 1.02rem; line-height: 1.6; color: var(--text); font-weight: 550; }
 .wb-gram .wb-actions { align-self: start; }
+/* 错题卡片里的选项 / 答案 / 解析：与题目卡片同样信息量，但压得更紧，一页能多看几道 */
+.wb-opts {
+  grid-column: 1 / -1; display: flex; flex-wrap: wrap; gap: 6px 14px;
+  font-size: .87rem; color: var(--text-2); line-height: 1.6;
+}
+.wb-opt { white-space: nowrap; }
+.wb-ans { grid-column: 1 / -1; font-size: .87rem; color: var(--text-2); }
+.wb-ans span { color: var(--ok); font-weight: 700; }
+.wb-why {
+  grid-column: 1 / -1; font-size: .86rem; color: var(--text-2); line-height: 1.68;
+  padding: 9px 13px; border-left: 2px solid var(--border-2);
+  background: var(--surface-2); border-radius: 0 8px 8px 0;
+}
+
+/* 打印错题纸：屏幕上不显示（按钮触发 window.print 时才出现） */
+.print-list { display: none; }
+.print-head { display: none; }
 
 /* 发音按钮（背词大卡） */
 .say-btn {
@@ -957,14 +978,51 @@ body.js-ready .reveal.out { opacity: 0; transform: translateY(14px); }
 
 /* ---------------- 打印错题纸样式 ---------------- */
 @media print {
+  /* 打印一律用浅色：深色主题的 CSS 变量会被带上纸，黑底黑字根本没法看。
+     这里把整套变量就地改写成浅色，再兜底强制 body 背景与文字色。 */
+  :root, html[data-theme="dark"], html[data-theme="light"] {
+    --bg: #ffffff; --bg-2: #ffffff; --bg-3: #f1f5f9;
+    --surface: #ffffff; --surface-2: #f8fafc;
+    --border: #cbd5e1; --border-2: #94a3b8;
+    --text: #0f172a; --text-2: #334155; --text-3: #64748b;
+    --accent: #1d4ed8; --ok: #047857; --rose: #b91c1c; --gold: #b45309;
+    --shadow-1: none; --shadow-2: none;
+  }
   .hdr, .foot, .scroll-progress, .quiz-actions, .rate-row, .hero-cta,
   .toolbar, .chips, .pager, .wb-actions, .w-say, .known-pill, .modal-backdrop, .toast, .report-actions {
     display: none !important;
   }
-  body { background: #fff !important; color: #000 !important; font-size: 12pt; }
+  html, body { background: #fff !important; color: #0f172a !important; font-size: 12pt; }
   .main { background: none !important; padding-bottom: 0; }
   .card, .gtopic, .wordlist, .wb-gram { box-shadow: none !important; border-color: #cbd5e1 !important; break-inside: avoid; }
   .page-head { padding: 10px 0; }
+
+  /* 打印时只留错题纸：隐藏交互区与页头，换成 printList 里的全量条目 */
+  .page-head, #tabs, .toolbar, #wbHint, #wbList, #wbPager, #wbEmpty,
+  #redoZone { display: none !important; }
+  #printZone { margin: 0 !important; }
+  .print-list { display: block !important; }
+  /* 空状态不该上纸 */
+  .print-list .empty { display: none !important; }
+  .print-head {
+    display: flex; justify-content: space-between; align-items: baseline;
+    border-bottom: 1.5px solid #94a3b8; padding-bottom: 8px; margin-bottom: 14px;
+    font-size: 10pt; color: #334155;
+  }
+  .print-head b { font-size: 12pt; color: #0f172a; }
+  .print-list .wrow { border-bottom: 1px solid #e2e8f0; padding: 7px 4px; font-size: 10pt; }
+  /* 打印宽度会命中移动端的 .wb-row 两列规则，导致「错 N 次」徽标被拉满整行。
+     这里显式恢复成四列，并让徽标只占自身宽度。 */
+  .print-list .wb-row {
+    grid-template-columns: minmax(120px, 1.1fr) minmax(56px, .5fr) 1.8fr auto;
+    gap: 10px; align-items: center;
+  }
+  .print-list .wb-row .zh { grid-column: auto; }
+  .print-list .wb-row .flag { justify-self: end; white-space: nowrap; }
+  .print-list .wb-row .pos { white-space: nowrap; }
+  .print-list .wb-gram { border: 1px solid #e2e8f0; padding: 10px 12px; margin-bottom: 8px; }
+  .print-list .wb-why { background: none; border-left-color: #cbd5e1; padding: 4px 0 0 10px; }
+  .print-list .wb-ans span { color: #047857 !important; }
 }
 
 /* ---------------- 词表工具条（词库页 / 主题页共用） ---------------- */
@@ -1451,6 +1509,8 @@ a.coverage-row:hover { border-color: var(--accent); transform: translateX(3px); 
 }
 .coverage-row.off .cv-score { color: var(--text-3); }
 .cv-score::after { content: ' 分'; font-size: .68rem; font-weight: 600; color: var(--text-3); }
+/* 词汇不是卷面题型、没有分值，单位是「词」——不能用「分」 */
+.cv-score.cv-unit-word::after { content: ' 词'; }
 .cv-part { font-weight: 700; font-size: .95rem; }
 .cv-note { font-size: .84rem; color: var(--text-2); line-height: 1.55; }
 .cv-note .cv-own { display: block; margin-top: 2px; color: var(--text-3); font-size: .8rem; }
@@ -1471,47 +1531,6 @@ a.coverage-row:hover { border-color: var(--accent); transform: translateX(3px); 
 .cv-bar { flex: 1; height: 8px; background: var(--bg-2); border-radius: 99px; overflow: hidden; }
 .cv-bar i { display: block; height: 100%; background: var(--accent-grad); border-radius: 99px; }
 
-/* ==========================================================
-   首页：四条主线
-   ========================================================== */
-.track-grid { align-items: stretch; }
-.track-card {
-  display: flex; flex-direction: column;
-  transition: transform .16s var(--ease), box-shadow .16s, border-color .16s;
-}
-.track-card:hover {
-  transform: translateY(-2px); box-shadow: var(--shadow-2);
-  border-color: color-mix(in srgb, var(--accent) 32%, transparent);
-}
-.track-head { display: flex; align-items: flex-start; gap: 13px; margin-bottom: 10px; }
-.track-ico {
-  width: 42px; height: 42px; border-radius: 12px; flex: none;
-  display: grid; place-items: center; font-size: 1.15rem;
-  background: var(--accent-soft); color: var(--accent);
-}
-.track-ico.purple { background: var(--accent-2-soft); color: var(--accent-2); }
-.track-ico.ok { background: var(--ok-soft); color: var(--ok); }
-.track-ico.gold { background: var(--gold-soft); color: var(--gold); }
-.track-step {
-  display: block; font-family: var(--mono); font-size: .7rem; font-weight: 700;
-  letter-spacing: .04em; color: var(--text-3); margin-bottom: 3px;
-}
-.track-head h3 { font-size: 1.04rem; margin: 0; line-height: 1.35; }
-.track-card .desc { flex: 1; }
-.track-meta {
-  display: flex; flex-wrap: wrap; gap: 6px; margin-top: 14px;
-}
-.track-meta span {
-  font-size: .74rem; font-weight: 600; color: var(--text-2);
-  padding: 3px 9px; border-radius: 99px;
-  background: var(--bg-3); white-space: nowrap;
-}
-.track-go {
-  display: inline-flex; align-items: center; gap: 4px;
-  margin-top: 14px; padding-top: 12px;
-  border-top: 1px dashed var(--border);
-  font-size: .84rem; font-weight: 700; color: var(--accent);
-}
 
 @media (max-width: 900px) {
   .coverage-row { grid-template-columns: 54px 1fr auto; gap: 10px 12px; padding: 12px 14px; }
