@@ -1648,3 +1648,43 @@ a.coverage-row:hover { border-color: var(--accent); transform: translateX(3px); 
 @media (max-width: 900px) {
   .wd-grid { grid-template-columns: 1fr; }
 }
+
+/* ==========================================================
+   书面表达：总览页的四个方法入口卡
+   ========================================================== */
+.module-cards { align-items: stretch; }
+.module-card {
+  position: relative; display: flex; flex-direction: column; gap: 8px;
+  transition: transform .16s var(--ease), box-shadow .16s, border-color .16s;
+}
+.module-card:hover {
+  transform: translateY(-2px); box-shadow: var(--shadow-2);
+  border-color: color-mix(in srgb, var(--accent) 32%, transparent);
+}
+.module-no {
+  position: absolute; top: 14px; right: 16px;
+  font-family: var(--display); font-size: 1.5rem; font-weight: 800;
+  color: var(--border-2); line-height: 1; letter-spacing: -.03em;
+}
+.module-head { display: flex; align-items: flex-start; gap: 12px; }
+.module-ico {
+  width: 40px; height: 40px; border-radius: 11px; flex: none;
+  display: grid; place-items: center; font-size: 1.1rem;
+  background: var(--gold-soft); color: var(--gold);
+}
+.module-kicker {
+  display: block; font-family: var(--mono); font-size: .69rem; font-weight: 700;
+  letter-spacing: .04em; color: var(--text-3); margin-bottom: 3px;
+}
+.module-head h3 { font-size: 1.02rem; margin: 0; line-height: 1.35; }
+.module-card .desc { flex: 1 1 auto; }
+.module-foot {
+  display: flex; align-items: center; justify-content: space-between; gap: 10px;
+  margin-top: 12px; padding-top: 11px; border-top: 1px dashed var(--border);
+  font-size: .78rem; color: var(--text-3);
+}
+.module-go { font-weight: 700; color: var(--accent); white-space: nowrap; }
+
+@media (max-width: 640px) {
+  .module-no { font-size: 1.2rem; top: 12px; right: 13px; }
+}

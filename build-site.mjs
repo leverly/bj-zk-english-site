@@ -1113,8 +1113,12 @@ function buildGrammar() {
    ========================================================== */
 function buildWriting() {
   /* ==========================================================
-     书面表达（参考河北项目的模块与页面组织）
-       writing.html  三条提分线 + 五步法 + 结构模板 + 句型库 + 失分点
+     书面表达：总览 + 4 个方法独立页（对齐河北的索引→内容两级组织）
+       writing.html             总览：三条提分线 + 4 个入口 + 交卷检查
+       writing/steps.html       写作五步法
+       writing/structures.html  四类文体的结构模板
+       writing/phrases.html     句型库（按功能分 5 类）
+       writing/traps.html       六个高频失分点
      产品决定：不附范文，范文留给学生自己写。
      ========================================================== */
 
@@ -1138,18 +1142,97 @@ function buildWriting() {
     },
   ];
 
+  /* 四个方法模块的元信息，总览页的入口卡与各子页的互相跳转都用它 */
+  const MODULES = [
+    {
+      slug: 'steps', icon: '🪜', kicker: '方法 · 第一步',
+      name: '写作五步法', title: '写作五步法：从审题到交卷',
+      desc: '审题划要点 → 定时态人称 → 搭三段框架 → 套句式写正文 → 查三样东西。按这个顺序走，20 分钟能写完一篇 8 分以上的短文。',
+      meta: `${WRITING_STEPS.length} 个步骤`,
+    },
+    {
+      slug: 'structures', icon: '🏛', kicker: '方法 · 第二步',
+      name: '结构模板', title: '四类文体的结构模板',
+      desc: '通知、书信 / 回信、议论文 / 观点、申请信——每类给出固定的写作块与顺序。换什么题目，骨架都是这个：先背结构，再填内容。',
+      meta: `${WRITING_STRUCTURES.length} 类文体`,
+    },
+    {
+      slug: 'phrases', icon: '💬', kicker: '方法 · 第三步',
+      name: '句型库', title: '句型库：按功能直接取用',
+      desc: '按开头点题 / 分层连接 / 举例支撑 / 提建议 / 结尾收束分成 5 组，共 19 句。不要临场造句子，从这些背熟的句式里挑。',
+      meta: `${WRITING_PHRASES.length} 组 · ${WRITING_PHRASE_N} 句`,
+    },
+    {
+      slug: 'traps', icon: '⚠️', kicker: '避坑',
+      name: '高频失分点', title: '六个最高频的失分点',
+      desc: '时态混用、第三人称单数漏 -s、可数名词忘复数、字数不足、要点漏写、全文无连接词。写完对照这张表自查，能救回 1–2 分。',
+      meta: `${WRITING_TRAPS.length} 个失分点`,
+    },
+  ];
 
-  /* ---------- writing.html —— 三条提分线 + 方法四件套 ---------- */
+  const FINAL_CHECK = `<section class="section">
+  <div class="card">
+    <h3>📝 交卷前的最后检查</h3>
+    <ol class="final-check">
+      <li>题目给的 <b>3 条要点</b>，是否每条都有对应句子？</li>
+      <li>全文时态是否统一？</li>
+      <li>第三人称单数的动词都加 <b>-s</b> 了吗？</li>
+      <li>many / some / two 后面的名词加 <b>-s</b> 了吗？</li>
+      <li>每个理由前有 <b>First / Second / Besides</b> 这类连接词吗？</li>
+      <li>字数够 <b>80 词</b> 了吗？</li>
+    </ol>
+  </div>
+</section>`;
+
+  /* 子页通用的上一页 / 下一页导航（在四个方法页之间串起来） */
+  const modulePager = (idx) => {
+    const prev = MODULES[idx - 1];
+    const next = MODULES[idx + 1];
+    return `<section class="section">
+  <div class="gfam-pager">
+    ${prev ? `<a class="btn sm" href="${prev.slug}.html">← ${esc(prev.name)}</a>` : '<span></span>'}
+    <a class="btn sm soft" href="../writing.html">返回书面表达总览</a>
+    ${next ? `<a class="btn sm" href="${next.slug}.html">${esc(next.name)} →</a>` : '<span></span>'}
+  </div>
+</section>`;
+  };
+
+  /* 子页通用骨架：面包屑 + 标题 + 正文 + 翻页 */
+  const subPage = (idx, bodyHtml, opts = {}) => {
+    const m = MODULES[idx];
+    return page({
+      base: '../',
+      title: `${m.name} · 书面表达`,
+      desc: opts.desc || `${m.name}：${m.desc}`,
+      active: 'writing',
+      dataKeys: [],
+      body: `
+<div class="page-head">
+  <div class="crumb"><a href="../index.html">首页</a> / <a href="../writing.html">书面表达</a> / ${esc(m.name)}</div>
+  <h1>${m.icon} ${esc(m.title)}</h1>
+  <p class="lede">${opts.lede || esc(m.desc)}</p>
+</div>
+
+${bodyHtml}
+
+${modulePager(idx)}
+`,
+    });
+  };
+
+  /* ==========================================================
+     总览：writing.html
+     ========================================================== */
   write('writing.html', page({
     title: '书面表达 · 10 分',
-    desc: `北京中考英语书面表达专项：三条提分线、五步写作法、${WRITING_STRUCTURES.length} 类结构模板、${WRITING_PHRASE_N} 句句型库、${WRITING_TRAPS.length} 个高频失分点。`,
+    desc: `北京中考英语书面表达专项：三条提分线、写作五步法、${WRITING_STRUCTURES.length} 类结构模板、${WRITING_PHRASE_N} 句句型库、${WRITING_TRAPS.length} 个高频失分点。`,
     active: 'writing',
     dataKeys: [],
     body: `
 <div class="page-head">
   <div class="crumb"><a href="index.html">首页</a> / 书面表达</div>
   <h1>书面表达</h1>
-  <p class="lede">北京卷第五部分 <b>10 分</b>，通常要求 80–100 词。这是<b>唯一能完全由自己控制得分</b>的题型——只要要点写全、语言不出错，稳拿 8 分以上。下面按 <b>三条提分线 → 五步法 → 结构模板 → 句型库 → 失分点</b> 的顺序，把从审题到交卷的每一步拆开讲。</p>
+  <p class="lede">北京卷第五部分 <b>10 分</b>，通常要求 80–100 词。这是<b>唯一能完全由自己控制得分</b>的题型——只要要点写全、语言不出错，稳拿 8 分以上。下面先讲清 10 分怎么来，再分四块把方法拆开。</p>
 </div>
 
 <section class="section" style="margin-top:22px">
@@ -1162,7 +1245,7 @@ function buildWriting() {
   </div>
 </section>
 
-<!-- ========== 零、三条提分线（对齐河北的分值拆解思路） ========== -->
+<!-- ========== 三条提分线 ========== -->
 <section class="section">
   <div class="card method-card">
     <div class="method-title">✍️ 书面表达的三条提分线</div>
@@ -1174,15 +1257,40 @@ function buildWriting() {
   </div>
 </section>
 
-<!-- ========== 一、写作五步法 ========== -->
+<!-- ========== 四个方法模块入口 ========== -->
 <section class="section">
   <div class="section-head">
     <div class="section-head-left">
-      <span class="kicker">方法 · 第一步</span>
-      <h2>写作五步法：从审题到交卷</h2>
-      <span class="sub">按这个顺序走，20 分钟能写完一篇 8 分以上的短文</span>
+      <span class="kicker">方法 · 共 4 块</span>
+      <h2>从审题到交卷，四块方法</h2>
+      <span class="sub">建议按顺序看：先学步骤，再背结构，然后攒句式，最后对照失分点自查</span>
     </div>
   </div>
+  <div class="grid c2 module-cards">
+    ${MODULES.map((m, i) => `<a class="card module-card" href="writing/${m.slug}.html">
+      <span class="module-no">${i + 1}</span>
+      <div class="module-head">
+        <span class="module-ico">${m.icon}</span>
+        <div>
+          <span class="module-kicker">${esc(m.kicker)}</span>
+          <h3>${esc(m.name)}</h3>
+        </div>
+      </div>
+      <p class="desc">${esc(m.desc)}</p>
+      <div class="module-foot"><span>${esc(m.meta)}</span><span class="module-go">进入 →</span></div>
+    </a>`).join('')}
+  </div>
+</section>
+
+${FINAL_CHECK}
+`,
+  }));
+
+  /* ==========================================================
+     子页 1：写作五步法
+     ========================================================== */
+  write('writing/steps.html', subPage(0, `
+<section class="section">
   <div class="step-flow">
     ${WRITING_STEPS.map((s) => `<div class="flow-item">
       <div class="flow-no">${s.n}</div>
@@ -1195,15 +1303,29 @@ function buildWriting() {
   </div>
 </section>
 
-<!-- ========== 二、结构模板 ========== -->
 <section class="section">
-  <div class="section-head">
-    <div class="section-head-left">
-      <span class="kicker">方法 · 第二步</span>
-      <h2>四类文体的结构模板</h2>
-      <span class="sub">换什么题目，骨架都是这个——先背结构，再填内容</span>
-    </div>
+  <div class="card">
+    <h3>⏱ 时间怎么分配（20 分钟写完一篇）</h3>
+    <table class="tbl" style="margin-top:12px;table-layout:fixed;width:100%">
+      <colgroup><col style="width:22%"><col><col style="width:16%"></colgroup>
+      <thead><tr><th>阶段</th><th>做什么</th><th>用时</th></tr></thead>
+      <tbody>
+        <tr><td>审题 + 列要点</td><td>圈出题目给的 3 条要点，每条写一个中文关键词</td><td>3 分钟</td></tr>
+        <tr><td>搭框架</td><td>定三段各写什么，标出时态与人称</td><td>2 分钟</td></tr>
+        <tr><td>写正文</td><td>套句型库的句式，一个要点写一到两句</td><td>10 分钟</td></tr>
+        <tr><td>检查</td><td>查要点齐不齐、动词形式对不对、名词单复数</td><td>5 分钟</td></tr>
+      </tbody>
+    </table>
+    <p class="note" style="margin-top:10px">最容易犯的错是把时间全花在写正文上，最后没时间检查——而检查这 5 分钟通常能救回 1–2 分。</p>
   </div>
+</section>
+`));
+
+  /* ==========================================================
+     子页 2：结构模板
+     ========================================================== */
+  write('writing/structures.html', subPage(1, `
+<section class="section">
   <div class="struct-grid">
     ${WRITING_STRUCTURES.map((s) => `<div class="card struct-card">
       <div class="struct-head">
@@ -1226,15 +1348,26 @@ function buildWriting() {
   </div>
 </section>
 
-<!-- ========== 三、句型库 ========== -->
 <section class="section">
-  <div class="section-head">
-    <div class="section-head-left">
-      <span class="kicker">方法 · 第三步</span>
-      <h2>句型库：按功能直接取用</h2>
-      <span class="sub">不要临场造句子，从这些背熟的句式里挑</span>
-    </div>
+  <div class="card">
+    <h3>🧭 怎么选模板</h3>
+    <p class="desc" style="margin-top:8px">看题目最后一句的<b>文体提示</b>：</p>
+    <ul class="tips" style="margin-top:10px">
+      <li>出现 <code>notice</code> / <code>通知</code> / 要求「告知全体同学」→ 用<b>通知</b>模板（有称呼、提示语、落款）</li>
+      <li>出现 <code>letter</code> / <code>回信</code> / 有「Dear …」开头 → 用<b>书信</b>模板</li>
+      <li>出现 <code>discuss</code> / <code>opinion</code> / 「谈谈你的看法」→ 用<b>议论文</b>模板</li>
+      <li>出现 <code>apply</code> / <code>volunteer</code> / 「申请」→ 用<b>申请信</b>模板</li>
+    </ul>
+    <p class="note" style="margin-top:10px">判断错了文体，格式分先丢一半。审题时先定文体，再动笔。</p>
   </div>
+</section>
+`));
+
+  /* ==========================================================
+     子页 3：句型库
+     ========================================================== */
+  write('writing/phrases.html', subPage(2, `
+<section class="section">
   <div class="phrase-bank">
     ${WRITING_PHRASES.map((g) => `<div class="card pb-card">
       <div class="pb-head">${g.icon} ${esc(g.fn)}</div>
@@ -1248,15 +1381,24 @@ function buildWriting() {
   </div>
 </section>
 
-<!-- ========== 四、高频失分点 ========== -->
 <section class="section">
-  <div class="section-head">
-    <div class="section-head-left">
-      <span class="kicker">避坑</span>
-      <h2>六个最高频的失分点</h2>
-      <span class="sub">写完对照这张表自查，能救回 1–2 分</span>
-    </div>
+  <div class="card">
+    <h3>💡 怎么用这 19 句</h3>
+    <ul class="tips" style="margin-top:10px">
+      <li><b>不要整篇背。</b>按功能记：开头两句、连接三句、举例两句、建议两句、结尾三句，够应付所有题型。</li>
+      <li><b>一句只用一个。</b>同一组里挑一句用，不要堆两句意思相同的，会显得啰嗦。</li>
+      <li><b>先求对，再求高级。</b>没把握的从句不要写，用简单句把要点写全，得分反而更高。</li>
+      <li><b>写作前先扫一眼。</b>动笔前花 30 秒看这页，写的时候就知道该套哪句。</li>
+    </ul>
   </div>
+</section>
+`));
+
+  /* ==========================================================
+     子页 4：高频失分点
+     ========================================================== */
+  write('writing/traps.html', subPage(3, `
+<section class="section">
   <div class="trap-grid">
     ${WRITING_TRAPS.map((t) => `<div class="card wt-card">
       <div class="wt-name">✕ ${esc(t.t)}</div>
@@ -1266,21 +1408,8 @@ function buildWriting() {
   </div>
 </section>
 
-<section class="section">
-  <div class="card">
-    <h3>📝 交卷前的最后检查</h3>
-    <ol class="final-check">
-      <li>题目给的 <b>3 条要点</b>，是否每条都有对应句子？</li>
-      <li>全文时态是否统一？</li>
-      <li>第三人称单数的动词都加 <b>-s</b> 了吗？</li>
-      <li>many / some / two 后面的名词加 <b>-s</b> 了吗？</li>
-      <li>每个理由前有 <b>First / Second / Besides</b> 这类连接词吗？</li>
-      <li>字数够 <b>80 词</b> 了吗？</li>
-    </ol>
-  </div>
-</section>
-`,
-  }));
+${FINAL_CHECK}
+`));
 }
 
 /* 四类文章的解题方法（每类独立成卡，放在该类型篇目之前） */
