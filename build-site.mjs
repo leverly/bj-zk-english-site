@@ -2213,7 +2213,6 @@ ZK.ready(function(){
   }).join('');
 
   /* 完形填空：4 篇直接铺在首页，每篇一张卡，不必再点一层 */
-  const czMethod = READING_METHODS.CZ;
   const homeCzCards = CLOZE.map((c, i) => {
     const tag = c.level === '基础' ? '基础' : c.level === '重点' ? '重点' : '难点';
     return `<a class="card passage-card" href="reading/${c.id}.html">
@@ -2224,15 +2223,6 @@ ZK.ready(function(){
       <span class="level-go">开始练习 →</span>
     </a>`;
   }).join('');
-
-  /* 完形模块的整体入口卡（放在篇目列表上方，供想先看读法的人） */
-  const czCard = `<a class="card level-card" href="reading/cz.html">
-    <div class="level-badge" style="background:linear-gradient(135deg,#2563eb,#4f46e5)">CZ</div>
-    <h3>${czMethod.icon} ${esc(czMethod.name)}</h3>
-    <p class="desc">${esc(czMethod.tagline)}</p>
-    <div class="meta">${CLOZE.length} 篇 · ${CLOZE_N} 空 · 8 分</div>
-    <span class="level-go">先看读法 →</span>
-  </a>`;
 
   write('reading.html', page({
     title: '整篇理解学阅读 · 完形 + 阅读理解 + 阅读表达 · 38 分',
@@ -2275,7 +2265,6 @@ ZK.ready(function(){
     </div>
     <a class="btn sm soft" href="reading/cz.html">进入完形填空 →</a>
   </div>
-  <div class="grid c2">${czCard}</div>
   <div class="section-head" style="margin-top:26px">
     <div class="section-head-left">
       <span class="kicker">篇目 · 共 ${CLOZE.length} 篇 ${CLOZE_N} 空</span>
