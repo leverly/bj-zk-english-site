@@ -127,7 +127,6 @@ const NAV = [
   { href: 'words.html', label: '词库', key: 'words' },
   { href: 'grammar.html', label: '语法', key: 'grammar' },
   { href: 'wrong.html', label: '错题本', key: 'wrong' },
-  { href: 'plan.html', label: '备考计划', key: 'plan' },
   { href: 'stats.html', label: '学习数据', key: 'stats' },
 ];
 
@@ -171,7 +170,6 @@ const FOOTER = (base) => `<footer class="foot">
       <a href="${base}reading/cz.html">完形填空</a>
       <a href="${base}writing.html">书面表达</a>
       <a href="${base}wrong.html">错题本</a>
-      <a href="${base}plan.html">备考计划</a>
     </div>
     <div class="col">
       <h4>知识体系</h4>
@@ -271,7 +269,6 @@ function buildHome() {
         <a class="btn primary" href="quiz.html">开始背单词 <span aria-hidden="true">→</span></a>
         <a class="btn" href="reading.html">学阅读</a>
         <a class="btn" href="writing.html">学书面表达</a>
-        <a class="btn ghost" href="plan.html">看备考计划</a>
       </div>
       <div class="hero-trust">
         <span><b>✓</b> 笔试 60 分题型全覆盖</span>
@@ -481,7 +478,7 @@ function buildHome() {
     <div class="section-head-left">
       <span class="kicker">支撑工具</span>
       <h2>练完之后，靠这三样把进度管住</h2>
-      <span class="sub">错题不清就会一直错，计划不排就会一直拖，数据不看就不知道差在哪</span>
+      <span class="sub">错题不清就会一直错，数据不看就不知道差在哪，口径不明就不知道哪些该信</span>
     </div>
   </div>
   <div class="grid c3">
@@ -491,11 +488,11 @@ function buildHome() {
       <p class="desc">单词、语法、阅读、完形、阅读表达的错题自动收纳。单词需连对 2 次才移出，其余答对一次即出册，并按遗忘曲线排期重做。</p>
       <div class="meta" style="margin-top:12px">五类错题一处管理 · 可重做</div>
     </a>
-    <a class="card tool-card" href="plan.html">
-      <div class="card-ico">🗓</div>
-      <h3>8 周备考计划</h3>
-      <p class="desc">按「词汇地基 → 时态 → 非谓语情态 → 从句 → 篇章入门 → 阅读主攻 → 写作成文 → 全真模拟」推进，每周一个主攻方向，可勾选打卡。</p>
-      <div class="meta" style="margin-top:12px">每天 20–30 分钟 · 8 周一轮</div>
+    <a class="card tool-card" href="content.html">
+      <div class="card-ico gold">📋</div>
+      <h3>内容说明</h3>
+      <p class="desc">词表从哪来、题是怎么出的、哪些口径是启发式推断、有哪些已知限制——都写在这里，方便判断哪些可以信、哪些要自己再核对。</p>
+      <div class="meta" style="margin-top:12px">数据来源 · 口径说明 · 已知限制</div>
     </a>
     <a class="card tool-card" href="stats.html">
       <div class="card-ico ok">📊</div>
@@ -536,7 +533,7 @@ function buildHome() {
     </details>
     <details class="faq-item">
       <summary>孩子平时作业多，每天需要花多长时间？</summary>
-      <p>建议每天 15–20 分钟：10 分钟背 20 个单词（系统自动安排到期复习 + 新词），5–10 分钟刷 10 道语法题。周末再花 20 分钟练一篇阅读或写一段短文，并按 8 周计划走完一轮完整体系。</p>
+      <p>建议每天 15–20 分钟：10 分钟背 20 个单词（系统自动安排到期复习 + 新词），5–10 分钟刷 10 道语法题。周末再花 20 分钟练一篇阅读或写一段短文，按自己的节奏走完一轮完整体系。</p>
     </details>
     <details class="faq-item">
       <summary>手机、iPad 和电脑都能用吗？需要下载 App 吗？</summary>
@@ -2519,186 +2516,6 @@ ZK.ready(function(){
   }));
 }
 
-/* ==========================================================
-   8. 备考计划
-   ========================================================== */
-const PLAN = [
-  {
-    week: 1, title: '摸清底细，打牢基础词',
-    goal: '完成一次诊断练习，明确薄弱考点；背完核心高频词的前 150 个。',
-    tasks: [
-      '去「练语法」用「全部考点 · 混合题型 · 40 题」做一次诊断，看正确率分布。',
-      '「背单词」范围选「核心高频」，每天 20 词，共 7 天。',
-      '读完语法族「名词」「代词」「冠词」三页，重点看易错对比。',
-    ],
-    focus: ['noun', 'pronoun', 'article'],
-  },
-  {
-    week: 2, title: '时态主线，串起动词体系',
-    goal: '掌握七种时态的构成与标志词，尤其区分一般过去与现在完成。',
-    tasks: [
-      '读「动词时态」全族 7 个考点，把每个时态的标志词抄一遍。',
-      '「练语法」指定考点逐个练：一般现在 → 一般过去 → 现在进行 → 现在完成。',
-      '背单词继续每天 20 词，范围切到「中频主力」。',
-    ],
-    focus: ['tense', 'passive'],
-  },
-  {
-    week: 3, title: '非谓语与情态，攻克高频错点',
-    goal: '记牢 to do / doing 的固定搭配，掌握 must 提问的否定回答。',
-    tasks: [
-      '读「非谓语动词」「情态动词」两族，重点看 enjoy doing / look forward to doing。',
-      '「练语法」只练「写作改错」题型 10 题，专治固定搭配错误。',
-      '把错题本里的语法错题全部重做一遍。',
-    ],
-    focus: ['nonfinite', 'modal'],
-  },
-  {
-    week: 4, title: '从句攻坚 + 阅读起步',
-    goal: '宾语从句语序、定语从句关系词、状语从句主将从现全部拿下；同时开始练阅读 A 篇。',
-    tasks: [
-      '读「从句」族 4 个考点，宾语从句的「陈述句语序」要默写一遍。',
-      '「练语法」范围选「专攻最弱考点」，做 20 题。',
-      '「阅读理解」做第 1 套的 A、B 两篇，重点看解析里的「原文定位」怎么找。',
-    ],
-    focus: ['clause', 'reading'],
-  },
-  {
-    week: 5, title: '形容词副词介词 + 完形入门',
-    goal: '比较等级与时间介词全部正确；掌握完形「先通读再回填」的方法。',
-    tasks: [
-      '读「形容词与副词」「介词」「数词」三族。',
-      '「练语法」练「语法填空」题型 15 题。',
-      '「学阅读」→ 完形填空，做第 1 篇，做完先别对答案，回读全文检查逻辑，再看解析。',
-    ],
-    focus: ['adjadv', 'prep', 'cloze'],
-  },
-  {
-    week: 6, title: '阅读主攻，拿下 38 分',
-    goal: '四类文章的读法成型，阅读错题控制在 2 个以内；阅读表达会用完整句作答。',
-    tasks: [
-      '「阅读理解」做第 1 套的 C、D 两篇，D 篇注意区分「作者观点」与「他人观点」。',
-      '做第 1 套的 4 道阅读表达，必须写完整英文句子。',
-      '「练语法」范围选「专攻最弱考点」，做 20 题保持手感。',
-    ],
-    focus: ['reading'],
-  },
-  {
-    week: 7, title: '写作成文 + 完形提速',
-    goal: '四类文体各写一篇，字数达标、要点齐全；完形错不超过 2 个。',
-    tasks: [
-      '读「书面表达」的结构模板与句型库，把通知、书信两类的写作块各抄一遍。',
-      '按「书面表达」的结构模板，自己限时 20 分钟写一篇通知或书信，再对照评分要点与失分点逐条自查。',
-      '「学阅读」→ 完形填空，做第 2 篇，限时 10 分钟，做完回读全文查逻辑。',
-    ],
-    focus: ['writing', 'cloze'],
-  },
-  {
-    week: 8, title: '全真模拟，回归错题',
-    goal: '按真实时间做一套完整笔试（60 分），错题本清零。',
-    tasks: [
-      '限时 90 分钟完整一套：单选 12 题 + 完形 8 空 + 阅读 13 题 + 阅读表达 4 题 + 写一篇作文。',
-      '把错题本里剩下的错题全部重做，直到清零。',
-      '背单词范围选「核心高频」，快速过一遍，把标「已掌握」的再确认一次。',
-    ],
-    focus: ['mock'],
-  },
-];
-
-function buildPlan() {
-  const cards = PLAN.map((p) => `<div class="card plan-card">
-    <div class="plan-head">
-      <span class="plan-week">第 ${p.week} 周</span>
-      <label class="plan-check"><input type="checkbox" data-week="${p.week}"><span>已完成</span></label>
-    </div>
-    <h3>${esc(p.title)}</h3>
-    <p class="desc">${esc(p.goal)}</p>
-    <ul class="plan-tasks">${p.tasks.map((t) => `<li>${esc(t)}</li>`).join('')}</ul>
-    <div class="plan-links">${p.focus.map((f) => {
-      const g = GRAMMAR.find((x) => x.id === f);
-      if (g) return `<a class="chip" href="grammar/${g.id}.html">${esc(g.name)}</a>`;
-      const map = {
-        mock: ['review.html', '全真练习'],
-        reading: ['reading.html', '阅读理解'],
-        cloze: ['reading/cz.html', '完形填空'],
-        writing: ['writing.html', '书面表达'],
-      };
-      const m = map[f];
-      return m ? `<a class="chip" href="${m[0]}">${m[1]}</a>` : '';
-    }).join('')}</div>
-  </div>`).join('');
-
-  const body = `
-<div class="page-head">
-  <div class="crumb"><a href="index.html">首页</a> / 备考计划</div>
-  <h1>8 周中考英语备考计划</h1>
-  <p class="lede">按「词汇地基 → 时态 → 非谓语情态 → 从句 → 篇章入门 → 阅读主攻 → 写作成文 → 全真模拟」推进，四条主线依次接上，每周一个主攻方向，每天 20–30 分钟。</p>
-</div>
-
-<section class="section" style="margin-top:22px">
-  <div class="card" style="padding:20px 24px">
-    <div class="today-goal-row">
-      <span>计划完成进度 <b id="pDone">0</b> / 8 周</span>
-      <span class="today-pct" id="pPct">0%</span>
-    </div>
-    <div class="bar"><i id="pBar" style="width:0%"></i></div>
-  </div>
-</section>
-
-<section class="section" style="margin-top:24px">
-  <div class="grid c2">${cards}</div>
-</section>
-
-<section class="section">
-  <div class="card">
-    <h3>⏱ 每天 20 分钟怎么分配</h3>
-    <table class="tbl" style="margin-top:12px">
-      <thead><tr><th>时段</th><th>内容</th><th>时长</th></tr></thead>
-      <tbody>
-        <tr><td>第 1 段</td><td>背单词（到期复习 + 新词）</td><td>10 分钟</td></tr>
-        <tr><td>第 2 段</td><td>练语法（10 题左右）</td><td>10 分钟</td></tr>
-        <tr><td>周中加练</td><td>读一篇完形或阅读，做完看原文定位解析</td><td>15 分钟</td></tr>
-        <tr><td>周末加练</td><td>清错题本 + 专攻最弱考点 + 按写作模板写一篇短文并自查</td><td>30–40 分钟</td></tr>
-      </tbody>
-    </table>
-    <p class="note" style="margin-top:10px">关键是每天不断，而不是某天学很久。连续打卡天数会记录在首页与背单词页。四条主线的顺序是按卷面依赖关系排的：词不认识就读不懂篇章，篇章不练就写不出句子。</p>
-  </div>
-</section>
-`;
-  const script = `
-ZK.ready(function(){
-  var KEY = 'zk-plan-v1';
-  var done = {};
-  try { done = JSON.parse(localStorage.getItem(KEY) || '{}'); } catch(e){ done = {}; }
-  function draw(){
-    var n = 0;
-    document.querySelectorAll('[data-week]').forEach(function(cb){
-      var w = cb.getAttribute('data-week');
-      cb.checked = !!done[w];
-      if (done[w]) n++;
-    });
-    document.getElementById('pDone').textContent = n;
-    var pct = Math.round(n/8*100);
-    document.getElementById('pPct').textContent = pct + '%';
-    document.getElementById('pBar').style.width = pct + '%';
-  }
-  document.querySelectorAll('[data-week]').forEach(function(cb){
-    cb.addEventListener('change', function(){
-      var w = cb.getAttribute('data-week');
-      if (cb.checked) { done[w] = 1; ZK.sfx('ok'); } else delete done[w];
-      try { localStorage.setItem(KEY, JSON.stringify(done)); } catch(e){}
-      draw();
-    });
-  });
-  draw();
-});
-`;
-  write('plan.html', page({
-    title: '8 周备考计划',
-    desc: '北京中考英语 8 周备考计划，每周一个主攻方向，每天 20–30 分钟。',
-    active: 'plan', body, script, dataKeys: [],
-  }));
-}
 
 /* ==========================================================
    9. 学习数据
@@ -2946,7 +2763,6 @@ buildReading();
 buildWriting();
 buildReview();
 buildWrong();
-buildPlan();
 buildStats();
 buildContent();
 
