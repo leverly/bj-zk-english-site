@@ -12,6 +12,9 @@ import { WORDS, THEMES, STATS } from './src/data-words.js';
 import { GRAMMAR, GRAMMAR_STATS } from './src/data-grammar.js';
 import { QUESTIONS } from './src/data-quiz.js';
 import { QUESTIONS_2 } from './src/data-quiz2.js';
+import { PASSAGES } from './src/data-reading.js';
+import { CLOZE } from './src/data-cloze.js';
+import { WRITING } from './src/data-writing.js';
 
 const __dir = dirname(fileURLToPath(import.meta.url));
 const OUT = __dir;
@@ -44,6 +47,11 @@ ALL_Q.forEach((q) => {
   Q_BY_TOPIC.get(q.topic).push(q);
 });
 const Q_MISS = [...GT.keys()].filter((id) => !Q_BY_TOPIC.has(id));
+
+const READ_Q = PASSAGES.reduce((a, p) => a + p.questions.length, 0);
+const EXPRESS_Q = PASSAGES.reduce((a, p) => a + (p.express || []).length, 0);
+const CLOZE_N = CLOZE.reduce((a, c) => a + c.blanks.length, 0);
+const WRITING_N = WRITING.length;
 
 const Q_STATS = {
   total: ALL_Q.length,
@@ -80,6 +88,9 @@ const NAV = [
   { href: 'index.html', label: '首页', key: 'home' },
   { href: 'quiz.html', label: '背单词', key: 'words-study' },
   { href: 'review.html', label: '练语法', key: 'grammar-drill' },
+  { href: 'reading.html', label: '阅读', key: 'reading' },
+  { href: 'cloze.html', label: '完形', key: 'cloze' },
+  { href: 'writing.html', label: '写作', key: 'writing' },
   { href: 'words.html', label: '词库', key: 'words' },
   { href: 'grammar.html', label: '语法', key: 'grammar' },
   { href: 'wrong.html', label: '错题本', key: 'wrong' },
@@ -148,7 +159,7 @@ const FOOTER = (base) => `<footer class="foot">
 /* ---------------- 数据内联 ---------------- */
 const __inlineCache = new Map();
 function inlineData(keys, extra) {
-  const ALL = { WORDS, THEMES, STATS, GRAMMAR, GRAMMAR_STATS, QUESTIONS: ALL_Q, QUESTIONS_2 };
+  const ALL = { WORDS, THEMES, STATS, GRAMMAR, GRAMMAR_STATS, QUESTIONS: ALL_Q, QUESTIONS_2, PASSAGES, CLOZE, WRITING };
   const extraKeys = Object.keys(extra || {});
   const id = keys.join(',') + '|' + extraKeys.join(',');
   if (__inlineCache.has(id)) return __inlineCache.get(id);
@@ -215,9 +226,10 @@ function buildHome() {
       <div class="hero-badge"><span class="dot-live"></span>对齐《义务教育英语课程标准（2022 年版）》与北京中考英语考试说明</div>
       <h1>北京中考英语，<br><span class="accent-word">词汇 · 语法</span>一轮打通</h1>
       <p class="lede">
- 专为北京初中生打造的中考英语备考站：<b>${STATS.total} 条课标词条</b>（含 ${STATS.phrases} 条高频短语），
- <b>${GRAMMAR_STATS.topics} 个语法考点配 ✕ 错句 / ✓ 对句避坑对比</b>，<b>${Q_STATS.total} 道中考题型精练</b>。
- 每天 20 分钟跟着遗忘曲线走，把笔试 60 分的地基打牢。
+ 专为北京初中生打造的中考英语备考站：<b>${STATS.total} 条课标词条</b>（含 ${STATS.phrases} 条高频短语）、
+ <b>${GRAMMAR_STATS.topics} 个语法考点</b>、<b>${Q_STATS.total} 道语法精练</b>，
+ 加上<b>阅读理解 ${READ_Q} 题、完形 ${CLOZE_N} 空、书面表达 ${WRITING_N} 篇</b>。
+ 笔试卷面 60 分里，<b>语法 12 + 完形 8 + 阅读 30 + 写作 10 = 60 分</b>全部有对应练习。
  </p>
       <div class="hero-cta">
         <a class="btn primary" href="quiz.html">开始背单词 <span aria-hidden="true">→</span></a>
@@ -274,11 +286,11 @@ function buildHome() {
   </div>
 
   <div class="stats reveal">
-    <div class="stat"><b data-count="${STATS.words}">${STATS.words}</b><span>课标单词</span><small>含音标与中文释义</small></div>
-    <div class="stat"><b data-count="${STATS.phrases}">${STATS.phrases}</b><span>高频短语</span><small>固定搭配与短语</small></div>
-    <div class="stat"><b data-count="${GRAMMAR_STATS.topics}">${GRAMMAR_STATS.topics}</b><span>语法考点</span><small>覆盖 ${GRAMMAR_STATS.families} 大语法族</small></div>
-    <div class="stat"><b data-count="${GRAMMAR_STATS.traps}">${GRAMMAR_STATS.traps}</b><span>易错对比</span><small>✕ 错句 vs ✓ 对句</small></div>
-    <div class="stat"><b data-count="${Q_STATS.total}">${Q_STATS.total}</b><span>语法精练</span><small>单选 · 改错 · 填空</small></div>
+    <div class="stat"><b data-count="${STATS.total}">${STATS.total}</b><span>课标词条</span><small>含 ${STATS.phrases} 条高频短语</small></div>
+    <div class="stat"><b data-count="${GRAMMAR_STATS.topics}">${GRAMMAR_STATS.topics}</b><span>语法考点</span><small>${GRAMMAR_STATS.traps} 条易错对比</small></div>
+    <div class="stat"><b data-count="${Q_STATS.total}">${Q_STATS.total}</b><span>语法精练</span><small>每考点不少于 4 题</small></div>
+    <div class="stat"><b data-count="${READ_Q + CLOZE_N}">${READ_Q + CLOZE_N}</b><span>阅读与完形</span><small>每题附原文定位</small></div>
+    <div class="stat"><b>60</b><span>笔试卷面</span><small>全部分值均有练习</small></div>
   </div>
 </section>
 
@@ -309,7 +321,7 @@ function buildHome() {
     <div class="card step-card">
       <span class="step-num">STEP 04</span>
       <h3>错题闭环 + 档案备份</h3>
-      <p class="desc">错词需连对 2 次才移出错题本，语法错题答对即出册；所有学习记录本地保存，支持随时导出备份换设备。</p>
+      <p class="desc">错词需连对 2 次才移出错题本，语法/阅读/完形错题答对即出册；所有学习记录本地保存，支持随时导出备份换设备。</p>
     </div>
   </div>
 </section>
@@ -340,6 +352,24 @@ function buildHome() {
       <h3>考点专项刷题 · ${Q_STATS.total} 题</h3>
       <p class="desc">覆盖全部 ${GRAMMAR_STATS.topics} 个考点（每考点不少于 4 题），自动统计正确率，支持「专攻最弱考点」与「只练错题本」。</p>
       <div class="meta" style="margin-top:12px">单选 ${Q_STATS.choice} · 改错 ${Q_STATS.correct} · 填空 ${Q_STATS.fill}</div>
+    </a>
+    <a class="card" href="reading.html">
+      <div class="card-ico">📖</div>
+      <h3>阅读理解 · ${READ_Q} 题 + ${EXPRESS_Q} 表达</h3>
+      <p class="desc">A/B/C/D 四类文章各 2 篇，每道题给出<b>原文定位句</b>、<b>为什么对</b>、<b>错项为什么错</b>三层解析。</p>
+      <div class="meta" style="margin-top:12px">对应分值 30 分 · 含阅读表达</div>
+    </a>
+    <a class="card" href="cloze.html">
+      <div class="card-ico purple">🧩</div>
+      <h3>完形填空 · ${CLOZE_N} 空</h3>
+      <p class="desc">按北京卷 8 空规格编写，每题给出上下文依据（前文线索 / 后文呼应 / 固定搭配），附全文中文译文。</p>
+      <div class="meta" style="margin-top:12px">对应分值 8 分</div>
+    </a>
+    <a class="card" href="writing.html">
+      <div class="card-ico ok">✒️</div>
+      <h3>书面表达 · ${WRITING_N} 篇</h3>
+      <p class="desc">通知、书信、议论文、申请信四类文体，每篇含写作提纲、必备句式、范文（正文 80–100 词）与评分要点。</p>
+      <div class="meta" style="margin-top:12px">对应分值 10 分</div>
     </a>
   </div>
 </section>
@@ -945,6 +975,502 @@ function buildGrammar() {
 /* ==========================================================
    6. 练语法
    ========================================================== */
+/* ==========================================================
+   阅读理解页（北京卷第三、四部分，共 30 分）
+   设计要点：
+   - 逐题即时判分，答后展开三层解析：原文定位 → 为什么对 → 错项为什么错
+   - 阅读表达用关键词组判分，避免语序差异误判
+   - 每篇按 A/B/C/D 标注题型与阅读策略
+   ========================================================== */
+/* ==========================================================
+   完形填空页（北京卷第二部分，8 分）
+   ========================================================== */
+function buildCloze() {
+  const totalBlanks = CLOZE.reduce((s, c) => s + c.blanks.length, 0);
+
+  const clozeHtml = (c) => {
+    const paras = c.passage.split('\n\n').map((x) =>
+      `<p class="passage-p">${esc(x).replace(/___\((\d+)\)___/g, '<span class="blank-num">($1)</span>')}</p>`
+    ).join('');
+    const blanks = c.blanks.map((b) => `
+      <div class="cloze-item" data-ans="${b.answer}" data-id="${c.id}-${b.n}" data-n="${b.n}">
+        <div class="cloze-head"><span class="cloze-n">(${b.n})</span></div>
+        <div class="qopts">
+          ${b.options.map((o, k) => `<button class="qopt" data-k="${k}"><span class="key">${'ABCD'[k]}</span><span>${esc(o)}</span></button>`).join('')}
+        </div>
+        <div class="cloze-fb"></div>
+      </div>`).join('');
+
+    return `<div class="card article-card" id="${c.id}">
+      <div class="article-head">
+        <h3>${esc(c.title)}</h3>
+        <div class="meta">完形填空 · ${c.blanks.length} 空 · ${esc(c.level)}</div>
+      </div>
+      <div class="note strategy">${esc(c.intro)}</div>
+      <div class="passage">${paras}</div>
+      <div class="cloze-list">${blanks}</div>
+      <div class="article-actions">
+        <button class="btn soft sm" data-toggle-trans="${c.id}">显示中文译文</button>
+        <span class="cloze-score" id="score-${c.id}">0 / ${c.blanks.length}</span>
+      </div>
+      <div class="trans" id="trans-${c.id}" hidden>${(c.translation || '').split('\n\n').map((p) => `<p>${esc(p)}</p>`).join('')}</div>
+    </div>`;
+  };
+
+  const body = `
+<div class="page-head">
+  <div class="crumb"><a href="index.html">首页</a> / 完形填空</div>
+  <h1>完形填空</h1>
+  <p class="lede">北京卷第二部分 <b>8 小题 × 1 分 = 8 分</b>。完形不是「逐空选词」，而是<b>先通读抓主线，再回填</b>——8 个空通常覆盖动词 2–3 个、名词 1–2 个、形容词/副词 1–2 个、连词或介词 1 个、固定搭配 1 个。每题答完给出上下文依据。</p>
+</div>
+
+<section class="section" style="margin-top:22px">
+  <div class="kv">
+    <div class="k"><b data-count="${CLOZE.length}">${CLOZE.length}</b><span>篇目</span></div>
+    <div class="k"><b data-count="${totalBlanks}">${totalBlanks}</b><span>空格</span></div>
+    <div class="k"><b>8</b><span>对应分值</span></div>
+  </div>
+</section>
+
+<section class="section" style="margin-top:20px">
+  <div class="card">
+    <h3>🧩 三步做完形</h3>
+    <div class="strategy-grid">
+      <div class="strategy-item"><b>① 通读不看选项</b><span>先花 1 分钟读完，抓住「谁、做了什么、结果如何」这条主线。</span></div>
+      <div class="strategy-item"><b>② 逐空找依据</b><span>每空都要能在上下文找到线索：前文交代、后文呼应、或固定搭配。</span></div>
+      <div class="strategy-item"><b>③ 回读查逻辑</b><span>填完全文再读一遍，检查时态、人称、褒贬是否一致。这步最容易被跳过，也最容易丢分。</span></div>
+    </div>
+  </div>
+</section>
+
+<section class="section" style="margin-top:26px">
+  ${CLOZE.map(clozeHtml).join('')}
+</section>
+`;
+
+  const script = `
+ZK.ready(function(){
+  var P = window.ZK;
+  document.querySelectorAll('.cloze-item').forEach(function(item){
+    var ans = parseInt(item.getAttribute('data-ans'), 10);
+    var card = item.closest('.article-card');
+    item.querySelectorAll('.qopt').forEach(function(b){
+      b.addEventListener('click', function(){
+        if (item.__done) return;
+        item.__done = true;
+        var k = parseInt(b.getAttribute('data-k'), 10);
+        var ok = k === ans;
+        item.querySelectorAll('.qopt').forEach(function(x){
+          var xi = parseInt(x.getAttribute('data-k'), 10);
+          x.classList.add('locked');
+          if (xi === ans) x.classList.add('right');
+          else if (xi === k) x.classList.add('wrong');
+        });
+        var pid = card.id, n = parseInt(item.getAttribute('data-n'), 10);
+        var passage = (window.ZK_DATA.CLOZE || []).find(function(c){ return c.id === pid; });
+        var blank = passage && passage.blanks.find(function(b){ return b.n === n; });
+        var fb = item.querySelector('.cloze-fb');
+        var html = '<div class="feedback ' + (ok ? 'auto-next' : 'bad') + '">';
+        html += '<b>' + (ok ? '✓ 正确' : '✕ 正确答案是 ' + 'ABCD'[ans]) + '</b>';
+        if (blank) {
+          html += '<div class="explain"><div class="exp-row exp-why"><span class="exp-tag">依据</span><span>' + P.esc(blank.why) + '</span></div></div>';
+        }
+        html += '</div>';
+        fb.innerHTML = html;
+        P.sfx(ok ? 'ok' : 'bad');
+        P.bumpDay('questions', 1);
+        P.qRecord('cloze-' + pid, ok, pid + '-' + n);
+        // 更新得分
+        var okN = 0;
+        card.querySelectorAll('.cloze-item').forEach(function(ci){
+          if (ci.__done && !ci.querySelector('.qopt.wrong')) okN++;
+        });
+        var el = document.getElementById('score-' + pid);
+        if (el) el.textContent = okN + ' / ' + card.querySelectorAll('.cloze-item').length;
+      });
+    });
+  });
+
+  document.querySelectorAll('[data-toggle-trans]').forEach(function(b){
+    b.addEventListener('click', function(){
+      var id = b.getAttribute('data-toggle-trans');
+      var el = document.getElementById('trans-' + id);
+      if (!el) return;
+      el.hidden = !el.hidden;
+      b.textContent = el.hidden ? '显示中文译文' : '隐藏中文译文';
+    });
+  });
+});
+`;
+
+  write('cloze.html', page({
+    title: '完形填空 · 8 分',
+    desc: `北京中考英语完形填空 ${CLOZE.length} 篇 ${totalBlanks} 空，每题附上下文依据与中文译文。`,
+    active: 'cloze', body, script, dataKeys: ['CLOZE'],
+  }));
+}
+
+/* ==========================================================
+   书面表达页（北京卷第五部分，10 分）
+   ========================================================== */
+function buildWriting() {
+  const cards = WRITING.map((w) => {
+    const words = w.model.trim().split(/\s+/).filter((x) => /[A-Za-z']/.test(x)).length;
+    return `<div class="card article-card">
+      <div class="article-head">
+        <h3>${esc(w.title)}</h3>
+        <div class="meta">${esc(w.type)} · ${esc(w.level)} · 10 分 · 范文 ${words} 词</div>
+      </div>
+
+      <div class="gsec">
+        <div class="gsec-t">题目要求</div>
+        <p style="white-space:pre-line">${esc(w.prompt)}</p>
+      </div>
+
+      ${w.given ? `<div class="gsec"><div class="gsec-t">已给出的开头/结尾（不计入词数）</div><pre class="given">${esc(w.given)}</pre></div>` : ''}
+
+      <div class="gsec">
+        <div class="gsec-t">写作提纲 · 每段写什么</div>
+        <ol class="outline">${w.outline.map((o) => `<li>${esc(o)}</li>`).join('')}</ol>
+      </div>
+
+      <div class="gsec">
+        <div class="gsec-t">必备句式 · 可直接套用</div>
+        <div class="kp-list">${w.keyPoints.map((k) => `<div class="kp"><span class="kp-en">${esc(k.en)}</span><span class="kp-zh">${esc(k.zh)}</span></div>`).join('')}</div>
+      </div>
+
+      <div class="gsec">
+        <div class="gsec-t">范文</div>
+        <pre class="model">${esc(w.model)}</pre>
+        <button class="btn soft sm" data-copy="1">复制范文</button>
+        <span class="note copy-tip"></span>
+      </div>
+
+      <div class="gsec">
+        <div class="gsec-t">评分要点 · 为什么这样写能得分</div>
+        <ul class="tips">${w.tips.map((t) => `<li>${esc(t)}</li>`).join('')}</ul>
+      </div>
+    </div>`;
+  }).join('');
+
+  const body = `
+<div class="page-head">
+  <div class="crumb"><a href="index.html">首页</a> / 书面表达</div>
+  <h1>书面表达</h1>
+  <p class="lede">北京卷第五部分 <b>10 分</b>，通常要求 80–100 词。这里是<b>唯一能自己控制得分</b>的题型——只要把要点写全、语言不出错，就能稳拿 8 分以上。</p>
+</div>
+
+<section class="section" style="margin-top:22px">
+  <div class="card">
+    <h3>📝 10 分是怎么给的</h3>
+    <table class="tbl" style="margin-top:12px">
+      <thead><tr><th>维度</th><th>要求</th><th>怎么练</th></tr></thead>
+      <tbody>
+        <tr><td><b>内容要点</b></td><td>题目要求的每一条都写到</td><td>下笔前先把要点列成 1/2/3，写完逐条对照打勾</td></tr>
+        <tr><td><b>语言准确</b></td><td>时态、人称、拼写、搭配不出错</td><td>写完后专门检查动词形式与单复数</td></tr>
+        <tr><td><b>结构连贯</b></td><td>有开头结尾，用连接词分层</td><td>背熟 First / Second / Besides / In a word</td></tr>
+      </tbody>
+    </table>
+    <p class="note" style="margin-top:12px"><b>提分优先级：</b>先把要点写全（这是硬分）→ 再改语言错误 → 最后才追求高级句式。字数不足 60 词会明显扣分。</p>
+  </div>
+</section>
+
+<section class="section" style="margin-top:26px">
+  ${cards}
+</section>
+
+<section class="section">
+  <div class="card">
+    <h3>✍️ 写完自查清单</h3>
+    <ol class="outline" style="margin-top:10px">
+      <li>题目给的要点，是否每条都有对应句子？（漏一条扣内容分）</li>
+      <li>时态是否统一？（记叙用过去时，通知/介绍用现在或将来时）</li>
+      <li>第三人称单数的动词加 -s 了吗？</li>
+      <li>可数名词复数加 -s 了吗？冠词有没有漏？</li>
+      <li>有没有用连接词分层？（First / Second / Besides / In a word）</li>
+      <li>字数够 80 词了吗？</li>
+    </ol>
+  </div>
+</section>
+`;
+
+  const script = `
+ZK.ready(function(){
+  var P = window.ZK;
+  document.querySelectorAll('[data-copy]').forEach(function(b){
+    b.addEventListener('click', function(){
+      var card = b.closest('.article-card');
+      var pre = card.querySelector('.model');
+      var txt = pre ? pre.textContent : '';
+      var tip = card.querySelector('.copy-tip');
+      function done(ok){
+        if (tip) tip.textContent = ok ? ' 已复制' : ' 复制失败，请手动选中';
+        P.toast(ok ? '范文已复制' : '复制失败');
+      }
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(txt).then(function(){ done(true); }, function(){ done(false); });
+      } else {
+        try {
+          var ta = document.createElement('textarea');
+          ta.value = txt; document.body.appendChild(ta); ta.select();
+          document.execCommand('copy'); document.body.removeChild(ta);
+          done(true);
+        } catch(e){ done(false); }
+      }
+    });
+  });
+});
+`;
+
+  write('writing.html', page({
+    title: '书面表达 · 10 分',
+    desc: `北京中考英语书面表达专项 ${WRITING.length} 篇，含写作提纲、必备句式、范文与评分要点。`,
+    active: 'writing', body, script, dataKeys: ['WRITING'],
+  }));
+}
+
+function buildReading() {
+  const totalQ = PASSAGES.reduce((s, p) => s + p.questions.length, 0);
+  const totalE = PASSAGES.reduce((s, p) => s + (p.express || []).length, 0);
+  const sets = [...new Set(PASSAGES.map((p) => p.set))].sort();
+
+  const levelBadge = (lv) => {
+    const map = { A: '应用文', B: '记叙文', C: '说明文', D: '议论文' };
+    return map[lv] || lv;
+  };
+
+  const passageHtml = (p) => {
+    const paras = p.passage.split('\n\n').map((x) => `<p class="passage-p">${esc(x)}</p>`).join('');
+    const qs = p.questions.map((q, qi) => {
+      const opts = q.options.map((o, k) =>
+        `<button class="qopt" data-k="${k}"><span class="key">${'ABCD'[k]}</span><span>${esc(o)}</span></button>`
+      ).join('');
+      return `<div class="read-q" data-ans="${q.answer}" data-id="${p.id}-${qi + 1}">
+        <div class="read-q-stem"><b>${qi + 1}.</b> ${esc(q.q)}</div>
+        <div class="qopts">${opts}</div>
+        <div class="read-fb"></div>
+      </div>`;
+    }).join('');
+
+    // 阅读表达：输入框判分
+    const express = (p.express || []).map((e, ei) => `
+      <div class="express-q" data-id="${p.id}-e${ei + 1}">
+        <div class="read-q-stem"><b>表达 ${ei + 1}.</b> ${esc(e.q)}</div>
+        <div class="qfill">
+          <input class="field express-in" type="text" placeholder="用英文作答，按 Enter 提交" autocomplete="off" spellcheck="false">
+          <button class="btn primary sm express-sub">提交</button>
+        </div>
+        <div class="read-fb"></div>
+      </div>`).join('');
+
+    return `<div class="card article-card" id="${p.id}">
+      <div class="article-head">
+        <h3>${esc(p.title)}</h3>
+        <div class="meta">${p.level} 篇 · ${levelBadge(p.level)} · ${p.questions.length} 题${p.express && p.express.length ? ' + 阅读表达 ' + p.express.length + ' 题' : ''}</div>
+      </div>
+      <div class="note strategy">${esc(p.intro)}</div>
+      <div class="passage">${paras}</div>
+      <div class="read-list">${qs}</div>
+      ${express ? `<div class="express-block"><div class="gsec-t">阅读表达 · 用英文作答</div>${express}</div>` : ''}
+      <div class="article-actions">
+        <span class="cloze-score" id="score-${p.id}">0 / ${p.questions.length + (p.express || []).length}</span>
+      </div>
+    </div>`;
+  };
+
+  const body = `
+<div class="page-head">
+  <div class="crumb"><a href="index.html">首页</a> / 阅读理解</div>
+  <h1>阅读理解与阅读表达</h1>
+  <p class="lede">北京卷第三部分阅读理解 <b>13 小题 × 2 分 = 26 分</b>，第四部分阅读表达 <b>4 小题 × 1 分 = 4 分</b>，合计 <b>30 分</b>，是笔试里分值最高的板块。每道题答完都会给出<b>原文定位句</b>、<b>为什么对</b>、<b>错项为什么错</b>三层解析。</p>
+</div>
+
+<section class="section" style="margin-top:22px">
+  <div class="kv">
+    <div class="k"><b data-count="${PASSAGES.length}">${PASSAGES.length}</b><span>阅读篇目</span></div>
+    <div class="k"><b data-count="${totalQ}">${totalQ}</b><span>选择题</span></div>
+    <div class="k"><b data-count="${totalE}">${totalE}</b><span>阅读表达</span></div>
+    <div class="k"><b>30</b><span>对应分值</span></div>
+  </div>
+</section>
+
+<section class="section" style="margin-top:20px">
+  <div class="card">
+    <h3>📖 四类文章的读法不同</h3>
+    <div class="strategy-grid">
+      <div class="strategy-item"><b>A 篇 · 应用文</b><span>先看题干再扫读定位，不必逐句翻译。警惕时间、地点、条件被张冠李戴。</span></div>
+      <div class="strategy-item"><b>B 篇 · 记叙文</b><span>抓时间线与人物态度变化。注意 but / however / then 后面的转折。</span></div>
+      <div class="strategy-item"><b>C 篇 · 说明文</b><span>抓段落主旨句与数据细节。因果链题要回到「为什么」的原句。</span></div>
+      <div class="strategy-item"><b>D 篇 · 议论文</b><span>区分「支持者观点」「反对者观点」「作者观点」三者，别混。作者观点常在让步之后。</span></div>
+    </div>
+  </div>
+</section>
+
+${sets.map((s) => `
+<section class="section" style="margin-top:26px">
+  <div class="section-head">
+    <div class="section-head-left">
+      <span class="kicker">第 ${s} 套</span>
+      <h2>${PASSAGES.filter((p) => p.set === s).map((p) => p.level).join(' / ')} 四篇</h2>
+      <span class="sub">建议按 A → B → C → D 顺序做，用时控制在 30 分钟内</span>
+    </div>
+  </div>
+  ${PASSAGES.filter((p) => p.set === s).map(passageHtml).join('')}
+</section>`).join('')}
+
+<section class="section">
+  <div class="card">
+    <h3>⏱ 应试提醒</h3>
+    <p class="desc" style="margin-top:8px">阅读理解每题 2 分，是笔试单题分值最高的题型。做完必须回到原文核对：<b>细节题</b>找到定位句再选；<b>推理题</b>确认依据在原文（不能凭常识）；<b>主旨题</b>看首末段与每段首句；<b>词义猜测题</b>看上下文同义或反义线索。阅读表达必须用<b>完整英文句子</b>作答，只写关键词会扣分。</p>
+  </div>
+</section>
+`;
+
+  const script = `
+ZK.ready(function(){
+  var P = window.ZK;
+
+  /* 选择题判分 + 三层解析 */
+  document.querySelectorAll('.read-q').forEach(function(item){
+    var ans = parseInt(item.getAttribute('data-ans'), 10);
+    var card = item.closest('.article-card');
+    item.querySelectorAll('.qopt').forEach(function(b){
+      b.addEventListener('click', function(){
+        if (item.__done) return;
+        item.__done = true;
+        var k = parseInt(b.getAttribute('data-k'), 10);
+        var ok = k === ans;
+        item.querySelectorAll('.qopt').forEach(function(x){
+          var xi = parseInt(x.getAttribute('data-k'), 10);
+          x.classList.add('locked');
+          if (xi === ans) x.classList.add('right');
+          else if (xi === k) x.classList.add('wrong');
+        });
+        // 从数据里取解析
+        var pid = card.id, qidx = parseInt(item.getAttribute('data-id').split('-').pop(), 10) - 1;
+        var passage = (window.ZK_DATA.PASSAGES || []).find(function(p){ return p.id === pid; });
+        var q = passage && passage.questions[qidx];
+        var fb = item.querySelector('.read-fb');
+        var html = '<div class="feedback ' + (ok ? 'auto-next' : 'bad') + '">';
+        html += '<b>' + (ok ? '✓ 正确' : '✕ 正确答案是 ' + 'ABCD'[ans]) + '</b>';
+        if (q) {
+          html += '<div class="explain">';
+          html += '<div class="exp-row exp-locate"><span class="exp-tag">原文定位</span><span>' + P.esc(q.locate) + '</span></div>';
+          html += '<div class="exp-row exp-why"><span class="exp-tag">为什么对</span><span>' + P.esc(q.why) + '</span></div>';
+          html += '<div class="exp-row exp-trap"><span class="exp-tag">错项分析</span><span>' + P.esc(q.trap) + '</span></div>';
+          html += '</div>';
+        }
+        html += '</div>';
+        fb.innerHTML = html;
+        P.sfx(ok ? 'ok' : 'bad');
+        P.bumpDay('questions', 1);
+        // 记录到错题本（复用语法题机制，topic 用篇目 id）
+        P.qRecord('reading-' + pid, ok, pid + '-' + (qidx + 1));
+        updateScore(card);
+      });
+    });
+  });
+
+  /* 阅读表达判分：关键词组命中 */
+  function norm(s) {
+    return String(s || '').toLowerCase()
+      .replace(/[’‘]/g, "'")
+      .replace(/[.,!?;:"]/g, '')
+      .replace(/\\s+/g, ' ')
+      .trim();
+  }
+  function checkExpress(val, accept) {
+    var v = norm(val);
+    if (!v) return false;
+    return accept.some(function(a){
+      var na = norm(a);
+      if (!na) return false;
+      // 标准答案本身或包含关系都算对；也允许答案包含在作答里
+      return v === na || v.indexOf(na) >= 0 || na.indexOf(v) >= 0 && v.length >= na.length * 0.6;
+    });
+  }
+
+  document.querySelectorAll('.express-q').forEach(function(item){
+    var card = item.closest('.article-card');
+    // accept 从内联数据里取：不用 data-* 属性传递，避免 HTML 转义破坏 JSON
+    var pid0 = card.id, eidx0 = parseInt(item.getAttribute('data-id').split('-e').pop(), 10) - 1;
+    var pass0 = (window.ZK_DATA.PASSAGES || []).find(function(p){ return p.id === pid0; });
+    var accept = (pass0 && pass0.express && pass0.express[eidx0] && pass0.express[eidx0].accept) || [];
+    var inp = item.querySelector('.express-in');
+    var submit = function(){
+      if (item.__done) return;
+      item.__done = true;
+      var ok = checkExpress(inp.value, accept);
+      inp.classList.add(ok ? 'right' : 'wrong');
+      inp.readOnly = true;
+      item.querySelector('.express-sub').disabled = true;
+      var fb = item.querySelector('.read-fb');
+      var pid = card.id, eidx = parseInt(item.getAttribute('data-id').split('-e').pop(), 10) - 1;
+      var passage = (window.ZK_DATA.PASSAGES || []).find(function(p){ return p.id === pid; });
+      var e = passage && passage.express && passage.express[eidx];
+      var html = '<div class="feedback ' + (ok ? 'auto-next' : 'bad') + '">';
+      html += '<b>' + (ok ? '✓ 正确' : '✕ 参考答案') + '</b>';
+      if (e) {
+        if (!ok) html += '<div class="ref-answer">' + P.esc(e.answer) + '</div>';
+        html += '<div class="explain"><div class="exp-row exp-why"><span class="exp-tag">依据</span><span>' + P.esc(e.why) + '</span></div></div>';
+      }
+      html += '</div>';
+      fb.innerHTML = html;
+      P.sfx(ok ? 'ok' : 'bad');
+      P.bumpDay('questions', 1);
+      P.qRecord('reading-' + pid, ok, pid + '-e' + (eidx + 1));
+      updateScore(card);
+    };
+    item.querySelector('.express-sub').addEventListener('click', submit);
+    inp.addEventListener('keydown', function(ev){ if (ev.key === 'Enter') submit(); });
+  });
+
+  function updateScore(card){
+    var total = card.querySelectorAll('.read-q, .express-q').length;
+    var done = card.querySelectorAll('.qopt.right, .express-in.right').length;
+    // 只统计「答对的题」，不是「标绿的选项」
+    var rightN = 0;
+    card.querySelectorAll('.read-q').forEach(function(q){ if (q.__done && q.querySelector('.qopt.right') && q.__right) rightN++; });
+    var el = document.getElementById('score-' + card.id);
+    if (el) {
+      var rq = card.querySelectorAll('.read-q').length;
+      var okQ = 0;
+      card.querySelectorAll('.read-q').forEach(function(q){
+        if (!q.__done) return;
+        var a = parseInt(q.getAttribute('data-ans'), 10);
+        var picked = q.querySelector('.qopt.wrong');
+        if (!picked) okQ++;  // 没选错项 = 选对了
+      });
+      var okE = card.querySelectorAll('.express-in.right').length;
+      el.textContent = (okQ + okE) + ' / ' + total;
+    }
+  }
+
+  /* 译文/原文切换不需要，但提供「折叠原文」帮助二刷 */
+  document.querySelectorAll('.article-card').forEach(function(card){
+    var head = card.querySelector('.article-head');
+    if (!head) return;
+    var btn = document.createElement('button');
+    btn.className = 'btn xs ghost fold-btn';
+    btn.textContent = '收起原文';
+    head.appendChild(btn);
+    btn.addEventListener('click', function(){
+      var ps = card.querySelector('.passage');
+      var hidden = ps.style.display === 'none';
+      ps.style.display = hidden ? '' : 'none';
+      btn.textContent = hidden ? '收起原文' : '展开原文';
+    });
+  });
+});
+`;
+
+  write('reading.html', page({
+    title: '阅读理解与阅读表达 · 30 分',
+    desc: `北京中考英语阅读理解 ${totalQ} 题与阅读表达 ${totalE} 题，每题附原文定位、正确理由与错项分析。`,
+    active: 'reading', body, script, dataKeys: ['PASSAGES'],
+  }));
+}
+
 function buildReview() {
   // 按语法族汇总题量，用于「按语法族筛选」的 chip 标签
   const groupChips = GRAMMAR.map((g) => {
@@ -1159,13 +1685,13 @@ function buildWrong() {
 <div class="page-head">
   <div class="crumb"><a href="index.html">首页</a> / 错题本</div>
   <h1>错题本</h1>
-  <p class="lede">单词错题与语法错题自动收纳在这里。单词答对一次即移出，语法题答对后按遗忘曲线排期复习。</p>
+  <p class="lede">单词、语法、阅读、完形的错题都自动收纳在这里。单词需连对 2 次才移出；其他题目答对一次即出册，并按遗忘曲线排期复习。</p>
 </div>
 
 <section class="section" style="margin-top:22px">
   <div class="kv">
     <div class="k"><b id="kWn" style="color:var(--rose)">0</b><span>单词错题</span></div>
-    <div class="k"><b id="kGn" style="color:var(--rose)">0</b><span>语法错题</span></div>
+    <div class="k"><b id="kGn" style="color:var(--rose)">0</b><span>题目错题</span></div>
     <div class="k"><b id="kAll">0</b><span>合计</span></div>
   </div>
 </section>
@@ -1184,7 +1710,7 @@ function buildWrong() {
 <section class="section" style="margin-top:28px">
   <div class="section-head">
     <div class="section-head-left">
-      <h2 style="font-size:1.15rem">语法错题</h2>
+      <h2 style="font-size:1.15rem">题目错题</h2>
       <span class="sub">点「重做这题」立即重练，答对即移出</span>
     </div>
     <button class="btn ghost sm" id="clearG">清空语法错题</button>
@@ -1204,6 +1730,31 @@ ZK.ready(function(){
   WORDS.forEach(function(w){ byWord[w.w.toLowerCase()] = w; });
   var byQ = {};
   Q.forEach(function(q){ byQ[q.id] = q; });
+  // 阅读与完形的错题也要能在错题本里显示——
+  // 它们的 id 形如 s1-a-3 / s1-a-e2 / cloze-1-2，需要单独建索引。
+  (ZK_DATA.PASSAGES || []).forEach(function(p){
+    p.questions.forEach(function(q, i){
+      byQ[p.id + '-' + (i + 1)] = {
+        id: p.id + '-' + (i + 1), kind: 'reading', src: p.title,
+        stem: q.q, options: q.options, answer: q.answer,
+        why: q.why, locate: q.locate, trap: q.trap,
+      };
+    });
+    (p.express || []).forEach(function(e, i){
+      byQ[p.id + '-e' + (i + 1)] = {
+        id: p.id + '-e' + (i + 1), kind: 'express', src: p.title,
+        stem: e.q, answer: e.answer, why: e.why,
+      };
+    });
+  });
+  (ZK_DATA.CLOZE || []).forEach(function(c){
+    c.blanks.forEach(function(b){
+      byQ[c.id + '-' + b.n] = {
+        id: c.id + '-' + b.n, kind: 'cloze', src: c.title,
+        stem: '第 (' + b.n + ') 空', options: b.options, answer: b.answer, why: b.why,
+      };
+    });
+  });
 
   function drawWords(){
     var wb = ZK.wordBook();
@@ -1284,7 +1835,7 @@ ZK.ready(function(){
   write('wrong.html', page({
     title: '错题本',
     desc: '北京中考英语单词错题与语法错题本，支持重做与自动移出。',
-    active: 'wrong', body, script, dataKeys: ['WORDS', 'QUESTIONS'],
+    active: 'wrong', body, script, dataKeys: ['WORDS', 'QUESTIONS', 'PASSAGES', 'CLOZE'],
   }));
 }
 
@@ -1323,50 +1874,50 @@ const PLAN = [
     focus: ['nonfinite', 'modal'],
   },
   {
-    week: 4, title: '从句攻坚，理清三大从句',
-    goal: '宾语从句的语序、定语从句的关系代词、状语从句的主将从现全部拿下。',
+    week: 4, title: '从句攻坚 + 阅读起步',
+    goal: '宾语从句语序、定语从句关系词、状语从句主将从现全部拿下；同时开始练阅读 A 篇。',
     tasks: [
       '读「从句」族 4 个考点，宾语从句的「陈述句语序」要默写一遍。',
       '「练语法」范围选「专攻最弱考点」，做 20 题。',
-      '把「从句」族的 4 个考点各练 5 题，直到正确率上到 80%。',
+      '「阅读理解」做第 1 套的 A、B 两篇，重点看解析里的「原文定位」怎么找。',
     ],
-    focus: ['clause', 'conjunction'],
+    focus: ['clause', 'reading'],
   },
   {
-    week: 5, title: '形容词副词与介词，补齐细节分',
-    goal: '比较等级、as…as、the more…the more 与 in/on/at 时间介词全部正确。',
+    week: 5, title: '形容词副词介词 + 完形入门',
+    goal: '比较等级与时间介词全部正确；掌握完形「先通读再回填」的方法。',
     tasks: [
       '读「形容词与副词」「介词」「数词」三族。',
       '「练语法」练「语法填空」题型 15 题。',
-      '练「易混点」类题目：since/for、few/little、used to/be used to 各 3 题。',
+      '「完形填空」做第 1 篇，做完先别对答案，回读全文检查逻辑，再看解析。',
     ],
-    focus: ['adjadv', 'prep', 'numeral'],
+    focus: ['adjadv', 'prep', 'cloze'],
   },
   {
-    week: 6, title: '综合强化，扫清剩余薄弱点',
-    goal: '全部 57 个考点的正确率都上到 80% 以上，错题本清零一轮。',
+    week: 6, title: '阅读主攻，冲刺 30 分',
+    goal: '四类文章的读法成型，阅读错题控制在 2 个以内，阅读表达会用完整句作答。',
     tasks: [
-      '「练语法」范围选「专攻最弱考点」，连续做 3 组、每组 20 题。',
-      '背单词范围切到「只背短语」，155 条短语过一遍。',
-      '把错题本里的语法错题全部重做，直到清零。',
+      '「阅读理解」做第 1 套的 C、D 两篇，D 篇注意区分「作者观点」与「他人观点」。',
+      '做第 1 套的 4 道阅读表达，必须写完整英文句子。',
+      '「练语法」范围选「专攻最弱考点」，做 20 题保持手感。',
     ],
-    focus: ['agreement', 'sentence'],
+    focus: ['reading'],
   },
   {
-    week: 7, title: '题型专攻，三种题型各打一轮',
-    goal: '单选、改错、语法填空三种题型各做一轮，掌握各自的解题节奏。',
+    week: 7, title: '写作成文 + 完形提速',
+    goal: '四类文体各写一篇，字数达标、要点齐全；完形错不超过 2 个。',
     tasks: [
-      '「练语法」只练「单项填空」题型，做 20 题，控制在 8 分钟内。',
-      '只练「写作改错」题型 15 题，专治固定搭配与中式表达。',
-      '只练「语法填空」题型 15 题，注意词形变化与时态。',
+      '读「书面表达」的通知与书信两篇，各抄一遍范文，标出连接词。',
+      '自己限时 20 分钟写一篇议论文，再对照范文与评分要点改。',
+      '「完形填空」做第 2 篇，限时 10 分钟，做完回读全文查逻辑。',
     ],
-    focus: ['nonfinite', 'modal'],
+    focus: ['writing', 'cloze'],
   },
   {
     week: 8, title: '全真模拟，回归错题',
-    goal: '按真实时间做一套完整笔试，错题本清零。',
+    goal: '按真实时间做一套完整笔试（60 分），错题本清零。',
     tasks: [
-      '限时 12 分钟：单选 12 题（按真实卷面节奏做）。',
+      '限时 90 分钟完整一套：单选 12 题 + 完形 8 空 + 阅读 17 题 + 写一篇作文。',
       '把错题本里剩下的错题全部重做，直到清零。',
       '背单词范围选「核心高频」，快速过一遍，把标「已掌握」的再确认一次。',
     ],
@@ -1386,7 +1937,12 @@ function buildPlan() {
     <div class="plan-links">${p.focus.map((f) => {
       const g = GRAMMAR.find((x) => x.id === f);
       if (g) return `<a class="chip" href="grammar/${g.id}.html">${esc(g.name)}</a>`;
-      const map = { mock: ['review.html', '全真练习'] };
+      const map = {
+        mock: ['review.html', '全真练习'],
+        reading: ['reading.html', '阅读理解'],
+        cloze: ['cloze.html', '完形填空'],
+        writing: ['writing.html', '书面表达'],
+      };
       const m = map[f];
       return m ? `<a class="chip" href="${m[0]}">${m[1]}</a>` : '';
     }).join('')}</div>
@@ -1695,6 +2251,9 @@ buildWords();
 buildThemes();
 buildQuiz();
 buildGrammar();
+buildReading();
+buildCloze();
+buildWriting();
 buildReview();
 buildWrong();
 buildPlan();
