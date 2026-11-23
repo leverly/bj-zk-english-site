@@ -1101,3 +1101,88 @@ body.js-ready .reveal.out { opacity: 0; transform: translateY(14px); }
    但 .gcard-body 仍占布局高度（实测 1236px），会把页面撑出大片空白。
    显式声明，不依赖浏览器默认行为。 */
 .gcard:not([open]) > .gcard-body { display: none; }
+
+/* ==========================================================
+   阅读理解：解题方法卡 + 一题一屏答题舞台
+   ========================================================== */
+
+/* 方法卡 */
+.method-card {
+  padding: 22px 24px; margin-bottom: 22px;
+  border-left: 4px solid var(--accent);
+  background: var(--surface);
+}
+.method-title {
+  font-weight: 700; font-size: 1.02rem; margin-bottom: 14px;
+  display: flex; align-items: center; gap: 8px;
+}
+.method-steps { margin: 0; padding-left: 20px; display: grid; gap: 12px; }
+.method-steps li { line-height: 1.7; }
+.method-steps li b { display: block; font-size: .93rem; margin-bottom: 2px; color: var(--text); }
+.method-steps li span { font-size: .88rem; color: var(--text-2); }
+.method-trap {
+  margin-top: 16px; padding: 10px 14px; border-radius: var(--r-sm);
+  background: var(--gold-soft); color: var(--text-2);
+  font-size: .85rem; line-height: 1.7;
+}
+
+/* 一题一屏：答题舞台 */
+.quiz-stage { margin-top: 20px; }
+.stage-bar {
+  display: flex; align-items: center; gap: 14px; flex-wrap: wrap;
+  padding: 10px 0 14px; border-top: 1px solid var(--border);
+}
+.stage-progress-text { font-size: .85rem; color: var(--text-2); white-space: nowrap; }
+.stage-progress-text b { color: var(--accent); font-size: .95rem; }
+.stage-dots { display: flex; gap: 6px; flex: 1 1 auto; flex-wrap: wrap; }
+.stage-dots i {
+  width: 9px; height: 9px; border-radius: 50%;
+  background: var(--border-2); transition: background .2s, transform .2s;
+}
+.stage-dots i.on { background: var(--accent); transform: scale(1.35); }
+.stage-dots i.done { background: var(--ok); }
+.stage-score { font-size: .85rem; color: var(--text-2); white-space: nowrap; }
+.stage-score b { color: var(--ok); font-size: .95rem; }
+
+.stage-body { min-height: 120px; }
+/* 只显示当前题：其余由 JS 设 display:none，这里兜底 */
+.stage-body > .read-q, .stage-body > .express-q { margin: 0; }
+
+.stage-nav {
+  display: flex; justify-content: space-between; gap: 12px;
+  margin-top: 18px; padding-top: 16px; border-top: 1px solid var(--border);
+}
+.stage-nav .btn:disabled { opacity: .38; cursor: not-allowed; }
+
+/* 原文折叠 */
+.passage-wrap { margin-bottom: 4px; }
+.fold-btn { margin-left: auto; }
+
+/* 解析三层：定位 / 为什么对 / 错项分析 */
+.explain { margin-top: 10px; display: grid; gap: 8px; }
+.exp-row {
+  display: flex; gap: 10px; align-items: flex-start;
+  font-size: .86rem; line-height: 1.72;
+  padding: 9px 12px; border-radius: var(--r-sm);
+  background: var(--surface-2);
+}
+.exp-tag {
+  flex: 0 0 auto; font-size: .74rem; font-weight: 700;
+  padding: 2px 8px; border-radius: var(--r-pill);
+  white-space: nowrap;
+}
+.exp-locate .exp-tag { background: var(--accent-soft); color: var(--accent); }
+.exp-locate span:last-child { font-family: var(--en); color: var(--text); }
+.exp-why .exp-tag { background: var(--ok-soft); color: var(--ok); }
+.exp-trap .exp-tag { background: var(--rose-soft); color: var(--rose); }
+.ref-answer {
+  margin: 8px 0; padding: 8px 12px; border-radius: var(--r-sm);
+  background: var(--ok-soft); color: var(--ok);
+  font-family: var(--en); font-weight: 600; font-size: .9rem;
+}
+
+@media (max-width: 640px) {
+  .stage-bar { gap: 8px; }
+  .stage-dots { order: 3; flex-basis: 100%; }
+  .method-card { padding: 18px 16px; }
+}

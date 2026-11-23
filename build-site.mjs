@@ -1229,32 +1229,80 @@ ZK.ready(function(){
   }));
 }
 
+/* 四类文章的解题方法（每类独立成卡，放在该类型篇目之前） */
+const READING_METHODS = {
+  A: {
+    name: '应用文',
+    icon: '📋',
+    tagline: '信息查找型 —— 答案就在原文里，考的是「找得快、看得准」',
+    steps: [
+      { t: '先看题干，划出关键词', d: '不要从第一句读起。先扫题干里问的是「谁 / 什么时间 / 什么条件」，圈出关键词。' },
+      { t: '带着关键词扫读原文', d: '眼睛只找那个词或它的同义表达，找到就停下来精读那一两句。' },
+      { t: '警惕四类陷阱', d: '① 时间张冠李戴（把集合时间当发车时间）；② 条件互换（把 A 社团的要求安到 B）；③ 范围扩大（原文说「一种」选项说「所有」）；④ 方向反了（把「免费」说成「要付费」）。' },
+    ],
+    trap: 'A 篇每题 2 分，错 1 题等于丢一道写作的 1/5。信息题最忌「凭印象选」，必须回原文核对。',
+  },
+  B: {
+    name: '记叙文',
+    icon: '📖',
+    tagline: '故事型 —— 考的是「谁做了什么、态度怎么变」',
+    steps: [
+      { t: '先抓时间线', d: '把「起初 → 后来 → 最后」三个节点找出来。记叙文的题目几乎都挂在这条线上。' },
+      { t: '盯住转折词', d: 'but / however / then / suddenly 后面往往是关键：人物态度变了、事情转向了。' },
+      { t: '分清「事实」与「感受」', d: '细节题问事实（几点、多少、做了什么）；主旨题问感受与收获。别把「他哭了」当成「他很生气」。' },
+    ],
+    trap: '主旨题的答案常常不是「表面结果」。比如「输了比赛」但主旨是「学会了跌倒后怎么做」——这类题要看结尾句。',
+  },
+  C: {
+    name: '说明文',
+    icon: '🔬',
+    tagline: '科普型 —— 考的是「原因、数据、结论」',
+    steps: [
+      { t: '找每段的主旨句', d: '说明文段落通常第一句就是主旨。先读每段第一句，串起来就是全文框架。' },
+      { t: '因果题回原文找 because', d: '问「为什么」的题，答案一定在 because / this is why / the reason is 后面。' },
+      { t: '数字题直接定位', d: '百分比、年份、数量这类题，扫数字比读句子快得多。' },
+      { t: '注意「旧说法 vs 新研究」', d: '科普文常先摆一个「人们以为」，再推翻它。问「以下哪个说法是错的」时，被推翻的那个就是答案。' },
+    ],
+    trap: '「以下哪项 NOT」这类题要看清 not / except。很多失分不是不懂，是漏看了否定词。',
+  },
+  D: {
+    name: '议论文',
+    icon: '💬',
+    tagline: '观点型 —— 考的是「谁说的、作者站哪边」',
+    steps: [
+      { t: '先分清三种声音', d: '① 支持者的观点（Supporters say…）；② 反对者的观点（Critics say…）；③ 作者自己的观点（In my opinion / I think…）。这三者常被混考。' },
+      { t: '作者观点常在让步之后', d: 'Although… / Of course… / These are serious points, but… 这些之后才是作者真正想说的。' },
+      { t: '警惕绝对化选项', d: 'all / never / only / always / must 这类词几乎都是错的——议论文很少有绝对结论。' },
+      { t: '注意类比句的作用', d: '作者打比方（如「不必人人学小提琴」）是为了说明道理，题目会问「为什么要提这个」。' },
+    ],
+    trap: 'D 篇最容易错的是「把作者观点当成他人观点」。看到 In my view / My own view 就标记下来，那是作者。',
+  },
+};
+
 function buildReading() {
   const totalQ = PASSAGES.reduce((s, p) => s + p.questions.length, 0);
   const totalE = PASSAGES.reduce((s, p) => s + (p.express || []).length, 0);
-  const sets = [...new Set(PASSAGES.map((p) => p.set))].sort();
+  const levels = ['A', 'B', 'C', 'D'];
 
-  const levelBadge = (lv) => {
-    const map = { A: '应用文', B: '记叙文', C: '说明文', D: '议论文' };
-    return map[lv] || lv;
-  };
-
+  /* 单篇渲染：原文 + 一题一屏的答题区
+     交互改进：不再把所有题铺开，而是一次只显示一题，
+     上一题/下一题翻页，进度可见，避免长页面滚动疲劳。 */
   const passageHtml = (p) => {
     const paras = p.passage.split('\n\n').map((x) => `<p class="passage-p">${esc(x)}</p>`).join('');
-    const qs = p.questions.map((q, qi) => {
+
+    const qCards = p.questions.map((q, qi) => {
       const opts = q.options.map((o, k) =>
         `<button class="qopt" data-k="${k}"><span class="key">${'ABCD'[k]}</span><span>${esc(o)}</span></button>`
       ).join('');
-      return `<div class="read-q" data-ans="${q.answer}" data-id="${p.id}-${qi + 1}">
+      return `<div class="read-q" data-ans="${q.answer}" data-id="${p.id}-${qi + 1}" data-qi="${qi}">
         <div class="read-q-stem"><b>${qi + 1}.</b> ${esc(q.q)}</div>
         <div class="qopts">${opts}</div>
         <div class="read-fb"></div>
       </div>`;
     }).join('');
 
-    // 阅读表达：输入框判分
-    const express = (p.express || []).map((e, ei) => `
-      <div class="express-q" data-id="${p.id}-e${ei + 1}">
+    const expressCards = (p.express || []).map((e, ei) => `
+      <div class="express-q" data-id="${p.id}-e${ei + 1}" data-qi="${p.questions.length + ei}">
         <div class="read-q-stem"><b>表达 ${ei + 1}.</b> ${esc(e.q)}</div>
         <div class="qfill">
           <input class="field express-in" type="text" placeholder="用英文作答，按 Enter 提交" autocomplete="off" spellcheck="false">
@@ -1263,26 +1311,72 @@ function buildReading() {
         <div class="read-fb"></div>
       </div>`).join('');
 
-    return `<div class="card article-card" id="${p.id}">
+    const totalItems = p.questions.length + (p.express || []).length;
+
+    return `<div class="card article-card reading-stage" id="${p.id}">
       <div class="article-head">
-        <h3>${esc(p.title)}</h3>
-        <div class="meta">${p.level} 篇 · ${levelBadge(p.level)} · ${p.questions.length} 题${p.express && p.express.length ? ' + 阅读表达 ' + p.express.length + ' 题' : ''}</div>
+        <div>
+          <h3>${esc(p.title)}</h3>
+          <div class="meta">${p.level} 篇 · ${READING_METHODS[p.level].name} · ${totalItems} 题</div>
+        </div>
+        <button class="btn xs ghost fold-btn" type="button">收起原文</button>
       </div>
+
       <div class="note strategy">${esc(p.intro)}</div>
-      <div class="passage">${paras}</div>
-      <div class="read-list">${qs}</div>
-      ${express ? `<div class="express-block"><div class="gsec-t">阅读表达 · 用英文作答</div>${express}</div>` : ''}
-      <div class="article-actions">
-        <span class="cloze-score" id="score-${p.id}">0 / ${p.questions.length + (p.express || []).length}</span>
+
+      <div class="passage-wrap">
+        <div class="passage">${paras}</div>
+      </div>
+
+      <div class="quiz-stage">
+        <div class="stage-bar">
+          <span class="stage-progress-text">第 <b class="stage-cur">1</b> / ${totalItems} 题</span>
+          <div class="stage-dots">${Array.from({ length: totalItems }, (_, i) => `<i data-dot="${i}"></i>`).join('')}</div>
+          <span class="stage-score">得分 <b>0</b> / ${totalItems}</span>
+        </div>
+
+        <div class="stage-body">
+          ${qCards}
+          ${expressCards}
+        </div>
+
+        <div class="stage-nav">
+          <button class="btn ghost sm stage-prev" type="button">← 上一题</button>
+          <button class="btn primary sm stage-next" type="button">下一题 →</button>
+        </div>
       </div>
     </div>`;
+  };
+
+  const levelSection = (lv) => {
+    const m = READING_METHODS[lv];
+    const list = PASSAGES.filter((p) => p.level === lv);
+    return `<section class="section" style="margin-top:30px">
+      <div class="section-head">
+        <div class="section-head-left">
+          <span class="kicker">${m.icon} ${lv} 篇 · ${m.name}</span>
+          <h2>${m.tagline}</h2>
+          <span class="sub">共 ${list.length} 篇 · ${list.reduce((s, p) => s + p.questions.length, 0)} 题</span>
+        </div>
+      </div>
+
+      <div class="card method-card">
+        <div class="method-title">${m.icon} ${m.name}的读法 · ${list.length} 篇练习</div>
+        <ol class="method-steps">
+          ${m.steps.map((st) => `<li><b>${esc(st.t)}</b><span>${esc(st.d)}</span></li>`).join('')}
+        </ol>
+        <div class="method-trap">⚠ ${esc(m.trap)}</div>
+      </div>
+
+      ${list.map(passageHtml).join('')}
+    </section>`;
   };
 
   const body = `
 <div class="page-head">
   <div class="crumb"><a href="index.html">首页</a> / 阅读理解</div>
   <h1>阅读理解与阅读表达</h1>
-  <p class="lede">北京卷第三部分阅读理解 <b>13 小题 × 2 分 = 26 分</b>，第四部分阅读表达 <b>4 小题 × 1 分 = 4 分</b>，合计 <b>30 分</b>，是笔试里分值最高的板块。每道题答完都会给出<b>原文定位句</b>、<b>为什么对</b>、<b>错项为什么错</b>三层解析。</p>
+  <p class="lede">北京卷第三部分阅读理解 <b>13 小题 × 2 分 = 26 分</b>，第四部分阅读表达 <b>4 小题 × 1 分 = 4 分</b>，合计 <b>30 分</b>，是笔试里分值最高的板块。四类文章读法不同，下面按 A/B/C/D 分别给出解题方法，每类 ${PASSAGES.filter((p) => p.level === 'A').length} 篇练习。</p>
 </div>
 
 <section class="section" style="margin-top:22px">
@@ -1296,27 +1390,17 @@ function buildReading() {
 
 <section class="section" style="margin-top:20px">
   <div class="card">
-    <h3>📖 四类文章的读法不同</h3>
+    <h3>📖 四类文章，四种读法</h3>
     <div class="strategy-grid">
-      <div class="strategy-item"><b>A 篇 · 应用文</b><span>先看题干再扫读定位，不必逐句翻译。警惕时间、地点、条件被张冠李戴。</span></div>
-      <div class="strategy-item"><b>B 篇 · 记叙文</b><span>抓时间线与人物态度变化。注意 but / however / then 后面的转折。</span></div>
-      <div class="strategy-item"><b>C 篇 · 说明文</b><span>抓段落主旨句与数据细节。因果链题要回到「为什么」的原句。</span></div>
-      <div class="strategy-item"><b>D 篇 · 议论文</b><span>区分「支持者观点」「反对者观点」「作者观点」三者，别混。作者观点常在让步之后。</span></div>
+      ${levels.map((lv) => {
+        const m = READING_METHODS[lv];
+        return `<div class="strategy-item"><b>${lv} 篇 · ${m.name}</b><span>${esc(m.tagline)}</span></div>`;
+      }).join('')}
     </div>
   </div>
 </section>
 
-${sets.map((s) => `
-<section class="section" style="margin-top:26px">
-  <div class="section-head">
-    <div class="section-head-left">
-      <span class="kicker">第 ${s} 套</span>
-      <h2>${PASSAGES.filter((p) => p.set === s).map((p) => p.level).join(' / ')} 四篇</h2>
-      <span class="sub">建议按 A → B → C → D 顺序做，用时控制在 30 分钟内</span>
-    </div>
-  </div>
-  ${PASSAGES.filter((p) => p.set === s).map(passageHtml).join('')}
-</section>`).join('')}
+${levels.map(levelSection).join('')}
 
 <section class="section">
   <div class="card">
@@ -1330,10 +1414,53 @@ ${sets.map((s) => `
 ZK.ready(function(){
   var P = window.ZK;
 
-  /* 选择题判分 + 三层解析 */
+  /* ---------- 一题一屏的舞台控制 ---------- */
+  document.querySelectorAll('.reading-stage').forEach(function(card){
+    var items = [].slice.call(card.querySelectorAll('.read-q, .express-q'));
+    var cur = 0;
+    var curEl = card.querySelector('.stage-cur');
+    var dots = [].slice.call(card.querySelectorAll('.stage-dots i'));
+    var scoreEl = card.querySelector('.stage-score b');
+    var prevBtn = card.querySelector('.stage-prev');
+    var nextBtn = card.querySelector('.stage-next');
+
+    function show(i){
+      cur = Math.max(0, Math.min(items.length - 1, i));
+      items.forEach(function(el, k){ el.style.display = (k === cur) ? '' : 'none'; });
+      if (curEl) curEl.textContent = cur + 1;
+      dots.forEach(function(d, k){ d.classList.toggle('on', k === cur); d.classList.toggle('done', !!items[k].__done); });
+      prevBtn.disabled = cur === 0;
+      nextBtn.disabled = cur === items.length - 1;
+      // 最后一题时按钮改为「看结果」
+      nextBtn.textContent = cur === items.length - 1 ? '已是最后一题' : '下一题 →';
+    }
+
+    function updateScore(){
+      var ok = 0;
+      items.forEach(function(el){
+        if (!el.__done) return;
+        if (el.classList.contains('express-q')) {
+          if (el.querySelector('.express-in.right')) ok++;
+        } else {
+          if (!el.querySelector('.qopt.wrong')) ok++;
+        }
+      });
+      if (scoreEl) scoreEl.textContent = ok;
+      dots.forEach(function(d, k){ d.classList.toggle('done', !!items[k].__done); });
+    }
+
+    prevBtn.addEventListener('click', function(){ show(cur - 1); });
+    nextBtn.addEventListener('click', function(){ show(cur + 1); });
+
+    card.__show = show;
+    card.__updateScore = updateScore;
+    show(0);
+  });
+
+  /* ---------- 选择题判分 ---------- */
   document.querySelectorAll('.read-q').forEach(function(item){
     var ans = parseInt(item.getAttribute('data-ans'), 10);
-    var card = item.closest('.article-card');
+    var card = item.closest('.reading-stage');
     item.querySelectorAll('.qopt').forEach(function(b){
       b.addEventListener('click', function(){
         if (item.__done) return;
@@ -1346,7 +1473,6 @@ ZK.ready(function(){
           if (xi === ans) x.classList.add('right');
           else if (xi === k) x.classList.add('wrong');
         });
-        // 从数据里取解析
         var pid = card.id, qidx = parseInt(item.getAttribute('data-id').split('-').pop(), 10) - 1;
         var passage = (window.ZK_DATA.PASSAGES || []).find(function(p){ return p.id === pid; });
         var q = passage && passage.questions[qidx];
@@ -1364,14 +1490,13 @@ ZK.ready(function(){
         fb.innerHTML = html;
         P.sfx(ok ? 'ok' : 'bad');
         P.bumpDay('questions', 1);
-        // 记录到错题本（复用语法题机制，topic 用篇目 id）
         P.qRecord('reading-' + pid, ok, pid + '-' + (qidx + 1));
-        updateScore(card);
+        if (card && card.__updateScore) card.__updateScore();
       });
     });
   });
 
-  /* 阅读表达判分：关键词组命中 */
+  /* ---------- 阅读表达判分 ---------- */
   function norm(s) {
     return String(s || '').toLowerCase()
       .replace(/[’‘]/g, "'")
@@ -1385,14 +1510,12 @@ ZK.ready(function(){
     return accept.some(function(a){
       var na = norm(a);
       if (!na) return false;
-      // 标准答案本身或包含关系都算对；也允许答案包含在作答里
-      return v === na || v.indexOf(na) >= 0 || na.indexOf(v) >= 0 && v.length >= na.length * 0.6;
+      return v === na || v.indexOf(na) >= 0 || (na.indexOf(v) >= 0 && v.length >= na.length * 0.6);
     });
   }
 
   document.querySelectorAll('.express-q').forEach(function(item){
-    var card = item.closest('.article-card');
-    // accept 从内联数据里取：不用 data-* 属性传递，避免 HTML 转义破坏 JSON
+    var card = item.closest('.reading-stage');
     var pid0 = card.id, eidx0 = parseInt(item.getAttribute('data-id').split('-e').pop(), 10) - 1;
     var pass0 = (window.ZK_DATA.PASSAGES || []).find(function(p){ return p.id === pid0; });
     var accept = (pass0 && pass0.express && pass0.express[eidx0] && pass0.express[eidx0].accept) || [];
@@ -1419,45 +1542,20 @@ ZK.ready(function(){
       P.sfx(ok ? 'ok' : 'bad');
       P.bumpDay('questions', 1);
       P.qRecord('reading-' + pid, ok, pid + '-e' + (eidx + 1));
-      updateScore(card);
+      if (card && card.__updateScore) card.__updateScore();
     };
     item.querySelector('.express-sub').addEventListener('click', submit);
     inp.addEventListener('keydown', function(ev){ if (ev.key === 'Enter') submit(); });
   });
 
-  function updateScore(card){
-    var total = card.querySelectorAll('.read-q, .express-q').length;
-    var done = card.querySelectorAll('.qopt.right, .express-in.right').length;
-    // 只统计「答对的题」，不是「标绿的选项」
-    var rightN = 0;
-    card.querySelectorAll('.read-q').forEach(function(q){ if (q.__done && q.querySelector('.qopt.right') && q.__right) rightN++; });
-    var el = document.getElementById('score-' + card.id);
-    if (el) {
-      var rq = card.querySelectorAll('.read-q').length;
-      var okQ = 0;
-      card.querySelectorAll('.read-q').forEach(function(q){
-        if (!q.__done) return;
-        var a = parseInt(q.getAttribute('data-ans'), 10);
-        var picked = q.querySelector('.qopt.wrong');
-        if (!picked) okQ++;  // 没选错项 = 选对了
-      });
-      var okE = card.querySelectorAll('.express-in.right').length;
-      el.textContent = (okQ + okE) + ' / ' + total;
-    }
-  }
-
-  /* 译文/原文切换不需要，但提供「折叠原文」帮助二刷 */
-  document.querySelectorAll('.article-card').forEach(function(card){
-    var head = card.querySelector('.article-head');
-    if (!head) return;
-    var btn = document.createElement('button');
-    btn.className = 'btn xs ghost fold-btn';
-    btn.textContent = '收起原文';
-    head.appendChild(btn);
+  /* ---------- 折叠原文（二刷用） ---------- */
+  document.querySelectorAll('.reading-stage').forEach(function(card){
+    var btn = card.querySelector('.fold-btn');
+    if (!btn) return;
     btn.addEventListener('click', function(){
-      var ps = card.querySelector('.passage');
-      var hidden = ps.style.display === 'none';
-      ps.style.display = hidden ? '' : 'none';
+      var pw = card.querySelector('.passage-wrap');
+      var hidden = pw.style.display === 'none';
+      pw.style.display = hidden ? '' : 'none';
       btn.textContent = hidden ? '收起原文' : '展开原文';
     });
   });
@@ -1466,7 +1564,7 @@ ZK.ready(function(){
 
   write('reading.html', page({
     title: '阅读理解与阅读表达 · 30 分',
-    desc: `北京中考英语阅读理解 ${totalQ} 题与阅读表达 ${totalE} 题，每题附原文定位、正确理由与错项分析。`,
+    desc: `北京中考英语阅读理解 ${totalQ} 题与阅读表达 ${totalE} 题，四类文章各有解题方法与原文定位解析。`,
     active: 'reading', body, script, dataKeys: ['PASSAGES'],
   }));
 }

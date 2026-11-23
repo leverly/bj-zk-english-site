@@ -673,3 +673,768 @@ PASSAGES.find((p) => p.id === 's2-d').express = [
     why: '原文末段：A better way is to teach students how to use phones well, and to set clear rules。',
   },
 ];
+
+/* ==========================================================
+   扩充篇目：每类（A/B/C/D）各补 2 篇，达到每类 4 篇
+   每篇仍严格遵守 locate / why / trap 三字段规范
+   ========================================================== */
+PASSAGES.push(
+  /* ---------- A 篇 3：活动海报 ---------- */
+  {
+    id: 's3-a', set: 3, level: 'A', type: '应用文',
+    title: 'School Clubs Open Day',
+    intro: 'A 篇应用文：海报类信息查找。先扫标题与表格结构，再按题干关键词定位，不要从头读。',
+    passage: `SCHOOL CLUBS OPEN DAY
+Saturday, September 14, 9:00 a.m. – 4:00 p.m.
+Come and try any club for free!
+
+【Robot Club】
+Room 201 ｜ 9:00 – 10:30 ｜ Mr Zhao
+Build a small car that can move by itself.
+For students in Grade 8 and 9 only. Max 15 students.
+
+【Cooking Club】
+School kitchen ｜ 10:00 – 12:00 ｜ Ms Sun
+Learn to make three simple dishes.
+All students welcome. Please bring an apron (围裙).
+
+【Photography Club】
+School garden ｜ 1:30 – 3:00 ｜ Mr Lin
+Learn how to take good photos with a phone.
+Bring your own phone or borrow one from the club.
+
+【Drama Club】
+Hall ｜ 2:00 – 4:00 ｜ Ms Huang
+Act out a short play in English.
+You need to read a short passage before you come — pick it up in Room 105.
+
+Note: If you want to join a club after Open Day, fill in the form on the school website before September 20.`,
+    questions: [
+      {
+        q: 'Which club is only for Grade 8 and 9 students?',
+        options: ['Robot Club.', 'Cooking Club.', 'Photography Club.', 'Drama Club.'],
+        answer: 0,
+        locate: 'For students in Grade 8 and 9 only. Max 15 students.',
+        why: 'Robot Club 部分明确写了「仅限 8、9 年级学生」，其他三个社团都写 All students welcome 或未设年级限制。',
+        trap: 'B 写的是 All students welcome；C、D 均未设年级限制，属于把 Robot Club 的条件安到别的社团上。',
+      },
+      {
+        q: 'What should students bring to the Cooking Club?',
+        options: ['A phone.', 'An apron.', 'A short passage.', 'A small car.'],
+        answer: 1,
+        locate: 'All students welcome. Please bring an apron (围裙).',
+        why: 'Cooking Club 的说明里明确要求带围裙（apron）。',
+        trap: 'A 手机是 Photography Club 要求的；C 短文是 Drama Club 要求提前读的；D 小车是 Robot Club 要做的作品。',
+      },
+      {
+        q: 'If a student wants to join Drama Club, what must he do BEFORE Open Day?',
+        options: ['Fill in a form online.', 'Borrow a phone.', 'Read a short passage.', 'Pay a small fee.'],
+        answer: 2,
+        locate: 'You need to read a short passage before you come — pick it up in Room 105.',
+        why: '定位句说「来之前需要读一篇短文」，并说明去 105 室领取，C 正确。',
+        trap: 'A 网上填表是 Open Day 之后加入社团的步骤，不是 Open Day 之前；B 是摄影社的事；D 全文标明日免费（for free）。',
+      },
+      {
+        q: 'What is the purpose of this poster?',
+        options: ['To sell tickets for a play.', 'To introduce clubs and invite students to try them.', 'To look for new teachers.', 'To report a school event.'],
+        answer: 1,
+        locate: 'Come and try any club for free!',
+        why: '海报标题是「社团开放日」，首句邀请「来免费体验任何社团」，全文列出四个社团的时间地点，目的是介绍并邀请体验。',
+        trap: 'A 戏剧社只是四个社团之一，不卖票；C 全文是招学生不是招老师；D 这是活动预告而非事后报道。',
+      },
+    ],
+    express: [],
+  },
+
+  /* ---------- A 篇 4：时间表 ---------- */
+  {
+    id: 's4-a', set: 4, level: 'A', type: '应用文',
+    title: 'A Day Trip to the Science Museum',
+    intro: 'A 篇应用文：行程表类。注意时间顺序与「先后关系」，这类题最爱考「几点做什么」。',
+    passage: `CLASS 2 DAY TRIP — SCIENCE MUSEUM
+Friday, October 18
+
+7:40  Meet at the school gate. Do not be late — the bus leaves at 7:50.
+8:00  Bus leaves. Journey takes about 50 minutes.
+8:50  Arrive at the museum. Teacher gives out worksheets.
+9:00  Visit Room 1: Space and Rockets. Watch a short film first.
+10:30 Visit Room 2: The Human Body. Try the "How fast can you run?" game.
+12:00 Lunch in the museum garden. Bring your own lunch — the café is closed for repairs.
+1:00  Free time in Room 3: Future Technology. You may buy small gifts here.
+2:30  Meet at the front desk. Hand in your worksheet.
+3:00  Bus leaves for school.
+4:00  Arrive back at school.
+
+Remember:
+• Wear your school uniform.
+• Do not touch the models in Room 1.
+• Photos are allowed everywhere except Room 1.`,
+    questions: [
+      {
+        q: 'What time does the bus leave the school?',
+        options: ['7:40.', '7:50.', '8:00.', '8:50.'],
+        answer: 1,
+        locate: '7:40  Meet at the school gate. Do not be late — the bus leaves at 7:50.',
+        why: '定位句明确区分了两件事：7:40 在校门口集合，7:50 发车。问的是发车时间，答 7:50。',
+        trap: 'A 7:40 是集合时间，不是发车时间——这是本题最大的坑；C 8:00 是行程表的下一项（车已出发后的记录）；D 8:50 是到达博物馆时间。',
+      },
+      {
+        q: 'Why must students bring their own lunch?',
+        options: ['The café is closed.', 'Lunch is too expensive.', 'There is no time to eat.', 'The museum has no restaurant.'],
+        answer: 0,
+        locate: 'Lunch in the museum garden. Bring your own lunch — the café is closed for repairs.',
+        why: '定位句用破折号给出原因：咖啡馆因维修关闭，所以要自带午餐。',
+        trap: 'B 全文未提价格；C 12:00 到 1:00 有整小时午餐时间；D 原文说咖啡馆是「关闭维修」，不是「没有餐厅」。',
+      },
+      {
+        q: 'In which room are students NOT allowed to take photos?',
+        options: ['Room 1.', 'Room 2.', 'Room 3.', 'The garden.'],
+        answer: 0,
+        locate: 'Photos are allowed everywhere except Room 1.',
+        why: '定位句说「除 1 号厅外，到处都可以拍照」，因此 1 号厅不能拍照。except 是关键词。',
+        trap: 'B、C、D 都在「除 1 号厅外」的范围内，可以拍照。漏看 except 会选错。',
+      },
+      {
+        q: 'What should students do at 2:30?',
+        options: ['Buy small gifts.', 'Hand in the worksheet.', 'Watch a film.', 'Get on the bus.'],
+        answer: 1,
+        locate: '2:30  Meet at the front desk. Hand in your worksheet.',
+        why: '行程表 2:30 对应「在前台集合，上交学习单」，B 正确。',
+        trap: 'A 买东西在 1:00 的自由活动时间；C 看电影是 9:00 在 1 号厅；D 3:00 才发车返校。',
+      },
+    ],
+    express: [],
+  },
+
+  /* ---------- B 篇 3：记叙文（成长类） ---------- */
+  {
+    id: 's3-b', set: 3, level: 'B', type: '记叙文',
+    title: 'The Day I Lost the Race',
+    intro: 'B 篇记叙文：成长类。注意「结果输了但收获了什么」，这类文章的主旨题答案往往不是表面结果。',
+    passage: `I had trained for the school 800-metre race for three months. Every morning I ran six laps before class. My father, who had been a runner himself, timed me with an old watch.
+
+On the day of the race, I felt strong. When the gun went off, I ran fast and soon was in second place. With 200 metres to go, I could see the boy in front of me. I decided to pass him.
+
+Then my left leg gave a sharp pain. I fell on the track. The other runners passed me one by one. I tried to stand up but my leg would not hold me.
+
+I wanted to give up. Then I heard my father's voice from the side: "Finish it. However slow."
+
+So I did. I limped the last 200 metres. The other runners had already finished and were drinking water. When I crossed the line, the whole playground was quiet — and then people began to clap. It was not the loud clapping for the winner. It was something different, quieter.
+
+My father met me at the finish line. He did not say "Bad luck" or "You should have been more careful". He said, "You finished."
+
+Later, my leg got better, but I never ran that fast again. I sometimes think about that afternoon. I did not win anything, and there was no medal for me. But I learned something that day that no medal could teach me: the race is not only about who is fastest. It is also about what you do after you fall.`,
+    questions: [
+      {
+        q: 'How long had the writer trained before the race?',
+        options: ['Three weeks.', 'Three months.', 'Six months.', 'One year.'],
+        answer: 1,
+        locate: 'I had trained for the school 800-metre race for three months.',
+        why: '定位句直接写明训练了三个月（three months）。',
+        trap: 'A 把「三个月」错记成「三周」；C、D 原文无依据。注意题干里的「每周六圈」是每天的跑量，不是训练时长。',
+      },
+      {
+        q: 'What happened when the writer tried to pass the runner in front?',
+        options: ['He won the race.', 'His leg hurt and he fell.', 'He stopped to rest.', 'The other runner fell too.'],
+        answer: 1,
+        locate: 'I decided to pass him. Then my left leg gave a sharp pain. I fell on the track.',
+        why: '定位句紧接在「决定超过他」之后：左腿剧痛、摔倒在跑道上，B 正确。',
+        trap: 'A 结果是他摔倒了，没赢；C 他是想站起来但腿撑不住，不是主动停下休息；D 原文没有别人摔倒。',
+      },
+      {
+        q: 'Why did the people clap when the writer crossed the line?',
+        options: ['Because he won the race.', 'Because he broke a record.', 'Because he finished despite the pain.', 'Because his father asked them to.'],
+        answer: 2,
+        locate: 'I limped the last 200 metres. ... When I crossed the line, the whole playground was quiet — and then people began to clap. It was not the loud clapping for the winner. It was something different, quieter.',
+        why: '原文特意说明「那不是给冠军的热烈掌声，而是另一种、更安静的」，结合他带伤走完全程，可知掌声是敬佩他的坚持，C 正确。',
+        trap: 'A 原文明确说这不是给冠军的掌声；B 全文没提纪录；D 原文没有父亲号召观众的情节。',
+      },
+      {
+        q: 'What did the writer learn from that day?',
+        options: ['He should train harder next time.', 'Winning is the most important thing.', 'What you do after falling matters.', 'He should not run long races.'],
+        answer: 2,
+        locate: 'the race is not only about who is fastest. It is also about what you do after you fall.',
+        why: '结尾句是全文主旨：比赛不只是比谁最快，还在于你跌倒之后做了什么。C 是原文的直接对应。',
+        trap: 'A 原文说「后来腿好了，但再没跑那么快」，重点不在训练量；B 与「不只是比谁最快」相反；D 原文无此结论。',
+      },
+    ],
+    express: [],
+  },
+
+  /* ---------- B 篇 4：记叙文（亲情类） ---------- */
+  {
+    id: 's4-b', set: 4, level: 'B', type: '记叙文',
+    title: 'My Grandfather\'s Letters',
+    intro: 'B 篇记叙文：亲情类。注意「物件」贯穿全文的作用，这类题常考「某个东西象征什么」。',
+    passage: `When my grandfather died, my mother found a wooden box in his desk. Inside were forty-two letters, all written by my grandmother.
+
+My grandmother died when my mother was only six. My mother had almost no memory of her. "I only remember her hands," she said once. "And a song she used to sing."
+
+The letters were written between 1962 and 1965, when my grandfather worked in a factory far from home. He came back only twice a year. So they wrote to each other — every week, for three years.
+
+My mother asked me to read them aloud. The first letters were about small things: whether the vegetables in the garden had come up, whether the roof leaked. Then they became about my mother as a baby — her first tooth, her first step, the way she laughed.
+
+One letter, written in winter, said: "She took her first steps today. She walked to the door and looked out, as if she were waiting for you. I told her you would come home soon. I hope I did not tell a lie."
+
+My grandfather kept these letters for over fifty years. He never spoke about them. But he kept every one.
+
+Now the box sits on my desk. Sometimes, when I am tired or unhappy, I open it and read one letter. I never met my grandmother. But through these letters, I feel I know her a little — a woman who wrote about vegetables and roofs and first steps, and who loved my grandfather enough to write to him every week for three years.`,
+    questions: [
+      {
+        q: 'How many letters were in the box?',
+        options: ['Twenty-four.', 'Forty-two.', 'Fifty.', 'Sixty-five.'],
+        answer: 1,
+        locate: 'Inside were forty-two letters, all written by my grandmother.',
+        why: '定位句直接写明盒子里有四十二封信（forty-two）。',
+        trap: 'A 把数字记反了；C 五十是「保存了五十多年」，不是信的数量；D 六十五是「1965 年」，属张冠李戴。',
+      },
+      {
+        q: 'Why did the grandparents write letters to each other?',
+        options: ['They had no telephone.', 'The grandfather worked far from home and came back only twice a year.', 'They liked writing better than talking.', 'The grandmother was often ill.'],
+        answer: 1,
+        locate: 'The letters were written between 1962 and 1965, when my grandfather worked in a factory far from home. He came back only twice a year.',
+        why: '定位句说明祖父在外地工厂工作、一年只回两次家，因此靠写信联系，B 完整概括。',
+        trap: 'A 原文没提有没有电话，属于自行推测；C 原文无此说法；D 祖母确实早逝，但那不是写信的原因。',
+      },
+      {
+        q: 'What was the winter letter mainly about?',
+        options: ['The leaking roof.', 'The writer\'s mother taking her first steps.', 'The grandfather coming home.', 'The vegetables in the garden.'],
+        answer: 1,
+        locate: 'She took her first steps today. She walked to the door and looked out, as if she were waiting for you.',
+        why: '定位句明确：冬天那封信写的是「她今天迈出了第一步」，B 正确。',
+        trap: 'A 漏雨的屋顶是早期信件的内容；C 信里说的是「告诉孩子爸爸很快回来」，不是他真的回来了；D 蔬菜也是早期内容。',
+      },
+      {
+        q: 'Why does the writer sometimes read the letters?',
+        options: ['To practise reading aloud.', 'To feel close to a grandmother he never met.', 'To find out about the old factory.', 'To copy her handwriting.'],
+        answer: 1,
+        locate: 'I never met my grandmother. But through these letters, I feel I know her a little',
+        why: '结尾句说明：虽然从没见过祖母，但通过这些信觉得自己对她有所了解，因此读信是为了接近这位未曾谋面的祖母。',
+        trap: 'A 朗读只是当年母亲的请求，不是现在读信的目的；C 工厂只是背景信息；D 原文未提临摹字迹。',
+      },
+    ],
+    express: [],
+  },
+
+  /* ---------- C 篇 3：说明文（科普） ---------- */
+  {
+    id: 's3-c', set: 3, level: 'C', type: '说明文',
+    title: 'How Do Chameleons Change Colour?',
+    intro: 'C 篇说明文：科普类。注意「常见误解 → 科学解释」的结构，这类文章最爱考「以下哪个说法是错的」。',
+    passage: `Most people believe that chameleons change colour to match their surroundings. This is one of the most common ideas about animals — and it is mostly wrong.
+
+Chameleons do change colour, but usually not to hide. Scientists have found that colour change has three main purposes.
+
+The first is temperature. Like all reptiles, chameleons cannot make their own body heat. In the morning, when they are cold, they become darker, because dark colours take in more sunlight. By midday, when they are too warm, they turn lighter to reflect the sun.
+
+The second is communication. A male chameleon may turn bright colours to show other males that this is his area. A female that is not ready to lay eggs may turn dark with bright spots, which tells males to stay away.
+
+The third is mood. A frightened chameleon often turns pale. A sick one may become very dark.
+
+So why do people think chameleons match their surroundings? The idea probably came from one kind of chameleon that lives in grass and is naturally green. But even this animal does not change colour to match what it stands on — it is simply green all the time.
+
+How do they do it? Under their skin, chameleons have special cells containing tiny crystals. By changing the distance between these crystals, the animal changes which colours of light are reflected. It is not paint, and it is not dye. It is more like the way a soap bubble shows different colours.`,
+    questions: [
+      {
+        q: 'What is the common belief about chameleons mentioned in the first paragraph?',
+        options: ['They are dangerous.', 'They change colour to match their surroundings.', 'They live only in grass.', 'They cannot see colours.'],
+        answer: 1,
+        locate: 'Most people believe that chameleons change colour to match their surroundings.',
+        why: '定位句直接说明：多数人相信变色龙变色是为了与周围环境相配。',
+        trap: 'A、D 原文均未提及；C 只适用于「一种生活在草里的变色龙」，被扩大成全部。',
+      },
+      {
+        q: 'Why does a chameleon become darker in the morning?',
+        options: ['To hide from enemies.', 'To take in more sunlight and get warm.', 'To show it is angry.', 'To attract a female.'],
+        answer: 1,
+        locate: 'In the morning, when they are cold, they become darker, because dark colours take in more sunlight.',
+        why: '定位句用 because 给出原因：深色吸收更多阳光，帮助取暖。这属于「调节体温」这一目的。',
+        trap: 'A 正是文章要纠正的误解；C 情绪确实影响颜色，但早晨变深是温度原因；D 吸引异性属于「交流」目的，且是雄性用鲜艳颜色。',
+      },
+      {
+        q: 'According to the passage, which is NOT a purpose of colour change?',
+        options: ['To control body temperature.', 'To communicate with other chameleons.', 'To show mood.', 'To match the colour of leaves exactly.'],
+        answer: 3,
+        locate: 'Chameleons do change colour, but usually not to hide. ... But even this animal does not change colour to match what it stands on — it is simply green all the time.',
+        why: '原文明确否定「变色为了与环境相配」：变色通常不是为了躲藏，那种绿色的变色龙也不是为了匹配脚下物体。因此 D 不是变色目的。',
+        trap: 'A、B、C 分别对应原文列出的三个目的（温度、交流、情绪），都是真实的。本题问「不是」，要选被否定的那项。',
+      },
+      {
+        q: 'How do chameleons change colour?',
+        options: ['By producing different paints.', 'By changing the distance between tiny crystals in their skin.', 'By moving to a different place.', 'By drinking coloured water.'],
+        answer: 1,
+        locate: 'By changing the distance between these crystals, the animal changes which colours of light are reflected.',
+        why: '定位句说明：通过改变皮肤内微小晶体之间的距离，改变反射的光的颜色。',
+        trap: 'A 原文明确说 It is not paint（不是颜料）；C 变色是身体变化，不是换地方；D 原文未提。',
+      },
+    ],
+    express: [],
+  },
+
+  /* ---------- C 篇 4：说明文（社会现象） ---------- */
+  {
+    id: 's4-c', set: 4, level: 'C', type: '说明文',
+    title: 'Why Do We Forget Names?',
+    intro: 'C 篇说明文：心理科普。注意「列举原因」的结构，这类题常考「以下哪项是原因之一」。',
+    passage: `You meet someone at a party. Two minutes later, you have forgotten the name. You are not alone — forgetting names is one of the most common memory problems, and scientists think they know why.
+
+First, names are arbitrary. A word like "table" carries meaning: you can picture a table. But a name like "Sarah" tells you nothing about the person. Your brain remembers meaning much better than sound, so names slip away.
+
+Second, you often hear a name only once, at a moment when you are busy — shaking hands, thinking what to say next. In one study, people remembered only about 10 percent of the names they heard in a conversation, but about 90 percent of the jobs those people did. Why? Because "doctor" or "teacher" comes with pictures and ideas, while a name does not.
+
+Third, names are easily confused with other names. If you meet three people called Li Wei in one month, your brain may mix them up. This is called interference.
+
+The good news is that you can train yourself. One simple method is to repeat the name right after you hear it: "Nice to meet you, Sarah." Another is to connect the name with something you can see — a person named Bai, which means "white" in Chinese, might be wearing a white shirt. A third is to use the name again before you leave: "Goodbye, Sarah."
+
+None of these methods is magic. But they work because they turn a meaningless sound into something your brain can hold on to — and that is exactly what memory needs.`,
+    questions: [
+      {
+        q: 'Why are names harder to remember than words like "table"?',
+        options: ['Names are longer.', 'Names carry no meaning, while "table" does.', 'Names are said more quietly.', 'Names are in a foreign language.'],
+        answer: 1,
+        locate: 'A word like "table" carries meaning: you can picture a table. But a name like "Sarah" tells you nothing about the person.',
+        why: '定位句对比说明：table 有意义、能想象出画面；而名字不携带关于这个人的任何信息。',
+        trap: 'A 名字通常并不更长（Sarah 比 table 长不了多少，且这不是原因）；C、D 原文均未提及。',
+      },
+      {
+        q: 'In the study, why did people remember jobs better than names?',
+        options: ['Jobs are more important.', 'Jobs come with pictures and ideas.', 'People say jobs more loudly.', 'Jobs are shorter words.'],
+        answer: 1,
+        locate: 'Because "doctor" or "teacher" comes with pictures and ideas, while a name does not.',
+        why: '定位句用 because 说明原因：职业词能唤起画面和概念，名字不能。',
+        trap: 'A 是主观判断，原文未以此解释；C、D 原文均未提及。',
+      },
+      {
+        q: 'What does "interference" mean in the passage?',
+        options: ['Forgetting where you met someone.', 'Mixing up names that are the same or similar.', 'Being too busy to listen.', 'Not liking a person\'s name.'],
+        answer: 1,
+        locate: 'If you meet three people called Li Wei in one month, your brain may mix them up. This is called interference.',
+        why: '原文用「一个月遇到三个李伟，大脑会混淆」来解释 interference，随后点名 This is called interference，指的是相似名字互相干扰、混淆。',
+        trap: 'A 原文未提忘记见面地点；C 是「只听到一次」这一原因的内容，不是 interference；D 原文未提喜好。',
+      },
+      {
+        q: 'What is the main idea of the last paragraph?',
+        options: ['These methods are difficult to learn.', 'These methods help because they give the name meaning.', 'Only clever people can remember names.', 'Names are not important at all.'],
+        answer: 1,
+        locate: 'But they work because they turn a meaningless sound into something your brain can hold on to — and that is exactly what memory needs.',
+        why: '末段总结：这些方法之所以有效，是因为把无意义的声音变成了大脑能抓住的东西。B 是这句话的准确概括。',
+        trap: 'A 原文说这些方法 simple，不是难学；C 原文未提智力差异；D 与全文主旨相反。',
+      },
+    ],
+    express: [],
+  },
+
+  /* ---------- D 篇 3：议论文（科技与生活） ---------- */
+  {
+    id: 's3-d', set: 3, level: 'D', type: '议论文',
+    title: 'Should Students Learn to Code?',
+    intro: 'D 篇议论文：注意「双方都有道理」的写法，作者可能给出折中观点。警惕绝对化选项（all / never / only）。',
+    passage: `In recent years, many countries have made computer programming a required subject in schools. Supporters say coding is a basic skill for the future, like reading and writing. Critics say not every student needs to become a programmer.
+
+Those in favour make a practical point: computers are everywhere, and understanding how they work helps people use them better. A student who has written a simple program understands why a machine follows instructions — and why it sometimes fails. This knowledge is useful whether or not the student becomes an engineer.
+
+Supporters also argue that coding teaches thinking. To write a program, you must break a big problem into small steps and check each step. This way of thinking can be used in maths, in science, and even in planning a trip.
+
+But critics raise two concerns. The first is time. School hours are limited, and every new subject takes time from something else. If coding is required, what should be dropped — music, art, or physical education? The second is that technology changes fast. The programming language taught today may be out of date in ten years. Teaching a language, critics say, is less important than teaching students how to learn new things.
+
+A third group takes a middle position. They say coding should be offered, but not required — at least not at first. Students who are interested can choose it, and schools can see how it works before making it compulsory.
+
+My own view is close to this middle position. I do not think every student must learn to code, any more than every student must learn to play the violin. But I do think every student should have the chance to try it, because you cannot know whether you like something until you have tried it.`,
+    questions: [
+      {
+        q: 'What do supporters compare coding to?',
+        options: ['A hobby like music.', 'A basic skill like reading and writing.', 'A difficult sport.', 'A language that will disappear.'],
+        answer: 1,
+        locate: 'Supporters say coding is a basic skill for the future, like reading and writing.',
+        why: '定位句直接说：支持者把编程比作面向未来的基本技能，就像读和写一样。',
+        trap: 'A 音乐是反对者提到的「可能被挤掉的科目」；C 原文未提体育以外的比较；D 是反对者关于「语言会过时」的担忧，不是支持者的比喻。',
+      },
+      {
+        q: 'What is one of the critics\' concerns?',
+        options: ['Coding is too easy for students.', 'School hours are limited and something must be dropped.', 'Computers are too expensive.', 'Students already know how to code.'],
+        answer: 1,
+        locate: 'The first is time. School hours are limited, and every new subject takes time from something else.',
+        why: '定位句说明反对者的第一个担忧是时间：课时有限，新增科目必然挤占其他内容。',
+        trap: 'A 与原文相反（原文担心的是难度与时效，不是太简单）；C 原文未提设备费用；D 原文未说学生已会编程。',
+      },
+      {
+        q: 'Why do critics think teaching a specific language is less important?',
+        options: ['Languages are too hard to learn.', 'Technology changes fast and today\'s language may be out of date.', 'Only English is useful.', 'Students forget languages quickly.'],
+        answer: 1,
+        locate: 'The second is that technology changes fast. The programming language taught today may be out of date in ten years.',
+        why: '定位句说明第二个担忧：技术变化快，今天教的编程语言十年后可能已过时，所以教「如何学习新事物」比教具体语言更重要。',
+        trap: 'A 原文未说太难；C 原文与「英语」无关；D 原文未提遗忘速度。',
+      },
+      {
+        q: 'What is the writer\'s own view?',
+        options: ['Coding must be required for everyone.', 'Coding should not be taught at all.', 'Coding should be offered so students can try it.', 'Only students who like maths should learn coding.'],
+        answer: 2,
+        locate: 'But I do think every student should have the chance to try it, because you cannot know whether you like something until you have tried it.',
+        why: '作者明确说：不认为每个学生都必须学，但每个学生都应该有机会尝试。C 准确概括。',
+        trap: 'A 与「不认为每个学生都必须学」相反；B 与「应该有机会尝试」相反；D 原文未以数学成绩作为筛选条件。',
+      },
+      {
+        q: 'The writer mentions "playing the violin" in order to ___.',
+        options: ['show that music is more important than coding', 'explain that not every skill must be required of everyone', 'prove that coding is difficult', 'criticize music teachers'],
+        answer: 1,
+        locate: 'I do not think every student must learn to code, any more than every student must learn to play the violin.',
+        why: 'any more than 是类比结构：正如不必要求人人学小提琴，也不必要求人人学编程。作者用小提琴作类比，说明「不是每项技能都必须人人必修」。',
+        trap: 'A 作者没有比较音乐与编程的重要性；C 类比的重点不是难度；D 全文没有批评音乐老师。',
+      },
+    ],
+    express: [],
+  },
+
+  /* ---------- D 篇 4：议论文（环境保护） ---------- */
+  {
+    id: 's4-d', set: 4, level: 'D', type: '议论文',
+    title: 'Is It Worth Recycling?',
+    intro: 'D 篇议论文：环境议题。注意作者如何处理「反方有理」的部分——承认部分合理但仍坚持主张。',
+    passage: `Recycling is one of the first things we are taught about protecting the environment. But in recent years, some people have begun to ask: is it really worth the effort?
+
+The doubters point to some real problems. Recycling paper, for example, uses water and energy. If a truck drives across the city to collect a small amount of paper, the pollution from the truck may be greater than the good the recycling does. In some cities, collected plastic has been found in rivers and fields because there was no factory to process it.
+
+These are serious points, and they should not be laughed at. But they do not prove that recycling is useless. They prove that recycling must be done well.
+
+Consider paper. A study found that recycling paper uses about 60 percent less energy than making new paper from trees. It also saves trees and reduces the amount of waste going into the ground. The key is scale: it works when there is enough material to fill a truck, and when the factory is not too far away.
+
+Plastic is harder. Not all plastic can be recycled, and mixing different kinds makes the result worse. This is why many places now ask people to separate plastic carefully, and why some have stopped accepting certain kinds altogether.
+
+So what should we do? The honest answer is that recycling alone will not solve the problem. We also need to buy less and use things longer. But "recycling is not enough" is very different from "recycling is useless". The first is true; the second is not.
+
+A good habit is not a magic answer. It is simply better than a bad one.`,
+    questions: [
+      {
+        q: 'What problem with paper recycling do the doubters mention?',
+        options: ['It produces too much paper.', 'Collecting and processing it uses water, energy and transport.', 'Nobody wants recycled paper.', 'It costs too much money for families.'],
+        answer: 1,
+        locate: 'Recycling paper, for example, uses water and energy. If a truck drives across the city to collect a small amount of paper, the pollution from the truck may be greater than the good the recycling does.',
+        why: '定位句列出怀疑者的两点理由：回收纸张消耗水和能源；运输过程产生的污染可能超过收益。B 概括了这两点。',
+        trap: 'A 原文说回收是减少用纸，不是产生更多纸；C 原文未提市场需求；D 原文未以家庭费用为论据。',
+      },
+      {
+        q: 'What did the study about paper show?',
+        options: ['Recycling paper is always better than making new paper.', 'Recycling paper uses about 60% less energy than making new paper.', 'New paper is cleaner than recycled paper.', 'Paper cannot be recycled twice.'],
+        answer: 1,
+        locate: 'A study found that recycling paper uses about 60 percent less energy than making new paper from trees.',
+        why: '定位句给出数据：回收纸比用树木造新纸少用约 60% 的能源。',
+        trap: 'A 用了 always（总是），过于绝对——作者强调「规模合适时才有效」，与 always 矛盾；C 原文未比较清洁度；D 原文未提回收次数。',
+      },
+      {
+        q: 'Why is plastic harder to recycle than paper?',
+        options: ['Plastic is heavier.', 'Not all plastic can be recycled, and mixing kinds makes it worse.', 'There is not enough plastic.', 'People do not use plastic.'],
+        answer: 1,
+        locate: 'Plastic is harder. Not all plastic can be recycled, and mixing different kinds makes the result worse.',
+        why: '定位句直接给出两点原因：并非所有塑料都能回收；混合不同种类会让结果更差。',
+        trap: 'A 原文未提重量；C 原文说有些地方停止接收某些塑料，与「不够多」不同；D 与常识和原文都矛盾。',
+      },
+      {
+        q: 'What is the writer\'s conclusion?',
+        options: ['Recycling is useless and should be stopped.', 'Recycling alone is not enough, but it is still worth doing.', 'Recycling will solve all environmental problems.', 'Only paper should be recycled.'],
+        answer: 1,
+        locate: 'The honest answer is that recycling alone will not solve the problem. ... But "recycling is not enough" is very different from "recycling is useless". The first is true; the second is not.',
+        why: '作者明确区分两句话：回收「不够」是真的，回收「无用」是假的。因此结论是「仅靠回收不够，但仍值得做」，B 准确。',
+        trap: 'A 正是作者否定的「recycling is useless」；C 与「回收本身解决不了问题」矛盾；D 原文也讨论了塑料，未主张只回收纸。',
+      },
+      {
+        q: 'The sentence "A good habit is not a magic answer" in the last paragraph means ___.',
+        options: ['good habits do not work', 'a good habit helps even though it cannot solve everything', 'we should not form habits', 'magic is better than habits'],
+        answer: 1,
+        locate: 'A good habit is not a magic answer. It is simply better than a bad one.',
+        why: '下一句是解释：「它只是比坏习惯好」。因此这句话的意思是「好习惯有帮助，但不是万能的解法」，B 正确。',
+        trap: 'A 与「比坏习惯好」矛盾；C 原文鼓励形成好习惯；D 是字面误解，magic 在这里是比喻。',
+      },
+    ],
+    express: [],
+  },
+);
+
+/* 为新增 4 篇补阅读表达（每套 4 题，对齐北京卷 4 小题） */
+PASSAGES.find((p) => p.id === 's3-a').express = [
+  {
+    q: 'Which club requires students to read something before Open Day?',
+    answer: 'The Drama Club.',
+    accept: ['the drama club', 'drama club', 'drama'],
+    why: 'Drama Club 部分：You need to read a short passage before you come。',
+  },
+  {
+    q: 'Where should students go to pick up the passage?',
+    answer: 'Room 105.',
+    accept: ['room 105', 'in room 105', '105'],
+    why: '原文：pick it up in Room 105。',
+  },
+  {
+    q: 'When must students fill in the form to join a club?',
+    answer: 'Before September 20.',
+    accept: ['before september 20', 'september 20', 'before sept 20', 'by september 20'],
+    why: '原文 Note：fill in the form on the school website before September 20。',
+  },
+  {
+    q: 'How long does the Photography Club last?',
+    answer: 'One and a half hours.',
+    accept: ['one and a half hours', '1.5 hours', 'an hour and a half', '90 minutes', 'one hour and a half'],
+    why: 'Photography Club 时间是 1:30 – 3:00，共 1.5 小时。',
+  },
+];
+
+PASSAGES.find((p) => p.id === 's3-b').express = [
+  {
+    q: 'How many metres was the race?',
+    answer: '800 metres.',
+    accept: ['800 metres', '800 meters', '800', 'eight hundred metres', 'eight hundred meters'],
+    why: '原文首句：the school 800-metre race。',
+  },
+  {
+    q: 'What did the writer\'s father say when he met him at the finish line?',
+    answer: 'He said "You finished."',
+    accept: ['you finished', 'he said you finished', 'finished'],
+    why: '原文：He said, "You finished."',
+  },
+  {
+    q: 'How did the writer finish the race?',
+    answer: 'He limped the last 200 metres.',
+    accept: ['he limped the last 200 metres', 'limped', 'he limped', 'walked slowly', 'limped the last 200 meters'],
+    why: '原文：I limped the last 200 metres。',
+  },
+  {
+    q: 'What did the writer learn that day?',
+    answer: 'The race is also about what you do after you fall.',
+    accept: [
+      'the race is also about what you do after you fall',
+      'what you do after you fall matters',
+      'what you do after falling',
+      'never give up',
+      'to finish what you start',
+    ],
+    why: '原文结尾：It is also about what you do after you fall。',
+  },
+];
+
+PASSAGES.find((p) => p.id === 's3-c').express = [
+  {
+    q: 'What do most people wrongly believe about chameleons?',
+    answer: 'That they change colour to match their surroundings.',
+    accept: [
+      'that they change colour to match their surroundings',
+      'they change colour to match their surroundings',
+      'to match their surroundings',
+      'they change color to hide',
+    ],
+    why: '原文第一段：Most people believe that chameleons change colour to match their surroundings ... it is mostly wrong。',
+  },
+  {
+    q: 'How many purposes of colour change are mentioned?',
+    answer: 'Three.',
+    accept: ['three', '3', 'three purposes', '3 purposes'],
+    why: '原文：colour change has three main purposes（temperature, communication, mood）。',
+  },
+  {
+    q: 'What do chameleons have under their skin that helps them change colour?',
+    answer: 'Special cells containing tiny crystals.',
+    accept: [
+      'special cells containing tiny crystals',
+      'cells containing tiny crystals',
+      'tiny crystals',
+      'special cells',
+      'crystals',
+    ],
+    why: '原文：Under their skin, chameleons have special cells containing tiny crystals。',
+  },
+  {
+    q: 'What does the writer compare the colour change to?',
+    answer: 'The way a soap bubble shows different colours.',
+    accept: [
+      'the way a soap bubble shows different colours',
+      'a soap bubble',
+      'soap bubble',
+      'the way a soap bubble shows different colors',
+    ],
+    why: '原文末句：It is more like the way a soap bubble shows different colours。',
+  },
+];
+
+PASSAGES.find((p) => p.id === 's3-d').express = [
+  {
+    q: 'What do supporters say coding is like?',
+    answer: 'A basic skill like reading and writing.',
+    accept: ['a basic skill like reading and writing', 'reading and writing', 'a basic skill', 'like reading and writing'],
+    why: '原文：Supporters say coding is a basic skill for the future, like reading and writing。',
+  },
+  {
+    q: 'What is the critics\' first concern about teaching coding?',
+    answer: 'School hours are limited and something must be dropped.',
+    accept: [
+      'school hours are limited and something must be dropped',
+      'school hours are limited',
+      'there is not enough time',
+      'time',
+      'it takes time from other subjects',
+    ],
+    why: '原文：The first is time. School hours are limited, and every new subject takes time from something else。',
+  },
+  {
+    q: 'Why may the programming language taught today become useless?',
+    answer: 'Because technology changes fast.',
+    accept: ['because technology changes fast', 'technology changes fast', 'technology changes quickly', 'technology changes'],
+    why: '原文：The second is that technology changes fast. The programming language taught today may be out of date in ten years。',
+  },
+  {
+    q: 'What does the writer think every student should have?',
+    answer: 'The chance to try coding.',
+    accept: ['the chance to try coding', 'a chance to try it', 'the chance to try it', 'a chance to try coding', 'the opportunity to try coding'],
+    why: '原文：I do think every student should have the chance to try it。',
+  },
+];
+
+PASSAGES.find((p) => p.id === 's4-a').express = [
+  {
+    q: 'What time do students meet at the school gate?',
+    answer: 'At 7:40.',
+    accept: ['at 7:40', '7:40', 'at seven forty', 'seven forty'],
+    why: '行程表：7:40 Meet at the school gate。',
+  },
+  {
+    q: 'How long does the bus journey take?',
+    answer: 'About 50 minutes.',
+    accept: ['about 50 minutes', '50 minutes', 'fifty minutes', 'about fifty minutes'],
+    why: '行程表：8:00 Bus leaves. Journey takes about 50 minutes。',
+  },
+  {
+    q: 'What must students wear on the trip?',
+    answer: 'Their school uniform.',
+    accept: ['their school uniform', 'school uniform', 'the school uniform', 'uniform'],
+    why: 'Remember 部分：Wear your school uniform。',
+  },
+  {
+    q: 'What must students do at 2:30?',
+    answer: 'Meet at the front desk and hand in the worksheet.',
+    accept: [
+      'meet at the front desk and hand in the worksheet',
+      'hand in the worksheet',
+      'hand in their worksheet',
+      'meet at the front desk',
+    ],
+    why: '行程表：2:30 Meet at the front desk. Hand in your worksheet。',
+  },
+];
+
+PASSAGES.find((p) => p.id === 's4-b').express = [
+  {
+    q: 'Who wrote the letters in the box?',
+    answer: 'The writer\'s grandmother.',
+    accept: ["the writer's grandmother", 'his grandmother', 'the grandmother', 'grandmother', 'my grandmother'],
+    why: '原文：Inside were forty-two letters, all written by my grandmother。',
+  },
+  {
+    q: 'How often did the grandfather come home?',
+    answer: 'Twice a year.',
+    accept: ['twice a year', 'two times a year', 'twice every year'],
+    why: '原文：He came back only twice a year。',
+  },
+  {
+    q: 'What did the writer\'s mother remember about her mother?',
+    answer: 'Her hands and a song she used to sing.',
+    accept: [
+      'her hands and a song she used to sing',
+      'her hands',
+      'a song',
+      'hands and a song',
+    ],
+    why: '原文：I only remember her hands ... And a song she used to sing。',
+  },
+  {
+    q: 'How long did the grandfather keep the letters?',
+    answer: 'Over fifty years.',
+    accept: ['over fifty years', 'fifty years', 'more than fifty years', '50 years', 'over 50 years'],
+    why: '原文：My grandfather kept these letters for over fifty years。',
+  },
+];
+
+PASSAGES.find((p) => p.id === 's4-c').express = [
+  {
+    q: 'What percentage of names did people remember in the study?',
+    answer: 'About 10 percent.',
+    accept: ['about 10 percent', '10 percent', '10%', 'about 10%', 'ten percent'],
+    why: '原文：people remembered only about 10 percent of the names they heard。',
+  },
+  {
+    q: 'Why does the brain remember "table" better than "Sarah"?',
+    answer: 'Because "table" carries meaning, while a name does not.',
+    accept: [
+      'because table carries meaning while a name does not',
+      'table carries meaning',
+      'names carry no meaning',
+      'because names have no meaning',
+    ],
+    why: '原文：A word like "table" carries meaning ... But a name like "Sarah" tells you nothing about the person。',
+  },
+  {
+    q: 'What is "interference"?',
+    answer: 'Mixing up names that are the same or similar.',
+    accept: [
+      'mixing up names that are the same or similar',
+      'mixing up names',
+      'mixing similar names',
+      'confusing names',
+    ],
+    why: '原文：your brain may mix them up. This is called interference。',
+  },
+  {
+    q: 'What is one method the passage suggests for remembering names?',
+    answer: 'Repeat the name right after you hear it.',
+    accept: [
+      'repeat the name right after you hear it',
+      'repeat the name',
+      'connect the name with something you can see',
+      'use the name again before you leave',
+      'say the name again',
+    ],
+    why: '原文列举三种方法：重复名字、把名字与看得见的东西联系、离开前再用一次名字。答出任一即可。',
+  },
+];
+
+PASSAGES.find((p) => p.id === 's4-d').express = [
+  {
+    q: 'What is the doubters\' example of a recycling problem?',
+    answer: 'Recycling paper uses water and energy, and trucks cause pollution.',
+    accept: [
+      'recycling paper uses water and energy and trucks cause pollution',
+      'recycling paper uses water and energy',
+      'the truck causes pollution',
+      'transport causes pollution',
+      'collecting paper uses water and energy',
+      'trucks cause pollution',
+    ],
+    why: '原文：Recycling paper, for example, uses water and energy. If a truck drives across the city ... the pollution from the truck may be greater。',
+  },
+  {
+    q: 'How much less energy does recycling paper use?',
+    answer: 'About 60 percent less.',
+    accept: ['about 60 percent less', '60 percent less', '60%', 'about 60%', '60 percent'],
+    why: '原文：recycling paper uses about 60 percent less energy than making new paper from trees。',
+  },
+  {
+    q: 'What two things do we also need besides recycling?',
+    answer: 'We need to buy less and use things longer.',
+    accept: [
+      'we need to buy less and use things longer',
+      'buy less and use things longer',
+      'to buy less and use things longer',
+      'buy less',
+      'use things longer',
+    ],
+    why: '原文：We also need to buy less and use things longer。',
+  },
+  {
+    q: 'What does the writer mean by "A good habit is not a magic answer"?',
+    answer: 'It helps, but it cannot solve everything.',
+    accept: [
+      'it helps but it cannot solve everything',
+      'it helps but cannot solve all problems',
+      'it is better than a bad habit',
+      'it helps even though it is not perfect',
+      'it is simply better than a bad one',
+    ],
+    why: '原文下一句解释：It is simply better than a bad one。即「有帮助但不是万能的」。',
+  },
+];
