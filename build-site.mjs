@@ -14,7 +14,7 @@ import { QUESTIONS } from './src/data-quiz.js';
 import { QUESTIONS_2 } from './src/data-quiz2.js';
 import { PASSAGES } from './src/data-reading.js';
 import { CLOZE } from './src/data-cloze.js';
-import { WRITING } from './src/data-writing.js';
+import { WRITING, WRITING_STEPS, WRITING_STRUCTURES, WRITING_PHRASES, WRITING_TRAPS } from './src/data-writing.js';
 
 const __dir = dirname(fileURLToPath(import.meta.url));
 const OUT = __dir;
@@ -1113,82 +1113,262 @@ ZK.ready(function(){
 /* ==========================================================
    书面表达页（北京卷第五部分，10 分）
    ========================================================== */
+/* ==========================================================
+   书面表达页（北京卷第五部分，10 分）
+   排版要点：
+   - 表格改为「卡片式定义列表」，避免三列挤在一起
+   - 范文按段落拆开呈现，每段标注「这段做什么」
+   - 方法论（五步法 / 结构模板 / 句型库 / 失分点）放在最前
+   ========================================================== */
 function buildWriting() {
-  const cards = WRITING.map((w) => {
-    const words = w.model.trim().split(/\s+/).filter((x) => /[A-Za-z']/.test(x)).length;
-    return `<div class="card article-card">
-      <div class="article-head">
-        <h3>${esc(w.title)}</h3>
-        <div class="meta">${esc(w.type)} · ${esc(w.level)} · 10 分 · 范文 ${words} 词</div>
+  /* 把范文按空行拆成段落，并给每段配一个「作用」标注。
+     段落数通常多于提纲条数（称呼、提示语、致谢、落款各占一段），
+     所以按段落内容特征判断，而不是用 outline[i] 硬对齐。 */
+  const splitModel = (w) => {
+    const paras = w.model.split(/\n\s*\n/).map((x) => x.trim()).filter(Boolean);
+    const n = paras.length;
+    const SIGN = /^(Best wishes|Yours sincerely|Yours|Sincerely|Li Hua|The Students)/i;
+    return paras.map((text, i) => {
+      const t = text.replace(/\s+/g, ' ').trim();
+      let role;
+      if (i === 0) {
+        if (/^(Dear|Boys and girls|Hello)/i.test(t)) role = '称呼';
+        else role = '开头：点题';
+      } else if (SIGN.test(t)) {
+        role = /^Li Hua$/i.test(t) ? '署名' : '落款';
+      } else if (/^May I have your attention/i.test(t)) {
+        role = '提示语（通知固定格式）';
+      } else if (/^(Thank you|Thanks\.?$)/i.test(t)) {
+        role = '致谢（通知固定格式）';
+      } else if (/^(I hope|We are looking forward|I'm looking forward|I can't wait|I would appreciate|It is a good chance)/i.test(t)) {
+        role = '结尾：期待 / 呼吁';
+      } else if (/^In a word/i.test(t)) {
+        role = '结尾：总结升华';
+      } else if (/^By the way/i.test(t)) {
+        role = '主体：补充提醒';
+      } else if (/^(As for me)/i.test(t)) {
+        role = '主体：自身例子';
+      } else if (/^(First|Second|Third|Besides|What's more)/i.test(t)) {
+        role = '主体：理由与例证';
+      } else if (/^(I am writing|I am Li Hua)/i.test(t)) {
+        role = '点明身份与写信目的';
+      } else if (/^There are two reasons/i.test(t)) {
+        role = '主体：说明申请理由';
+      } else if (/^If I am chosen/i.test(t)) {
+        role = '主体：说明希望承担的工作';
+      } else if (/^If you ask me/i.test(t)) {
+        role = '主体：推荐与理由';
+      } else if (i === n - 1) {
+        role = '结尾：收束';
+      } else {
+        role = '主体：展开要点';
+      }
+      return { text, role };
+    });
+  };
+
+  const caseHtml = (w, idx) => {
+    const words = (() => {
+      let body = w.model;
+      if (w.given) {
+        w.given.split('\n').filter((l) => l.trim() && !l.includes('___'))
+          .forEach((l) => { body = body.replace(l.trim(), ''); });
+      }
+      return body.trim().split(/\s+/).filter((x) => /[A-Za-z']/.test(x)).length;
+    })();
+    const paras = splitModel(w);
+
+    return `<div class="card write-case" id="${w.id}">
+      <div class="case-head">
+        <div class="case-no">例文 ${idx + 1}</div>
+        <div class="case-title">
+          <h3>${esc(w.title)}</h3>
+          <div class="case-tags">
+            <span class="wt-tag">${esc(w.type)}</span>
+            <span class="wt-tag lv">${esc(w.level)}</span>
+            <span class="wt-tag ok">范文 ${words} 词</span>
+          </div>
+        </div>
       </div>
 
-      <div class="gsec">
-        <div class="gsec-t">题目要求</div>
-        <p style="white-space:pre-line">${esc(w.prompt)}</p>
+      <div class="case-sec">
+        <div class="case-label">📋 题目要求</div>
+        <div class="prompt-box">${esc(w.prompt).replace(/\n/g, '<br>')}</div>
       </div>
 
-      ${w.given ? `<div class="gsec"><div class="gsec-t">已给出的开头/结尾（不计入词数）</div><pre class="given">${esc(w.given)}</pre></div>` : ''}
+      ${w.given ? `<div class="case-sec">
+        <div class="case-label">✏️ 已给出的开头 / 结尾<span class="case-note">不计入词数，抄上去即可</span></div>
+        <div class="given-box">${esc(w.given).replace(/\n/g, '<br>')}</div>
+      </div>` : ''}
 
-      <div class="gsec">
-        <div class="gsec-t">写作提纲 · 每段写什么</div>
-        <ol class="outline">${w.outline.map((o) => `<li>${esc(o)}</li>`).join('')}</ol>
+      <div class="case-sec">
+        <div class="case-label">🗂 逐段怎么写</div>
+        <div class="outline-list">
+          ${w.outline.map((o, i) => `<div class="outline-item"><span class="ol-no">${i + 1}</span><span>${esc(o)}</span></div>`).join('')}
+        </div>
       </div>
 
-      <div class="gsec">
-        <div class="gsec-t">必备句式 · 可直接套用</div>
-        <div class="kp-list">${w.keyPoints.map((k) => `<div class="kp"><span class="kp-en">${esc(k.en)}</span><span class="kp-zh">${esc(k.zh)}</span></div>`).join('')}</div>
+      <div class="case-sec">
+        <div class="case-label">🔑 必备句式<span class="case-note">可直接套用</span></div>
+        <div class="phrase-list">
+          ${w.keyPoints.map((k) => `<div class="phrase-row">
+            <span class="ph-en">${esc(k.en)}</span>
+            <span class="ph-zh">${esc(k.zh)}</span>
+          </div>`).join('')}
+        </div>
       </div>
 
-      <div class="gsec">
-        <div class="gsec-t">范文</div>
-        <pre class="model">${esc(w.model)}</pre>
-        <button class="btn soft sm" data-copy="1">复制范文</button>
-        <span class="note copy-tip"></span>
+      <div class="case-sec">
+        <div class="case-label">⭐ 优秀例文<span class="case-note">${paras.length} 段 · 每段作用已标注</span></div>
+        <div class="model-box">
+          ${paras.map((p, i) => `<div class="model-para">
+            <div class="mp-role">${esc(p.role)}</div>
+            <div class="mp-text">${esc(p.text).replace(/\n/g, '<br>')}</div>
+          </div>`).join('')}
+        </div>
+        <button class="btn soft sm copy-btn" type="button">复制范文</button>
+        <span class="copy-tip note"></span>
       </div>
 
-      <div class="gsec">
-        <div class="gsec-t">评分要点 · 为什么这样写能得分</div>
-        <ul class="tips">${w.tips.map((t) => `<li>${esc(t)}</li>`).join('')}</ul>
+      <div class="case-sec">
+        <div class="case-label">✅ 评分要点<span class="case-note">为什么这样写能得分</span></div>
+        <ul class="score-list">
+          ${w.tips.map((t) => `<li>${esc(t)}</li>`).join('')}
+        </ul>
       </div>
     </div>`;
-  }).join('');
+  };
 
   const body = `
 <div class="page-head">
   <div class="crumb"><a href="index.html">首页</a> / 书面表达</div>
   <h1>书面表达</h1>
-  <p class="lede">北京卷第五部分 <b>10 分</b>，通常要求 80–100 词。这里是<b>唯一能自己控制得分</b>的题型——只要把要点写全、语言不出错，就能稳拿 8 分以上。</p>
+  <p class="lede">北京卷第五部分 <b>10 分</b>，通常要求 80–100 词。这是<b>唯一能完全由自己控制得分</b>的题型——只要要点写全、语言不出错，稳拿 8 分以上。下面先讲方法，再给四篇例文。</p>
 </div>
 
 <section class="section" style="margin-top:22px">
-  <div class="card">
-    <h3>📝 10 分是怎么给的</h3>
-    <table class="tbl" style="margin-top:12px">
-      <thead><tr><th>维度</th><th>要求</th><th>怎么练</th></tr></thead>
-      <tbody>
-        <tr><td><b>内容要点</b></td><td>题目要求的每一条都写到</td><td>下笔前先把要点列成 1/2/3，写完逐条对照打勾</td></tr>
-        <tr><td><b>语言准确</b></td><td>时态、人称、拼写、搭配不出错</td><td>写完后专门检查动词形式与单复数</td></tr>
-        <tr><td><b>结构连贯</b></td><td>有开头结尾，用连接词分层</td><td>背熟 First / Second / Besides / In a word</td></tr>
-      </tbody>
-    </table>
-    <p class="note" style="margin-top:12px"><b>提分优先级：</b>先把要点写全（这是硬分）→ 再改语言错误 → 最后才追求高级句式。字数不足 60 词会明显扣分。</p>
+  <div class="kv">
+    <div class="k"><b>10</b><span>对应分值</span></div>
+    <div class="k"><b>80–100</b><span>要求词数</span></div>
+    <div class="k"><b>${WRITING_STRUCTURES.length}</b><span>结构模板</span></div>
+    <div class="k"><b>${WRITING.length}</b><span>优秀例文</span></div>
   </div>
 </section>
 
-<section class="section" style="margin-top:26px">
-  ${cards}
+<!-- ========== 一、写作五步法 ========== -->
+<section class="section">
+  <div class="section-head">
+    <div class="section-head-left">
+      <span class="kicker">方法 · 第一步</span>
+      <h2>写作五步法：从审题到交卷</h2>
+      <span class="sub">按这个顺序走，20 分钟能写完一篇 8 分以上的短文</span>
+    </div>
+  </div>
+  <div class="step-flow">
+    ${WRITING_STEPS.map((s) => `<div class="flow-item">
+      <div class="flow-no">${s.n}</div>
+      <div class="flow-body">
+        <h4>${esc(s.t)}</h4>
+        <p>${esc(s.d)}</p>
+        <div class="flow-tip">💡 ${esc(s.tip)}</div>
+      </div>
+    </div>`).join('')}
+  </div>
+</section>
+
+<!-- ========== 二、结构模板 ========== -->
+<section class="section">
+  <div class="section-head">
+    <div class="section-head-left">
+      <span class="kicker">方法 · 第二步</span>
+      <h2>四类文体的结构模板</h2>
+      <span class="sub">换什么题目，骨架都是这个——先背结构，再填内容</span>
+    </div>
+  </div>
+  <div class="struct-grid">
+    ${WRITING_STRUCTURES.map((s) => `<div class="card struct-card">
+      <div class="struct-head">
+        <span class="struct-icon">${s.icon}</span>
+        <div>
+          <h3>${esc(s.name)}</h3>
+          <div class="struct-use">用于：${esc(s.use)}</div>
+        </div>
+      </div>
+      <div class="struct-blocks">
+        ${s.blocks.map((b, i) => `<div class="struct-block">
+          <span class="sb-no">${i + 1}</span>
+          <div>
+            <div class="sb-label">${esc(b.label)}</div>
+            <div class="sb-en">${esc(b.en)}</div>
+          </div>
+        </div>`).join('')}
+      </div>
+    </div>`).join('')}
+  </div>
+</section>
+
+<!-- ========== 三、句型库 ========== -->
+<section class="section">
+  <div class="section-head">
+    <div class="section-head-left">
+      <span class="kicker">方法 · 第三步</span>
+      <h2>句型库：按功能直接取用</h2>
+      <span class="sub">不要临场造句子，从这些背熟的句式里挑</span>
+    </div>
+  </div>
+  <div class="phrase-bank">
+    ${WRITING_PHRASES.map((g) => `<div class="card pb-card">
+      <div class="pb-head">${g.icon} ${esc(g.fn)}</div>
+      <div class="pb-items">
+        ${g.items.map((it) => `<div class="pb-item">
+          <span class="pb-en">${esc(it.en)}</span>
+          <span class="pb-zh">${esc(it.zh)}</span>
+        </div>`).join('')}
+      </div>
+    </div>`).join('')}
+  </div>
+</section>
+
+<!-- ========== 四、高频失分点 ========== -->
+<section class="section">
+  <div class="section-head">
+    <div class="section-head-left">
+      <span class="kicker">避坑</span>
+      <h2>六个最高频的失分点</h2>
+      <span class="sub">写完对照这张表自查，能救回 1–2 分</span>
+    </div>
+  </div>
+  <div class="trap-grid">
+    ${WRITING_TRAPS.map((t) => `<div class="card wt-card">
+      <div class="wt-name">✕ ${esc(t.t)}</div>
+      <div class="wt-desc">${esc(t.d)}</div>
+      <div class="wt-fix">✓ ${esc(t.fix)}</div>
+    </div>`).join('')}
+  </div>
+</section>
+
+<!-- ========== 五、优秀例文 ========== -->
+<section class="section">
+  <div class="section-head">
+    <div class="section-head-left">
+      <span class="kicker">例文</span>
+      <h2>${WRITING.length} 篇优秀例文</h2>
+      <span class="sub">覆盖通知 / 书信 / 议论文 / 申请信四类文体，每篇标注每段作用</span>
+    </div>
+  </div>
+  ${WRITING.map(caseHtml).join('')}
 </section>
 
 <section class="section">
   <div class="card">
-    <h3>✍️ 写完自查清单</h3>
-    <ol class="outline" style="margin-top:10px">
-      <li>题目给的要点，是否每条都有对应句子？（漏一条扣内容分）</li>
-      <li>时态是否统一？（记叙用过去时，通知/介绍用现在或将来时）</li>
-      <li>第三人称单数的动词加 -s 了吗？</li>
-      <li>可数名词复数加 -s 了吗？冠词有没有漏？</li>
-      <li>有没有用连接词分层？（First / Second / Besides / In a word）</li>
-      <li>字数够 80 词了吗？</li>
+    <h3>📝 交卷前的最后检查</h3>
+    <ol class="final-check">
+      <li>题目给的 <b>3 条要点</b>，是否每条都有对应句子？</li>
+      <li>全文时态是否统一？</li>
+      <li>第三人称单数的动词都加 <b>-s</b> 了吗？</li>
+      <li>many / some / two 后面的名词加 <b>-s</b> 了吗？</li>
+      <li>每个理由前有 <b>First / Second / Besides</b> 这类连接词吗？</li>
+      <li>字数够 <b>80 词</b> 了吗？</li>
     </ol>
   </div>
 </section>
@@ -1197,11 +1377,11 @@ function buildWriting() {
   const script = `
 ZK.ready(function(){
   var P = window.ZK;
-  document.querySelectorAll('[data-copy]').forEach(function(b){
+  document.querySelectorAll('.copy-btn').forEach(function(b){
     b.addEventListener('click', function(){
-      var card = b.closest('.article-card');
-      var pre = card.querySelector('.model');
-      var txt = pre ? pre.textContent : '';
+      var card = b.closest('.write-case');
+      var paras = [].slice.call(card.querySelectorAll('.mp-text'));
+      var txt = paras.map(function(p){ return p.innerText; }).join('\\n\\n');
       var tip = card.querySelector('.copy-tip');
       function done(ok){
         if (tip) tip.textContent = ok ? ' 已复制' : ' 复制失败，请手动选中';
@@ -1224,7 +1404,7 @@ ZK.ready(function(){
 
   write('writing.html', page({
     title: '书面表达 · 10 分',
-    desc: `北京中考英语书面表达专项 ${WRITING.length} 篇，含写作提纲、必备句式、范文与评分要点。`,
+    desc: `北京中考英语书面表达专项：五步写作法、${WRITING_STRUCTURES.length} 类结构模板、句型库与 ${WRITING.length} 篇优秀例文。`,
     active: 'writing', body, script, dataKeys: ['WRITING'],
   }));
 }

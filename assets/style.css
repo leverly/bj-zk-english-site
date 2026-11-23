@@ -1261,3 +1261,164 @@ body.js-ready .reveal.out { opacity: 0; transform: translateY(14px); }
   .level-cards { grid-template-columns: 1fr !important; }
   .passage-cards { grid-template-columns: 1fr !important; }
 }
+
+/* ==========================================================
+   书面表达页排版
+   ========================================================== */
+
+/* 一、五步法流程 */
+.step-flow { display: grid; gap: 14px; }
+.flow-item {
+  display: flex; gap: 16px; align-items: flex-start;
+  padding: 18px 20px; background: var(--surface);
+  border: 1px solid var(--border); border-radius: var(--r);
+  transition: box-shadow .18s, border-color .18s;
+}
+.flow-item:hover { box-shadow: var(--shadow-2); border-color: color-mix(in srgb, var(--accent) 30%, transparent); }
+.flow-no {
+  flex: 0 0 auto; width: 34px; height: 34px; border-radius: 10px;
+  display: grid; place-items: center;
+  font-family: var(--display); font-weight: 800; font-size: 1rem;
+  color: #fff; background: var(--accent-grad); box-shadow: var(--shadow-accent);
+}
+.flow-body { flex: 1 1 auto; min-width: 0; }
+.flow-body h4 { font-size: .98rem; margin: 0 0 6px; }
+.flow-body p { font-size: .88rem; color: var(--text-2); line-height: 1.75; margin: 0; }
+.flow-tip {
+  margin-top: 9px; padding: 8px 12px; border-radius: var(--r-sm);
+  background: var(--gold-soft); font-size: .82rem; color: var(--text-2); line-height: 1.65;
+}
+
+/* 二、结构模板 */
+.struct-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
+.struct-card { padding: 20px; }
+.struct-head { display: flex; gap: 12px; align-items: flex-start; margin-bottom: 14px; }
+.struct-icon {
+  flex: 0 0 auto; width: 36px; height: 36px; border-radius: 10px;
+  display: grid; place-items: center; font-size: 1.1rem;
+  background: var(--accent-soft);
+}
+.struct-head h3 { font-size: 1rem; margin: 0 0 3px; }
+.struct-use { font-size: .78rem; color: var(--text-3); }
+.struct-blocks { display: grid; gap: 10px; }
+.struct-block {
+  display: flex; gap: 10px; align-items: flex-start;
+  padding: 10px 12px; border-radius: var(--r-sm); background: var(--surface-2);
+}
+.sb-no {
+  flex: 0 0 auto; width: 20px; height: 20px; border-radius: 6px;
+  display: grid; place-items: center; font-size: .72rem; font-weight: 700;
+  background: var(--bg-3); color: var(--text-2);
+}
+.sb-label { font-size: .78rem; font-weight: 700; color: var(--text); margin-bottom: 3px; }
+.sb-en { font-family: var(--en); font-size: .85rem; color: var(--accent); line-height: 1.6; }
+
+/* 三、句型库 */
+.phrase-bank { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; }
+.pb-card { padding: 18px 20px; }
+.pb-head { font-weight: 700; font-size: .95rem; margin-bottom: 12px; }
+.pb-items { display: grid; gap: 10px; }
+.pb-item { display: flex; flex-direction: column; gap: 2px; padding-bottom: 9px; border-bottom: 1px dashed var(--border); }
+.pb-item:last-child { border-bottom: 0; padding-bottom: 0; }
+.pb-en { font-family: var(--en); font-size: .9rem; font-weight: 600; line-height: 1.55; }
+.pb-zh { font-size: .8rem; color: var(--text-3); }
+
+/* 四、失分点 */
+.trap-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+.wt-card { padding: 16px 18px; }
+.wt-name { font-weight: 700; font-size: .9rem; color: var(--rose); margin-bottom: 7px; }
+.wt-desc { font-size: .83rem; color: var(--text-2); line-height: 1.7; margin-bottom: 9px; }
+.wt-fix {
+  font-size: .82rem; color: var(--ok); line-height: 1.65;
+  padding-top: 8px; border-top: 1px dashed var(--border);
+}
+
+/* 五、例文卡 */
+.write-case { padding: 24px; margin-bottom: 20px; }
+.case-head { display: flex; gap: 14px; align-items: flex-start; margin-bottom: 18px; }
+.case-no {
+  flex: 0 0 auto; padding: 3px 10px; border-radius: var(--r-pill);
+  font-size: .74rem; font-weight: 700;
+  background: var(--accent-grad); color: #fff;
+}
+.case-title h3 { font-size: 1.08rem; margin: 0 0 7px; }
+.case-tags { display: flex; gap: 7px; flex-wrap: wrap; }
+.wt-tag {
+  font-size: .73rem; padding: 2px 9px; border-radius: var(--r-pill);
+  background: var(--bg-3); color: var(--text-2);
+}
+.wt-tag.lv { background: var(--accent-soft); color: var(--accent); }
+.wt-tag.ok { background: var(--ok-soft); color: var(--ok); }
+
+.case-sec { margin-top: 20px; }
+.case-label {
+  font-size: .82rem; font-weight: 700; color: var(--text);
+  margin-bottom: 9px; display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+}
+.case-note { font-size: .74rem; font-weight: 400; color: var(--text-3); }
+
+.prompt-box {
+  padding: 14px 16px; border-radius: var(--r-sm);
+  background: var(--surface-2); font-size: .88rem; line-height: 1.85; color: var(--text-2);
+}
+.given-box {
+  padding: 14px 16px; border-radius: var(--r-sm);
+  background: var(--code-bg); border-left: 3px solid var(--border-2);
+  font-family: var(--en); font-size: .88rem; line-height: 1.9; color: var(--text-2);
+}
+
+/* 提纲：编号列表 */
+.outline-list { display: grid; gap: 9px; }
+.outline-item {
+  display: flex; gap: 10px; align-items: flex-start;
+  font-size: .88rem; line-height: 1.7; color: var(--text-2);
+}
+.ol-no {
+  flex: 0 0 auto; width: 22px; height: 22px; border-radius: 50%;
+  display: grid; place-items: center; font-size: .74rem; font-weight: 700;
+  background: var(--accent-soft); color: var(--accent);
+}
+
+/* 句式：英文在上、中文在下，避免两列挤压 */
+.phrase-list { display: grid; gap: 8px; }
+.phrase-row {
+  display: flex; flex-direction: column; gap: 3px;
+  padding: 10px 14px; border-radius: var(--r-sm);
+  background: var(--surface-2); border-left: 3px solid var(--accent-soft-2);
+}
+.ph-en { font-family: var(--en); font-size: .89rem; font-weight: 600; line-height: 1.6; }
+.ph-zh { font-size: .79rem; color: var(--text-3); }
+
+/* 范文：逐段 + 段落作用标注 */
+.model-box { display: grid; gap: 2px; }
+.model-para {
+  padding: 13px 16px; border-radius: var(--r-sm);
+  background: var(--code-bg); transition: background .16s;
+}
+.model-para:hover { background: var(--accent-soft); }
+.mp-role {
+  font-size: .72rem; font-weight: 700; color: var(--accent);
+  margin-bottom: 6px; letter-spacing: .02em;
+}
+.mp-text { font-family: var(--en); font-size: .92rem; line-height: 1.9; color: var(--text); }
+
+.copy-btn { margin-top: 12px; }
+
+/* 评分要点 */
+.score-list { margin: 0; padding-left: 20px; display: grid; gap: 8px; }
+.score-list li { font-size: .87rem; line-height: 1.75; color: var(--text-2); }
+
+/* 最后检查 */
+.final-check { margin: 10px 0 0; padding-left: 20px; display: grid; gap: 9px; }
+.final-check li { font-size: .89rem; line-height: 1.75; color: var(--text-2); }
+.final-check b { color: var(--accent); }
+
+@media (max-width: 900px) {
+  .struct-grid, .phrase-bank { grid-template-columns: 1fr; }
+  .trap-grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 600px) {
+  .trap-grid { grid-template-columns: 1fr; }
+  .write-case { padding: 18px 16px; }
+  .flow-item { padding: 16px; gap: 12px; }
+}

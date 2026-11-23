@@ -175,3 +175,144 @@ Li Hua`,
     ],
   },
 ];
+
+/* ==========================================================
+   写作通用方法论：技巧 / 结构模板 / 句型库
+   这些是「换什么题都能用」的底层内容，
+   与具体篇目的范文互补。
+   ========================================================== */
+
+/* 一、写作五步法 */
+export const WRITING_STEPS = [
+  {
+    n: 1, t: '审题划要点',
+    d: '把题目要求拆成编号要点（通常 3 条）。每个要点在草稿上写一个中文关键词，写完逐条打勾——这是内容分，漏一条就丢分。',
+    tip: '北京卷写作的要点是「按点给分」的，不是「整体感觉」。',
+  },
+  {
+    n: 2, t: '定时态人称',
+    d: '先确定全文用什么时态：介绍/通知用一般现在时或将来时，记叙往事用一般过去时。人称也要先定（I / we / you）。',
+    tip: '时态混用是最大的失分点，比单词拼错扣得多。',
+  },
+  {
+    n: 3, t: '搭三段框架',
+    d: '第一段点题（我是谁、为什么写），第二段主体（2–3 个要点各一句），第三段收尾（期待、感谢、呼吁）。',
+    tip: '三段式最稳。阅卷老师扫一眼能看到层次，就是结构分。',
+  },
+  {
+    n: 4, t: '套句式写正文',
+    d: '用背熟的句式搭骨架（First… Second… Besides…），再填具体内容。不要临场造复杂句，简单句写对就是好句。',
+    tip: '宁可用对的一般句，也不用错的从句。',
+  },
+  {
+    n: 5, t: '查三样东西',
+    d: '① 要点齐不齐；② 动词形式对不对（第三人称单数、时态、被动）；③ 名词单复数与冠词。',
+    tip: '留 3 分钟专门检查这三项，能救回 1–2 分。',
+  },
+];
+
+/* 二、常见结构模板 */
+export const WRITING_STRUCTURES = [
+  {
+    id: 'notice', name: '通知', icon: '📢',
+    use: '学校活动、社团招新、讲座安排',
+    blocks: [
+      { label: '称呼 + 提示语', en: 'Boys and girls, / May I have your attention, please?' },
+      { label: '活动是什么、何时何地', en: 'Our school is going to hold … It will take place in … from … to ….' },
+      { label: '活动内容（2–3 项）', en: 'At the …, you can … and …. There will also be ….' },
+      { label: '号召参加 + 意义', en: 'I hope you will take an active part in it. It is a good chance to ….' },
+      { label: '落款', en: 'The Students\' Union' },
+    ],
+  },
+  {
+    id: 'letter', name: '书信 / 回信', icon: '✉️',
+    use: '给笔友回信、给老师写信、邀请信',
+    blocks: [
+      { label: '问候 + 回应来信', en: 'Dear …, I\'m very glad to hear that ….' },
+      { label: '主体一：回答对方的问题', en: 'You asked about …. Well, ….' },
+      { label: '主体二：补充建议或提醒', en: 'By the way, you\'d better …. / One more thing, ….' },
+      { label: '期待 + 结尾', en: 'I\'m looking forward to seeing you. / I can\'t wait to ….' },
+      { label: '落款', en: 'Best wishes, / Yours, + Li Hua' },
+    ],
+  },
+  {
+    id: 'opinion', name: '议论文 / 观点', icon: '💬',
+    use: '该不该做某事、如何看待某现象',
+    blocks: [
+      { label: '亮明观点', en: 'In my opinion, … / I think … is a good idea.' },
+      { label: '理由一', en: 'First, … helps us …. For example, ….' },
+      { label: '理由二', en: 'Second, … allows us to ….' },
+      { label: '自身例子', en: 'As for me, I often …. Although …, I feel ….' },
+      { label: '总结升华', en: 'In a word, … is not a waste of time. It is ….' },
+    ],
+  },
+  {
+    id: 'apply', name: '申请信', icon: '📝',
+    use: '申请志愿者、社团、比赛',
+    blocks: [
+      { label: '身份 + 目的', en: 'I am Li Hua, a student from …. I am writing to apply to be ….' },
+      { label: '申请原因', en: 'There are two reasons why I would like to join you.' },
+      { label: '优势一（带事实）', en: 'First, I am good at …. Last year, I ….' },
+      { label: '优势二 / 希望承担的工作', en: 'Second, I have experience in …. If I am chosen, I would like to ….' },
+      { label: '礼貌收尾', en: 'I would appreciate it if you could give me the chance.' },
+    ],
+  },
+];
+
+/* 三、句型库（按功能分类，可直接套用） */
+export const WRITING_PHRASES = [
+  {
+    fn: '开头点题', icon: '🚩',
+    items: [
+      { en: 'I am writing to tell you about …', zh: '我写信是想告诉你关于…' },
+      { en: 'I\'m very glad to hear that …', zh: '很高兴听说…（回信必备）' },
+      { en: 'Our school is going to hold …', zh: '我们学校将举办…（通知）' },
+      { en: 'In my opinion, …', zh: '在我看来…（议论）' },
+    ],
+  },
+  {
+    fn: '分层连接', icon: '🔗',
+    items: [
+      { en: 'First, … Second, … Besides, …', zh: '第一…第二…此外…' },
+      { en: 'What\'s more, …', zh: '更重要的是…' },
+      { en: 'On the one hand, … On the other hand, …', zh: '一方面…另一方面…' },
+      { en: 'However, …', zh: '然而…（转折）' },
+    ],
+  },
+  {
+    fn: '举例支撑', icon: '📌',
+    items: [
+      { en: 'For example, …', zh: '例如…' },
+      { en: 'Take … as an example.', zh: '以…为例。' },
+      { en: 'Last year, I …', zh: '去年我…（用事实支撑优势）' },
+    ],
+  },
+  {
+    fn: '提建议', icon: '💡',
+    items: [
+      { en: 'You\'d better …', zh: '你最好…（比 must 礼貌）' },
+      { en: 'Why not …?', zh: '为什么不…呢？' },
+      { en: 'It would be a good idea to …', zh: '…会是个好主意。' },
+      { en: 'I suggest that you …', zh: '我建议你…' },
+    ],
+  },
+  {
+    fn: '结尾收束', icon: '🏁',
+    items: [
+      { en: 'In a word, …', zh: '总之…' },
+      { en: 'I hope you will take an active part in it.', zh: '希望你能积极参加。' },
+      { en: 'I\'m looking forward to seeing you.', zh: '期待见到你。' },
+      { en: 'I would appreciate it if you could …', zh: '如果您能…我将不胜感激。' },
+    ],
+  },
+];
+
+/* 四、写作高频失分点 */
+export const WRITING_TRAPS = [
+  { t: '时态混用', d: '记叙用过去时，通知/介绍用现在或将来时。一篇里不能一会儿过去一会儿现在。', fix: '下笔前先定一个主时态，全文跟着它走。' },
+  { t: '第三人称单数漏 -s', d: 'He go / She like / My father work 是最高频的拼写类失分。', fix: '写完专门扫一遍所有动词，主语是 he/she/it/单数名词的加 -s。' },
+  { t: '可数名词忘复数', d: 'many student / two book / some friend', fix: '看到 many / some / two 后面的名词，先确认加没加 -s。' },
+  { t: '字数不足', d: '低于 60 词会明显扣分，常见于「要点写得太简单」。', fix: '每个要点至少写两句：一句陈述 + 一句展开（原因/例子）。' },
+  { t: '要点漏写', d: '题目给 3 条要点只写了 2 条，内容分直接掉一档。', fix: '写完逐条对照题目打勾，缺的补一句。' },
+  { t: '全文无连接词', d: '句子之间没有 First / Second / Besides，读起来像散句堆叠。', fix: '每个理由前加一个连接词，成本最低、得分最明显。' },
+];
