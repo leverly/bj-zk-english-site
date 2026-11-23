@@ -420,17 +420,39 @@
       } else counters.forEach(runCount);
     }
 
-    /* 滚动揭示 */
-    if (!reduceMotion && 'IntersectionObserver' in window) {
-      var io2 = new IntersectionObserver(function (es) {
-        es.forEach(function (e) {
-          if (e.isIntersecting) { e.target.classList.remove('out'); io2.unobserve(e.target); }
-        });
-      }, { threshold: .06, rootMargin: '0px 0px -30px 0px' });
-      document.querySelectorAll('.reveal').forEach(function (n) {
+    /* 滚动揭示
+       注意：这里不能用 IntersectionObserver 单打独斗。实测在部分环境下
+       （后台标签页、无滚动容器的滚动模拟）回调不触发，会让 .reveal 区块
+       永久停在 opacity:0，整页出现大片空白。改为「滚动时按 rect 判定」，
+       并加一个兜底定时器：无论发生什么，2 秒后全部显示。 */
+    if (!reduceMotion) {
+      var revealNodes = [].slice.call(document.querySelectorAll('.reveal'));
+      var revealAll = function () {
+        revealNodes.forEach(function (n) { n.classList.remove('out'); });
+      };
+      var checkReveal = function () {
+        var vh = window.innerHeight || document.documentElement.clientHeight;
+        for (var i = revealNodes.length - 1; i >= 0; i--) {
+          var n = revealNodes[i];
+          if (!n.classList.contains('out')) { revealNodes.splice(i, 1); continue; }
+          var r = n.getBoundingClientRect();
+          // 进入视口下方 40px 以内就显示
+          if (r.top < vh - 40 && r.bottom > 0) {
+            n.classList.remove('out');
+            revealNodes.splice(i, 1);
+          }
+        }
+      };
+      // 初始：只隐藏确实在首屏之外的区块
+      revealNodes.forEach(function (n) {
         var r = n.getBoundingClientRect();
-        if (r.top > window.innerHeight) { n.classList.add('out'); io2.observe(n); }
+        if (r.top > (window.innerHeight || 0)) n.classList.add('out');
       });
+      document.addEventListener('scroll', checkReveal, { passive: true });
+      window.addEventListener('resize', checkReveal);
+      checkReveal();
+      // 兜底：2 秒后无条件全部显示，保证内容绝不会因动画失效而消失
+      setTimeout(revealAll, 2000);
     }
   });
 
