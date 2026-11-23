@@ -11,6 +11,7 @@ import { fileURLToPath } from 'node:url';
 import { WORDS, THEMES, STATS } from './src/data-words.js';
 import { GRAMMAR, GRAMMAR_STATS } from './src/data-grammar.js';
 import { QUESTIONS } from './src/data-quiz.js';
+import { QUESTIONS_2 } from './src/data-quiz2.js';
 import { CLOZE, READING } from './src/data-reading.js';
 import { WRITING, SPEAKING } from './src/data-writing.js';
 
@@ -36,17 +37,23 @@ const GT = new Map();
 GRAMMAR.forEach((g) => g.topics.forEach((t) => GT.set(t.id, { ...t, family: g.name, familyId: g.id })));
 
 const Q_BY_TOPIC = new Map();
-QUESTIONS.forEach((q) => {
+/* 两批题库合并：第一批 160 题覆盖 57 考点，第二批 133 题补齐低频考点、
+   语境化变式、语法填空改错与易混点对比。 */
+const ALL_Q = [...QUESTIONS, ...QUESTIONS_2];
+
+ALL_Q.forEach((q) => {
   if (!Q_BY_TOPIC.has(q.topic)) Q_BY_TOPIC.set(q.topic, []);
   Q_BY_TOPIC.get(q.topic).push(q);
 });
 const Q_MISS = [...GT.keys()].filter((id) => !Q_BY_TOPIC.has(id));
 
 const Q_STATS = {
-  total: QUESTIONS.length,
-  choice: QUESTIONS.filter((q) => q.type === 'choice').length,
-  correct: QUESTIONS.filter((q) => q.type === 'correct').length,
-  fill: QUESTIONS.filter((q) => q.type === 'fill').length,
+  total: ALL_Q.length,
+  choice: ALL_Q.filter((q) => q.type === 'choice').length,
+  correct: ALL_Q.filter((q) => q.type === 'correct').length,
+  fill: ALL_Q.filter((q) => q.type === 'fill').length,
+  batch1: QUESTIONS.length,
+  batch2: QUESTIONS_2.length,
   cloze: CLOZE.reduce((s, c) => s + c.blanks.length, 0),
   reading: READING.reduce((s, r) => s + r.questions.length, 0),
 };
@@ -155,7 +162,7 @@ const FOOTER = (base) => `<footer class="foot">
 /* ---------------- 数据内联 ---------------- */
 const __inlineCache = new Map();
 function inlineData(keys, extra) {
-  const ALL = { WORDS, THEMES, STATS, GRAMMAR, GRAMMAR_STATS, QUESTIONS, CLOZE, READING, WRITING, SPEAKING };
+  const ALL = { WORDS, THEMES, STATS, GRAMMAR, GRAMMAR_STATS, QUESTIONS: ALL_Q, QUESTIONS_2, CLOZE, READING, WRITING, SPEAKING };
   const extraKeys = Object.keys(extra || {});
   const id = keys.join(',') + '|' + extraKeys.join(',');
   if (__inlineCache.has(id)) return __inlineCache.get(id);
