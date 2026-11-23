@@ -1188,7 +1188,7 @@ function buildWriting() {
     return `<section class="section">
   <div class="gfam-pager">
     ${prev ? `<a class="btn sm" href="${prev.slug}.html">← ${esc(prev.name)}</a>` : '<span></span>'}
-    <a class="btn sm soft" href="../writing.html">返回书面表达总览</a>
+    <a class="btn sm soft" href="../writing.html">返回中考英语书面表达总览</a>
     ${next ? `<a class="btn sm" href="${next.slug}.html">${esc(next.name)} →</a>` : '<span></span>'}
   </div>
 </section>`;
@@ -1199,13 +1199,13 @@ function buildWriting() {
     const m = MODULES[idx];
     return page({
       base: '../',
-      title: `${m.name} · 书面表达`,
+      title: `${m.name} · 中考英语书面表达`,
       desc: opts.desc || `${m.name}：${m.desc}`,
       active: 'writing',
       dataKeys: [],
       body: `
 <div class="page-head">
-  <div class="crumb"><a href="../index.html">首页</a> / <a href="../writing.html">书面表达</a> / ${esc(m.name)}</div>
+  <div class="crumb"><a href="../index.html">首页</a> / <a href="../writing.html">中考英语书面表达</a> / ${esc(m.name)}</div>
   <h1>${m.icon} ${esc(m.title)}</h1>
   <p class="lede">${opts.lede || esc(m.desc)}</p>
 </div>
@@ -1221,14 +1221,14 @@ ${modulePager(idx)}
      总览：writing.html
      ========================================================== */
   write('writing.html', page({
-    title: '书面表达 · 10 分',
+    title: '中考英语书面表达 · 10 分',
     desc: `北京中考英语书面表达专项：三条提分线、写作五步法、${WRITING_STRUCTURES.length} 类结构模板、${WRITING_PHRASE_N} 句句型库、${WRITING_TRAPS.length} 个高频失分点。`,
     active: 'writing',
     dataKeys: [],
     body: `
 <div class="page-head">
-  <div class="crumb"><a href="index.html">首页</a> / 书面表达</div>
-  <h1>书面表达</h1>
+  <div class="crumb"><a href="index.html">首页</a> / 中考英语书面表达</div>
+  <h1>中考英语书面表达</h1>
   <p class="lede">北京卷第五部分 <b>10 分</b>，通常要求 80–100 词。这是<b>唯一能完全由自己控制得分</b>的题型——只要要点写全、语言不出错，稳拿 8 分以上。下面先讲清 10 分怎么来，再分四块把方法拆开。</p>
 </div>
 
