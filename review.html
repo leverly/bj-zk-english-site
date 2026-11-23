@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<title>练语法 · 考点专项 · 中考英语领航</title>
+<meta name="description" content="160 道北京中考英语语法精练题，覆盖 57 个考点，自动定位薄弱项。">
+<meta property="og:title" content="练语法 · 考点专项 · 中考英语领航">
+<meta property="og:description" content="160 道北京中考英语语法精练题，覆盖 57 个考点，自动定位薄弱项。">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%232563eb'/%3E%3Cstop offset='1' stop-color='%234f46e5'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='32' height='32' rx='9' fill='url(%23g)'/%3E%3Ctext x='16' y='22' font-family='system-ui,sans-serif' font-size='14' font-weight='800' fill='%23fff' text-anchor='middle'%3E%E4%B8%AD%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="assets/style.css?v=4e686e05">
+<script>try{var m=JSON.parse(localStorage.getItem('zk-theme-manual')||'null');var h=new Date().getHours();var t=(m==='light'||m==='dark')?m:((h>=19||h<6)?'dark':'light');document.documentElement.setAttribute('data-theme',t);}catch(e){var h2=new Date().getHours();document.documentElement.setAttribute('data-theme',(h2>=19||h2<6)?'dark':'light');}</script>
+</head>
+<body data-base="">
+<div class="scroll-progress"></div>
+<header class="hdr">
+  <div class="hdr-in">
+    <a class="logo" href="index.html">
+  <span class="logo-mark"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg></span>
+  <span>中考领航</span>
+  <span class="logo-badge">中考</span>
+</a>
+    <nav class="hdr-nav">
+      <a href="index.html">首页</a><a href="quiz.html">背单词</a><a href="review.html" class="on">练语法</a><a href="reading.html">完形阅读</a><a href="writing.html">书面表达</a><a href="speaking.html">听说机考</a><a href="words.html">词库</a><a href="grammar.html">语法</a><a href="wrong.html">错题本</a><a href="plan.html">备考计划</a><a href="stats.html">学习数据</a>
+    </nav>
+    <div class="hdr-tools">
+      <button class="theme-btn" aria-label="切换主题">☾</button>
+      <button class="menu-btn" aria-label="菜单" aria-expanded="false">☰</button>
+    </div>
+  </div>
+</header>
+<main class="main">
+<div class="wrap">
+
+<div class="page-head">
+  <div class="crumb"><a href="index.html">首页</a> / 练语法</div>
+  <h1>考点专项练语法</h1>
+  <p class="lede">160 道精练题覆盖 <b>57 个中考核心考点</b>。系统实时追踪各考点正确率，答错的题自动进错题本，答对后按遗忘曲线排期复习。</p>
+</div>
+
+<section class="section" style="margin-top:22px">
+  <div class="kv">
+    <div class="k"><b id="kQn">0</b><span>累计练习题数</span></div>
+    <div class="k"><b id="kRate" style="color:var(--accent)">—</b><span>综合正确率</span></div>
+    <div class="k"><b id="kWrong" style="color:var(--rose)">0</b><span>语法错题本</span></div>
+    <div class="k"><b id="kDue">—</b><span>到期复习题</span></div>
+  </div>
+</section>
+
+<section class="section" style="margin-top:24px" id="setup">
+  <div class="card setup-card">
+    <div class="setup-head">
+      <h3>配置本组练习</h3>
+      <div class="setup-actions">
+        <button class="btn primary" id="startBtn">开始刷题 →</button>
+        <button class="btn ghost sm" id="resetBtn">清空记录</button>
+      </div>
+    </div>
+
+    <div class="setup-grid">
+      <div class="setup-group">
+        <div class="kicker">练习范围</div>
+        <div class="chips" id="scopeChips">
+          <button class="chip on" data-scope="all">全部考点</button>
+          <button class="chip" data-scope="wrong">只练错题本 <span id="wrongN">0</span></button>
+          <button class="chip" data-scope="weak">专攻最弱考点</button>
+        </div>
+        <p class="setup-hint">选「专攻最弱考点」会自动挑出正确率最低的薄弱项集中突破 · <b id="dueN">—</b> 题待复习</p>
+      </div>
+
+      <div class="setup-group">
+        <div class="kicker">题型</div>
+        <div class="chips" id="typeChips">
+          <button class="chip on" data-t="all">混合题型</button>
+          <button class="chip" data-t="choice">单项填空</button>
+          <button class="chip" data-t="correct">写作改错</button>
+          <button class="chip" data-t="fill">语法填空</button>
+        </div>
+        <p class="setup-hint">混合模式最贴近真实卷面顺序</p>
+      </div>
+
+      <div class="setup-group">
+        <div class="kicker">本组题量</div>
+        <div class="chips" id="lenChips">
+          <button class="chip" data-l="10">10 题</button>
+          <button class="chip on" data-l="20">20 题</button>
+          <button class="chip" data-l="40">40 题</button>
+        </div>
+        <p class="setup-hint">20 题约 8–10 分钟，适合日常打卡</p>
+      </div>
+
+      <div class="setup-group">
+        <div class="kicker">指定考点（可选）</div>
+        <select id="topicSel" class="select">
+          <option value="">全部考点</option>
+          <optgroup label="名词">
+    <option value="countable">可数名词与不可数名词（4 题）</option><option value="plural">名词复数变化（5 题）</option><option value="noun-possessive">名词所有格（3 题）</option>
+  </optgroup><optgroup label="代词">
+    <option value="personal">人称代词（4 题）</option><option value="possessive">物主代词（3 题）</option><option value="reflexive">反身代词（3 题）</option><option value="indefinite">不定代词（4 题）</option><option value="demonstrative">指示代词与疑问代词（2 题）</option>
+  </optgroup><optgroup label="冠词">
+    <option value="indefinite-article">不定冠词 a / an（5 题）</option><option value="definite-article">定冠词 the（3 题）</option><option value="zero-article">零冠词（不用冠词）（3 题）</option>
+  </optgroup><optgroup label="数词">
+    <option value="cardinal">基数词（2 题）</option><option value="ordinal">序数词（2 题）</option><option value="fraction-time">分数、小数与时刻（2 题）</option>
+  </optgroup><optgroup label="形容词与副词">
+    <option value="adj-position">形容词的位置与用法（3 题）</option><option value="adv-form">副词的构成与位置（4 题）</option><option value="comparative">比较级（3 题）</option><option value="superlative">最高级（3 题）</option><option value="comparison-patterns">常见比较句式（3 题）</option>
+  </optgroup><optgroup label="介词">
+    <option value="time-prep">时间介词 in / on / at（4 题）</option><option value="place-prep">地点与方位介词（2 题）</option><option value="manner-prep">方式与手段介词（2 题）</option>
+  </optgroup><optgroup label="连词">
+    <option value="coordinating">并列连词（2 题）</option><option value="subordinating">从属连词（3 题）</option><option value="correlative">关联连词（3 题）</option>
+  </optgroup><optgroup label="动词时态">
+    <option value="present-simple">一般现在时（3 题）</option><option value="past-simple">一般过去时（3 题）</option><option value="future-simple">一般将来时（1 题）</option><option value="present-continuous">现在进行时（2 题）</option><option value="past-continuous">过去进行时（1 题）</option><option value="present-perfect">现在完成时（5 题）</option><option value="past-future">过去将来时（1 题）</option>
+  </optgroup><optgroup label="被动语态">
+    <option value="passive-form">被动语态的构成（7 题）</option><option value="passive-active">主动与被动的转换（1 题）</option><option value="passive-meaning">主动形式表被动（1 题）</option>
+  </optgroup><optgroup label="情态动词">
+    <option value="can-could">can / could（2 题）</option><option value="must-have-to">must / have to（3 题）</option><option value="may-might">may / might（1 题）</option><option value="should-need">should / need / dare（1 题）</option>
+  </optgroup><optgroup label="非谓语动词">
+    <option value="infinitive">动词不定式 to do（4 题）</option><option value="gerund">动名词 doing（5 题）</option><option value="participle">分词（2 题）</option>
+  </optgroup><optgroup label="主谓一致">
+    <option value="grammatical-agreement">语法一致（5 题）</option><option value="notional-agreement">意义一致（2 题）</option><option value="proximity">就近原则（2 题）</option>
+  </optgroup><optgroup label="句型">
+    <option value="there-be">there be 句型（3 题）</option><option value="questions">疑问句（2 题）</option><option value="imperative">祈使句（1 题）</option><option value="exclamatory">感叹句（3 题）</option><option value="inversion">倒装与强调（2 题）</option>
+  </optgroup><optgroup label="从句">
+    <option value="object-clause">宾语从句（6 题）</option><option value="attributive-clause">定语从句（3 题）</option><option value="adverbial-clause">状语从句（1 题）</option><option value="conditional">条件状语从句与虚拟（3 题）</option>
+  </optgroup><optgroup label="情景交际">
+    <option value="greeting">问候与介绍（2 题）</option><option value="request">请求、建议与许可（3 题）</option><option value="thanks-apology">感谢、道歉与应答（2 题）</option>
+  </optgroup>
+        </select>
+        <p class="setup-hint">从语法页点进来时会自动选中对应考点</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section" style="margin-top:20px">
+  <div id="quizMount">
+    <div class="empty"><b>点上方「开始刷题」进入练习</b>先配置范围、题型和题量</div>
+  </div>
+</section>
+
+</div>
+</main>
+<footer class="foot">
+  <div class="foot-in">
+    <div class="col">
+      <div class="logo" style="margin-bottom:10px">
+        <span class="logo-mark"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg></span>
+        <span>中考领航</span>
+        <span class="logo-badge">中考</span>
+      </div>
+      <p style="line-height:1.7;margin:0;color:var(--text-2)">面向北京中考英语的系统备考站。1755 条大纲词条、57 个语法考点、160 道语法精练、16 个完形空、17 道阅读题与听说写作专项。</p>
+    </div>
+    <div class="col">
+      <h4>每日备考</h4>
+      <a href="quiz.html">背单词</a>
+      <a href="review.html">练语法</a>
+      <a href="wrong.html">错题本</a>
+      <a href="plan.html">备考计划</a>
+    </div>
+    <div class="col">
+      <h4>题型专项</h4>
+      <a href="reading.html">完形与阅读</a>
+      <a href="writing.html">书面表达</a>
+      <a href="speaking.html">听说机考</a>
+    </div>
+    <div class="col">
+      <h4>知识体系</h4>
+      <a href="words.html">1755 条词表</a>
+      <a href="themes/index.html">主题词库</a>
+      <a href="grammar.html">15 大语法族</a>
+    </div>
+    <div class="col">
+      <h4>数据与说明</h4>
+      <a href="stats.html">学习数据</a>
+      <a href="content.html">内容说明</a>
+      <a href="index.html#faq">常见问题</a>
+    </div>
+  </div>
+  <div class="foot-bottom">
+    <span>中考英语领航 · 对齐北京中考英语考试说明</span>
+    <span>词表基于义务教育英语课程标准三级词汇 · 离线与在线均可使用</span>
+  </div>
+</footer>
+<script src="assets/app.js?v=3b175a07"></script>
+<script>window.ZK_DATA=window.ZK_DATA||{};
+window.ZK_DATA.QUESTIONS=[{"id":"n1","topic":"countable","type":"choice","stem":"There is some ___ in the fridge. Let me get you a glass.","options":["oranges","juice","apples","eggs"],"answer":1,"why":"a glass of 说明后面是不可数名词液体；oranges / apples / eggs 都是可数名词复数，不能装进一杯里。"},{"id":"n2","topic":"countable","type":"choice","stem":"Could you give me some ___ about learning English?","options":["advices","advice","an advice","the advices"],"answer":1,"why":"advice 是不可数名词，没有复数形式，也不能直接加 a/an。要表示数量用 a piece of advice。"},{"id":"n3","topic":"countable","type":"choice","stem":"The ___ is very important to us. We should listen carefully.","options":["news","newses","a news","some newses"],"answer":0,"why":"news 虽以 -s 结尾，但它是不可数名词，没有复数，谓语用单数 is。"},{"id":"n4","topic":"plural","type":"choice","stem":"There are many ___ on the farm. They are eating grass.","options":["sheeps","sheep","sheepes","a sheep"],"answer":1,"why":"sheep 单复数同形，many 后接复数意义但仍写 sheep。同类还有 deer, fish, Chinese。"},{"id":"n5","topic":"plural","type":"choice","stem":"My little brother has lost two ___ already.","options":["tooths","teeth","toothes","teeths"],"answer":1,"why":"tooth 的复数是 teeth，属于不规则变化。类似：foot→feet, man→men, child→children。"},{"id":"n6","topic":"plural","type":"choice","stem":"Look! There are three ___ playing with a ball in the garden.","options":["childs","childrens","children","child"],"answer":2,"why":"child 的复数是 children，本身已是复数，不能再加 s。"},{"id":"n7","topic":"plural","type":"choice","stem":"We took a lot of ___ during our trip to Beijing.","options":["photoes","photos","photo","photose"],"answer":1,"why":"photo 是外来词，复数直接加 -s。同类：piano→pianos, zoo→zoos, radio→radios。"},{"id":"n8","topic":"noun-possessive","type":"choice","stem":"This is not my bag. It's ___.","options":["Lucy's and Lily's","Lucy and Lily's","Lucy's and Lily","Lucy and Lily"],"answer":1,"why":"两人共有一个包，所有格只在最后一个名字后加 's。若各自有包才写 Lucy's and Lily's bags。"},{"id":"n9","topic":"noun-possessive","type":"choice","stem":"The ___ room is on the second floor.","options":["teacher's","teachers'","teachers","teacher"],"answer":1,"why":"由 the 和 room 判断指的是全体教师的办公室，teachers 是以 s 结尾的规则复数，所有格只加撇号。"},{"id":"n10","topic":"noun-possessive","type":"choice","stem":"It's only ten ___ walk from my home to the school.","options":["minute's","minutes'","minutes","minute"],"answer":1,"why":"ten minutes 是复数，且表示时间距离的名词可用 's 所有格：ten minutes' walk（十分钟的路程）。"},{"id":"p1","topic":"personal","type":"choice","stem":"This is a photo of my family and ___.","options":["I","me","my","mine"],"answer":1,"why":"of 是介词，介词后必须用宾格 me。这是北京卷最经典的代词陷阱。"},{"id":"p2","topic":"personal","type":"choice","stem":"___ and my sister are in the same class.","options":["Me","I","My","Mine"],"answer":1,"why":"主语位置用主格 I；且英语习惯把自己放在后面，所以是 My sister and I，但这里空格在前，仍用主格 I。"},{"id":"p3","topic":"personal","type":"choice","stem":"Please give the book to ___. He needs it.","options":["he","him","his","himself"],"answer":1,"why":"介词 to 后接宾格 him。"},{"id":"p4","topic":"possessive","type":"choice","stem":"This is ___ book. That one is ___.","options":["my; your","mine; yours","my; yours","mine; your"],"answer":2,"why":"第一空后接名词 book，用形容词性 my；第二空后无名词，用名词性 yours（= your book）。"},{"id":"p5","topic":"possessive","type":"choice","stem":"The dog is wagging ___ tail happily.","options":["it's","its","it","itself"],"answer":1,"why":"its 是「它的」（形容词性物主代词）；it's 是 it is 的缩写，两者完全不同。"},{"id":"p6","topic":"possessive","type":"choice","stem":"—Whose pen is this? —It might be ___.","options":["her","she","hers","herself"],"answer":2,"why":"句末无名词，需要名词性物主代词 hers（= her pen）。her 后面必须接名词。"},{"id":"p7","topic":"reflexive","type":"choice","stem":"Help ___ to some fish, children.","options":["yourself","yourselves","you","yours"],"answer":1,"why":"对象是 children（复数），反身代词要用 yourselves。单数才用 yourself。"},{"id":"p8","topic":"reflexive","type":"choice","stem":"She learned to play the piano all by ___.","options":["her","herself","hers","she"],"answer":1,"why":"by oneself 是固定搭配，表示「独自地」；主语是 she，所以用 herself。"},{"id":"p9","topic":"indefinite","type":"choice","stem":"There is ___ water in the bottle. We need to buy some.","options":["a few","few","a little","little"],"answer":3,"why":"water 不可数，排除 a few / few；后半句「需要买一些」说明几乎没有了，表否定用 little。"},{"id":"p10","topic":"indefinite","type":"choice","stem":"___ of the two answers is correct. Try again.","options":["Both","Either","Neither","All"],"answer":2,"why":"两者（two answers）且「都不对」，用 neither，谓语用单数 is。Both 表都肯定，Either 表其中一个。"},{"id":"p11","topic":"indefinite","type":"choice","stem":"___ of my parents are teachers.","options":["Both","Neither","Either","None"],"answer":0,"why":"parents 是两者，谓语是 are（复数），说明两者都肯定，用 Both。Neither / Either 谓语要用单数。"},{"id":"p12","topic":"indefinite","type":"choice","stem":"Would you like ___ tea?","options":["any","some","many","few"],"answer":1,"why":"表示邀请、请求的疑问句用 some，期待对方肯定回答。tea 不可数，排除 many / few。"},{"id":"p13","topic":"demonstrative","type":"choice","stem":"___ are my new classmates.","options":["This","That","These","It"],"answer":2,"why":"谓语是 are，主语必须是复数，用 These。This / That / It 都是单数。"},{"id":"p14","topic":"demonstrative","type":"choice","stem":"___ bag is this? It looks nice.","options":["Who","Whose","Who's","Which"],"answer":1,"why":"问「谁的」用 whose（所有格）。who's 是 who is 的缩写，不表所属。"},{"id":"a1","topic":"indefinite-article","type":"choice","stem":"He is ___ honest boy. Everyone likes him.","options":["a","an","the","/"],"answer":1,"why":"honest 的 h 不发音，读作 /ˈɒnɪst/，以元音音素开头，所以用 an。"},{"id":"a2","topic":"indefinite-article","type":"choice","stem":"It takes about ___ hour to get to the airport.","options":["a","an","the","/"],"answer":1,"why":"hour 的 h 不发音，读 /ˈaʊə/，以元音开头，用 an。"},{"id":"a3","topic":"indefinite-article","type":"choice","stem":"She is ___ university student and studies very hard.","options":["a","an","the","/"],"answer":0,"why":"university 读 /ˌjuːnɪˈvɜːsəti/，以辅音 /j/ 开头，用 a。看读音不看字母。"},{"id":"a4","topic":"indefinite-article","type":"choice","stem":"This is ___ useful book for beginners.","options":["a","an","the","/"],"answer":0,"why":"useful 读 /ˈjuːsfl/，以辅音 /j/ 开头，用 a。"},{"id":"a5","topic":"definite-article","type":"choice","stem":"___ sun rises in the east.","options":["A","An","The","/"],"answer":2,"why":"sun 是独一无二的事物，前面用 the。同类：the moon, the earth, the sky。"},{"id":"a6","topic":"definite-article","type":"choice","stem":"She is ___ tallest girl in our class.","options":["a","an","the","/"],"answer":2,"why":"形容词最高级前必须加 the。"},{"id":"a7","topic":"definite-article","type":"choice","stem":"He can play ___ guitar very well.","options":["a","an","the","/"],"answer":2,"why":"乐器名词前加 the（play the guitar / the piano）；但球类运动前不加 the。"},{"id":"a8","topic":"zero-article","type":"choice","stem":"He likes playing ___ basketball after school.","options":["a","an","the","/"],"answer":3,"why":"球类、棋类运动前不加冠词：play basketball / play chess。这是与乐器前加 the 的对比考点。"},{"id":"a9","topic":"zero-article","type":"choice","stem":"We usually have ___ breakfast at seven.","options":["a","an","the","/"],"answer":3,"why":"一日三餐前一般不加冠词：have breakfast / lunch / dinner。"},{"id":"a10","topic":"zero-article","type":"choice","stem":"He goes to work ___ bus every day.","options":["by","by the","in","on the"],"answer":0,"why":"by + 交通工具（不加冠词）：by bus / by bike / by train。用 in / on 时要加冠词，如 on the bus。"},{"id":"nu1","topic":"cardinal","type":"choice","stem":"There are ___ students in our school.","options":["three hundreds","three hundred","three hundreds of","hundred of"],"answer":1,"why":"hundred 前有具体数字时不加 s，也不接 of。"},{"id":"nu2","topic":"cardinal","type":"choice","stem":"___ people visit the Great Wall every year.","options":["Thousand of","Thousands of","Thousand","Thousands"],"answer":1,"why":"表示「成千上万」这类概数，用 thousands of（复数 + of）。"},{"id":"nu3","topic":"ordinal","type":"choice","stem":"Today is his ___ birthday. He is nine years old.","options":["nine","nineth","ninth","ninthth"],"answer":2,"why":"nine 变序数词要去掉 e 再加 th：ninth。"},{"id":"nu4","topic":"ordinal","type":"choice","stem":"She lives on the ___ floor of that building.","options":["twelve","twelveth","twelfth","twelvth"],"answer":2,"why":"twelve 变序数词是 twelfth（ve 变 f 再加 th）。同类：five→fifth。"},{"id":"nu5","topic":"fraction-time","type":"choice","stem":"___ of the students in our class are girls.","options":["Two third","Two thirds","Second three","Two three"],"answer":1,"why":"分数：分子用基数词 two，分母用序数词；分子大于 1 时分母加 s，所以是 two thirds。"},{"id":"nu6","topic":"fraction-time","type":"choice","stem":"The meeting will start at ___.","options":["half past nine","half to nine","nine half","half nine"],"answer":0,"why":"半点用 half past + 小时：half past nine（九点半）。"},{"id":"ad1","topic":"adj-position","type":"choice","stem":"The music sounds ___. I like it very much.","options":["beautiful","beautifully","beauty","more beautiful"],"answer":0,"why":"sound 是系动词，后面接形容词作表语，不接副词。"},{"id":"ad2","topic":"adj-position","type":"choice","stem":"He told me ___ yesterday.","options":["important something","something important","some important","important anything"],"answer":1,"why":"形容词修饰 something / anything / nothing / everything 时必须后置。"},{"id":"ad3","topic":"adv-form","type":"choice","stem":"He studies very ___ and always gets good grades.","options":["hardly","hard","harder","hardest"],"answer":1,"why":"「努力地」是 hard；hardly 意思是「几乎不」，表否定，与「成绩好」矛盾。"},{"id":"ad4","topic":"adv-form","type":"choice","stem":"I can ___ hear you. Please speak louder.","options":["hard","hardly","nearly","almost"],"answer":1,"why":"hardly = 几乎不。后半句「请大声点」说明听不清，用 hardly。"},{"id":"ad5","topic":"adv-form","type":"choice","stem":"She plays the violin very ___.","options":["good","well","nice","fine"],"answer":1,"why":"修饰动词 play 要用副词 well。good / nice / fine 都是形容词。"},{"id":"ad6","topic":"comparative","type":"choice","stem":"This book is much ___ than that one.","options":["interesting","more interesting","most interesting","the most interesting"],"answer":1,"why":"两者比较用比较级；interesting 是多音节词，比较级用 more interesting。much 修饰比较级。"},{"id":"ad7","topic":"comparative","type":"choice","stem":"My bag is bigger than ___.","options":["you","your","yours","yourself"],"answer":2,"why":"比较对象要同类：我的包和你的包比，yours = your bag。不能和「你」这个人比。"},{"id":"ad8","topic":"superlative","type":"choice","stem":"She is ___ student in our class.","options":["best","the best","better","the better"],"answer":1,"why":"三者以上比较用最高级，且最高级前必须加 the。"},{"id":"ad9","topic":"superlative","type":"choice","stem":"Shanghai is one of ___ in China.","options":["the biggest city","the biggest cities","biggest cities","the bigger cities"],"answer":1,"why":"one of the + 最高级 + 名词复数，表示「最…之一」。"},{"id":"ad10","topic":"comparison-patterns","type":"choice","stem":"He is ___ his brother.","options":["as taller as","as tall as","so tall as","taller as"],"answer":1,"why":"as…as 表示「和…一样」，中间必须用形容词原级，不能用比较级。"},{"id":"ad11","topic":"comparison-patterns","type":"choice","stem":"___ you read, ___ you will know.","options":["More; more","The more; the more","The much; the much","Much; much"],"answer":1,"why":"「越…越…」结构：the + 比较级, the + 比较级，两个分句都要有 the。"},{"id":"ad12","topic":"comparison-patterns","type":"choice","stem":"It is getting ___ in winter.","options":["cold and cold","colder and colder","the colder","more cold"],"answer":1,"why":"「越来越冷」用比较级 + and + 比较级：colder and colder。"},{"id":"pr1","topic":"time-prep","type":"choice","stem":"We will meet ___ 8 o'clock ___ Monday morning.","options":["at; on","on; at","in; on","at; in"],"answer":0,"why":"具体时刻用 at；具体某一天的上午用 on（不是 in）。"},{"id":"pr2","topic":"time-prep","type":"choice","stem":"He came back ___ the morning of May 1st.","options":["in","on","at","for"],"answer":1,"why":"具体某一天（May 1st）的上午用 on。若只说 in the morning 才用 in。"},{"id":"pr3","topic":"time-prep","type":"choice","stem":"I have studied English ___ three years.","options":["since","for","in","at"],"answer":1,"why":"for + 时间段（three years）；since + 时间点（since 2020）。"},{"id":"pr4","topic":"time-prep","type":"choice","stem":"She has lived here ___ 2015.","options":["for","since","in","from"],"answer":1,"why":"since + 时间点（2015），表示「自…以来」。"},{"id":"pr5","topic":"place-prep","type":"choice","stem":"He is the tallest ___ the three boys.","options":["between","among","in","of"],"answer":1,"why":"between 用于两者；among 用于三者及以上。the three boys 是三者。"},{"id":"pr6","topic":"place-prep","type":"choice","stem":"There is a beautiful garden ___ the house.","options":["in the front of","in front of","in front","front of"],"answer":1,"why":"in front of 指外部前方；in the front of 指内部前部（如车头）。花园在房子外部。"},{"id":"pr7","topic":"manner-prep","type":"choice","stem":"Please write your name ___ a pen.","options":["by","with","in","on"],"answer":1,"why":"具体工具用 with；by 接手段或交通方式（by bus, by email）。"},{"id":"pr8","topic":"manner-prep","type":"choice","stem":"Can you say it ___ English?","options":["with","by","in","on"],"answer":2,"why":"用某种语言用 in：in English / in Chinese。"},{"id":"c1","topic":"coordinating","type":"choice","stem":"Hurry up, ___ you will miss the train.","options":["and","but","or","so"],"answer":2,"why":"「祈使句 + or + 陈述句」表示「否则」：快点，否则你会误车。"},{"id":"c2","topic":"coordinating","type":"choice","stem":"___ he is young, he knows a lot.","options":["Although","But","Because","So"],"answer":0,"why":"although 引导让步状语从句；注意不能与 but 连用，所以选 Although 后不能再有 but。"},{"id":"c3","topic":"subordinating","type":"choice","stem":"I will call you as soon as I ___ there.","options":["get","will get","got","am getting"],"answer":0,"why":"as soon as 引导时间状语从句，遵循主将从现：主句将来时，从句用一般现在时。"},{"id":"c4","topic":"subordinating","type":"choice","stem":"It was ___ a hot day that we stayed inside.","options":["so","such","very","too"],"answer":1,"why":"such + a/an + 形容词 + 名词 + that；so + 形容词/副词 + that。这里有名词 day，用 such。"},{"id":"c5","topic":"correlative","type":"choice","stem":"Both Tom and Jim ___ good at English.","options":["is","are","was","has"],"answer":1,"why":"both…and 连接两个主语时，谓语用复数 are。"},{"id":"c6","topic":"correlative","type":"choice","stem":"Not only the students but also the teacher ___ the film.","options":["like","likes","liking","to like"],"answer":1,"why":"not only…but also 遵循就近原则，谓语与最近的 the teacher 一致，用 likes。"},{"id":"c7","topic":"correlative","type":"choice","stem":"Neither he nor I ___ free today.","options":["am","is","are","be"],"answer":0,"why":"neither…nor 遵循就近原则，与最近的 I 一致，用 am。"},{"id":"t1","topic":"present-simple","type":"choice","stem":"My father usually ___ to work by bus.","options":["go","goes","going","went"],"answer":1,"why":"usually 表习惯用一般现在时；主语 My father 是第三人称单数，动词加 -es。"},{"id":"t2","topic":"present-simple","type":"choice","stem":"The train ___ at 7:30 tomorrow morning.","options":["leaves","will leave","left","is leaving"],"answer":0,"why":"按时刻表发生的动作（火车、航班、课程）习惯用一般现在时表将来。"},{"id":"t3","topic":"past-simple","type":"choice","stem":"—What did you do last weekend? —I ___ my grandparents.","options":["visit","visited","have visited","will visit"],"answer":1,"why":"last weekend 是明确过去时间，用一般过去时。现在完成时不能与明确过去时间连用。"},{"id":"t4","topic":"past-simple","type":"choice","stem":"___ you finish your homework yesterday?","options":["Do","Did","Have","Will"],"answer":1,"why":"yesterday 表过去，用 Did 引导疑问句；did 后动词用原形 finish。"},{"id":"t5","topic":"future-simple","type":"choice","stem":"Look at the dark clouds! It ___ rain.","options":["is going to","will be","is","was going to"],"answer":0,"why":"根据眼前迹象（乌云）推测将要发生，用 be going to。"},{"id":"t6","topic":"present-continuous","type":"choice","stem":"Listen! Someone ___ in the next room.","options":["sings","is singing","sang","has sung"],"answer":1,"why":"Listen! 提示此刻正在发生，用现在进行时 is singing。"},{"id":"t7","topic":"present-continuous","type":"choice","stem":"I ___ the answer to this question.","options":["am knowing","know","knowing","have knowing"],"answer":1,"why":"know 是状态动词，一般不用进行时。状态动词还有 like, want, need, belong, understand。"},{"id":"t8","topic":"past-continuous","type":"choice","stem":"While she ___ dinner, the phone rang.","options":["cooks","was cooking","has cooked","is cooking"],"answer":1,"why":"while 引导的长动作用过去进行时；主句突发短动作用一般过去时 rang。"},{"id":"t9","topic":"present-perfect","type":"choice","stem":"I ___ already ___ my homework. Can I go out now?","options":["have; finished","has; finished","did; finish","was; finishing"],"answer":0,"why":"already 是现在完成时标志词；主语 I 用 have + 过去分词 finished。"},{"id":"t10","topic":"present-perfect","type":"choice","stem":"He ___ the car for two years.","options":["has bought","has had","bought","buys"],"answer":1,"why":"buy 是瞬间动词，不能与 for + 时间段连用，要换成状态动词 have（has had）。"},{"id":"t11","topic":"present-perfect","type":"choice","stem":"—Have you ever ___ to the Great Wall? —Yes, twice.","options":["go","went","been","gone"],"answer":2,"why":"have been to 表示「去过（已回来）」；have gone to 表示「去了（还没回来）」。"},{"id":"t12","topic":"past-future","type":"choice","stem":"He said he ___ come the next day.","options":["will","would","is","has"],"answer":1,"why":"主句 said 是过去时，宾语从句要用过去将来时 would + 动词原形。"},{"id":"pa1","topic":"passive-form","type":"choice","stem":"English ___ in many countries around the world.","options":["speaks","is spoken","is speaking","spoke"],"answer":1,"why":"English 是「被说」的对象，用被动语态 is spoken。"},{"id":"pa2","topic":"passive-form","type":"choice","stem":"The bridge ___ in 1990.","options":["built","was built","is built","has built"],"answer":1,"why":"桥是「被建造」的，且时间是 1990（过去），用一般过去时被动 was built。"},{"id":"pa3","topic":"passive-form","type":"choice","stem":"The work ___ before Friday.","options":["must finish","must be finished","must finished","must be finish"],"answer":1,"why":"含情态动词的被动语态：情态动词 + be + 过去分词。"},{"id":"pa4","topic":"passive-form","type":"choice","stem":"An accident ___ near my home last night.","options":["was happened","happened","is happened","has happened"],"answer":1,"why":"happen 是不及物动词，没有被动语态，直接用主动形式。"},{"id":"pa5","topic":"passive-form","type":"choice","stem":"The window ___ by the naughty boy yesterday.","options":["was broke","was broken","broke","is broken"],"answer":1,"why":"被动语态用过去分词 broken，不是过去式 broke。"},{"id":"pa6","topic":"passive-active","type":"choice","stem":"They will hold a meeting tomorrow. → A meeting ___ tomorrow.","options":["will hold","will be held","is held","was held"],"answer":1,"why":"主动变被动：宾语 a meeting 变主语，will hold 变 will be held。"},{"id":"pa7","topic":"passive-meaning","type":"choice","stem":"This kind of book ___ well.","options":["is sold","sells","sold","selling"],"answer":1,"why":"sell 表「本身好卖」这种特性时用主动形式表被动，配合副词 well。"},{"id":"m1","topic":"can-could","type":"choice","stem":"He ___ swim very well when he was five.","options":["can","could","may","must"],"answer":1,"why":"when he was five 是过去时间，表过去的能力用 could。"},{"id":"m2","topic":"can-could","type":"choice","stem":"—Could you help me with this box? —___","options":["Yes, I could.","Sure.","No, I couldn't.","Yes, I can."],"answer":1,"why":"Could you…? 是委婉请求，回答用 Sure. / Of course.，不用 could 直接应答。"},{"id":"m3","topic":"must-have-to","type":"choice","stem":"—Must I finish it now? —No, you ___.","options":["mustn't","needn't","can't","shouldn't"],"answer":1,"why":"must 引导的疑问句，否定回答用 needn't（不必）。mustn't 是「禁止」，意思不同。"},{"id":"m4","topic":"must-have-to","type":"choice","stem":"You ___ smoke here. It's a hospital.","options":["needn't","mustn't","don't have to","may not"],"answer":1,"why":"医院禁止吸烟，用 mustn't（禁止）。needn't / don't have to 是「不必」，语气不够。"},{"id":"m5","topic":"may-might","type":"choice","stem":"—May I use your phone? —Yes, you ___.","options":["can","may","must","need"],"answer":1,"why":"May I…? 请求许可，肯定回答用 Yes, you may.，保持语气一致。"},{"id":"m6","topic":"should-need","type":"choice","stem":"You look tired. You ___ have a rest.","options":["should","can","may","must"],"answer":0,"why":"给对方建议用 should（应该）。"},{"id":"nf1","topic":"infinitive","type":"choice","stem":"I want ___ a new bike for my birthday.","options":["buy","to buy","buying","bought"],"answer":1,"why":"want 后接不定式 to do：want to buy。"},{"id":"nf2","topic":"infinitive","type":"choice","stem":"Let me ___ you with your bags.","options":["to help","help","helping","helped"],"answer":1,"why":"let / make / have 后接不带 to 的不定式，直接用动词原形。"},{"id":"nf3","topic":"infinitive","type":"choice","stem":"He got up early ___ the first bus.","options":["catch","to catch","catching","caught"],"answer":1,"why":"不定式作目的状语：早起「为了」赶头班车。"},{"id":"nf4","topic":"gerund","type":"choice","stem":"I enjoy ___ to music after school.","options":["listen","to listen","listening","listened"],"answer":2,"why":"enjoy 后只接动名词 doing：enjoy listening。"},{"id":"nf5","topic":"gerund","type":"choice","stem":"He is good at ___ basketball.","options":["play","to play","playing","played"],"answer":2,"why":"be good at 中的 at 是介词，介词后接动名词 playing。"},{"id":"nf6","topic":"gerund","type":"choice","stem":"I look forward to ___ from you soon.","options":["hear","hearing","heard","be heard"],"answer":1,"why":"look forward to 中的 to 是介词，后接动名词 hearing。这是高频陷阱。"},{"id":"nf7","topic":"participle","type":"choice","stem":"The film is very ___. All of us like it.","options":["interest","interested","interesting","interests"],"answer":2,"why":"interesting 表「令人感兴趣的」（修饰物）；interested 表「感到感兴趣的」（修饰人）。"},{"id":"nf8","topic":"participle","type":"choice","stem":"The boy ___ under the tree is my brother.","options":["stand","standing","stood","to stand"],"answer":1,"why":"现在分词短语作后置定语，表主动、正在进行的动作：the boy standing（正站着的男孩）。"},{"id":"ag1","topic":"grammatical-agreement","type":"choice","stem":"The number of the students in our school ___ about 500.","options":["is","are","were","have"],"answer":0,"why":"the number of 的中心词是 number，谓语用单数 is。"},{"id":"ag2","topic":"grammatical-agreement","type":"choice","stem":"A number of students ___ playing on the playground.","options":["is","are","was","has"],"answer":1,"why":"a number of = 许多，后接复数名词，谓语用复数 are。与 the number of 正好相反。"},{"id":"ag3","topic":"grammatical-agreement","type":"choice","stem":"The teacher as well as the students ___ going to the museum.","options":["are","is","were","be"],"answer":1,"why":"as well as 引导的部分是附加成分，谓语与真正的主语 The teacher 一致，用 is。"},{"id":"ag4","topic":"grammatical-agreement","type":"choice","stem":"Each of the students ___ a dictionary.","options":["have","has","are having","were having"],"answer":1,"why":"each 作主语时谓语用单数 has。类似：every / either / neither。"},{"id":"ag5","topic":"notional-agreement","type":"choice","stem":"The news ___ very exciting.","options":["are","is","were","have"],"answer":1,"why":"news 是不可数名词，谓语用单数 is。"},{"id":"ag6","topic":"notional-agreement","type":"choice","stem":"My family ___ all watching TV now.","options":["is","are","was","has"],"answer":1,"why":"family 强调家庭成员（all）时谓语用复数 are；强调整体才用单数。"},{"id":"ag7","topic":"proximity","type":"choice","stem":"There ___ a pen and two books on the desk.","options":["are","is","have","has"],"answer":1,"why":"there be 遵循就近原则，与最靠近的 a pen（单数）一致，用 is。"},{"id":"ag8","topic":"proximity","type":"choice","stem":"Neither the teacher nor the students ___ here.","options":["is","are","was","has"],"answer":1,"why":"neither…nor 遵循就近原则，与最近的 the students 一致，用 are。"},{"id":"s1","topic":"there-be","type":"choice","stem":"There ___ a meeting tomorrow afternoon.","options":["will have","will be","is going to have","has"],"answer":1,"why":"there be 的将来时是 there will be，不能换成 have。"},{"id":"s2","topic":"there-be","type":"choice","stem":"___ a book on the desk?","options":["Is there","There is","Has there","There has"],"answer":0,"why":"there be 的疑问句把 be 提前：Is there a book…?"},{"id":"s3","topic":"questions","type":"choice","stem":"Where ___ last Sunday?","options":["you did go","did you go","you went","do you go"],"answer":1,"why":"特殊疑问句语序：疑问词 + 助动词 + 主语 + 动词原形。"},{"id":"s4","topic":"questions","type":"choice","stem":"He is a student, ___?","options":["is he","isn't he","does he","doesn't he"],"answer":1,"why":"反意疑问句「前肯后否」：前面是 is，后面用 isn't he。"},{"id":"s5","topic":"imperative","type":"choice","stem":"___ late for class again.","options":["Not be","Don't be","Don't","Not to be"],"answer":1,"why":"否定祈使句用 Don't + 动词原形：Don't be late。"},{"id":"s6","topic":"exclamatory","type":"choice","stem":"___ clever boy he is!","options":["What","What a","How","How a"],"answer":1,"why":"中心词是单数可数名词 boy，用 What a + 形容词 + 名词 + 主谓。"},{"id":"s7","topic":"exclamatory","type":"choice","stem":"___ fine weather it is today!","options":["What a","What","How","How a"],"answer":1,"why":"weather 是不可数名词，不能加 a，用 What + 形容词 + 不可数名词。"},{"id":"s8","topic":"exclamatory","type":"choice","stem":"___ hard he works!","options":["What","What a","How","How a"],"answer":2,"why":"中心词是副词 hard，用 How + 副词 + 主谓。"},{"id":"s9","topic":"inversion","type":"choice","stem":"—I like music. —So ___ I.","options":["do","am","can","have"],"answer":0,"why":"「我也是」用 So + 助动词 + 主语；前面是实义动词 like，助动词用 do。"},{"id":"s10","topic":"inversion","type":"choice","stem":"—I can't swim. —Neither ___ he.","options":["can","does","is","has"],"answer":0,"why":"「他也不」用 Neither + 助动词 + 主语；前面用 can，这里也用 can。"},{"id":"cl1","topic":"object-clause","type":"choice","stem":"I don't know where ___.","options":["does he live","he lives","he live","did he live"],"answer":1,"why":"宾语从句必须用陈述句语序（主语 + 谓语），不能倒装。"},{"id":"cl2","topic":"object-clause","type":"choice","stem":"He asked me ___ I could help him.","options":["that","if","what","which"],"answer":1,"why":"一般疑问句变宾语从句用 if / whether 引导。"},{"id":"cl3","topic":"object-clause","type":"choice","stem":"The teacher told us that the earth ___ around the sun.","options":["moved","moves","will move","has moved"],"answer":1,"why":"客观真理、自然规律永远用一般现在时，不受主句过去时影响。"},{"id":"cl4","topic":"object-clause","type":"choice","stem":"He said that he ___ busy at that time.","options":["is","was","will be","has been"],"answer":1,"why":"主句 said 是过去时，从句时态要呼应，用 was。"},{"id":"cl5","topic":"attributive-clause","type":"choice","stem":"The man ___ is standing there is my teacher.","options":["which","who","whose","where"],"answer":1,"why":"先行词 the man 是人，关系代词用 who（或 that）。"},{"id":"cl6","topic":"attributive-clause","type":"choice","stem":"This is the book ___ I want to buy.","options":["who","whose","which","where"],"answer":2,"why":"先行词 the book 是物，关系代词用 which（或 that）。"},{"id":"cl7","topic":"attributive-clause","type":"choice","stem":"The boy ___ father is a doctor studies very hard.","options":["who","which","whose","that"],"answer":2,"why":"表示「男孩的父亲」，所属关系用 whose。"},{"id":"cl8","topic":"adverbial-clause","type":"choice","stem":"___ he was ill, he still went to school.","options":["Although","But","Because","So"],"answer":0,"why":"前后是让步关系（虽然病了仍去上学），用 Although；不能与 but 连用。"},{"id":"cl9","topic":"conditional","type":"choice","stem":"If it ___ tomorrow, we will stay at home.","options":["will rain","rains","rained","is raining"],"answer":1,"why":"真实条件句遵循主将从现：主句将来时，if 从句用一般现在时。"},{"id":"cl10","topic":"conditional","type":"choice","stem":"If I ___ you, I would take the chance.","options":["am","was","were","be"],"answer":2,"why":"与现在事实相反的虚拟语气，be 动词一律用 were（If I were you）。"},{"id":"cm1","topic":"greeting","type":"choice","stem":"—How do you do? —___","options":["Fine, thank you.","How do you do?","I'm fine.","Very well."],"answer":1,"why":"How do you do? 是初次见面问候，回答同样用 How do you do?。Fine, thank you 回答的是 How are you?。"},{"id":"cm2","topic":"greeting","type":"choice","stem":"—Nice to meet you. —___","options":["Nice to meet you, too.","I'm fine.","Thank you.","You're welcome."],"answer":0,"why":"Nice to meet you. 的应答是 Nice to meet you, too."},{"id":"cm3","topic":"request","type":"choice","stem":"—How about ___ swimming this afternoon? —Good idea!","options":["go","to go","going","went"],"answer":2,"why":"How about 中的 about 是介词，后接动名词 going。"},{"id":"cm4","topic":"request","type":"choice","stem":"—Would you like some tea? —___","options":["Yes, I would.","Yes, please.","No, I wouldn't.","Yes, I like."],"answer":1,"why":"Would you like…? 是邀请，肯定回答用 Yes, please.，否定用 No, thanks."},{"id":"cm5","topic":"request","type":"choice","stem":"—Could you please open the window? —___","options":["Yes, I could.","Of course.","No, I couldn't.","You're welcome."],"answer":1,"why":"Could you please…? 是委婉请求，肯定回答用 Of course. / Sure."},{"id":"cm6","topic":"thanks-apology","type":"choice","stem":"—Thank you for your help. —___","options":["No, thanks.","You're welcome.","That's right.","Never mind."],"answer":1,"why":"感谢的应答是 You're welcome. / Not at all.。No, thanks 用于拒绝提议。"},{"id":"cm7","topic":"thanks-apology","type":"choice","stem":"—I'm sorry I'm late. —___","options":["You're welcome.","Never mind.","Thank you.","That's right."],"answer":1,"why":"道歉的应答用 Never mind. / That's all right. / It doesn't matter."},{"id":"cr1","topic":"countable","type":"correct","stem":"下面哪一句是正确的？","options":["I need some advices from you.","I need some advice from you.","I need an advice from you.","I need advices from you."],"answer":1,"why":"advice 是不可数名词，没有复数，也不能加 a/an。"},{"id":"cr2","topic":"personal","type":"correct","stem":"下面哪一句是正确的？","options":["This is a photo of my parents and I.","This is a photo of my parents and me.","This is a photo of I and my parents.","This is a photo of me and my parents."],"answer":1,"why":"of 是介词，后接宾格 me。"},{"id":"cr3","topic":"adv-form","type":"correct","stem":"下面哪一句是正确的？","options":["He plays basketball very good.","He plays basketball very well.","He plays basketball very nice.","He play basketball very well."],"answer":1,"why":"修饰动词 play 要用副词 well；且主语 He 是第三人称单数，动词加 s。"},{"id":"cr4","topic":"subordinating","type":"correct","stem":"下面哪一句是正确的？","options":["Although he is young, but he is brave.","Although he is young, he is brave.","Because he is young, so he is brave.","He is young, although he is brave."],"answer":1,"why":"although 与 but 不能连用；because 与 so 也不能连用。"},{"id":"cr5","topic":"gerund","type":"correct","stem":"下面哪一句是正确的？","options":["I look forward to see you.","I look forward to seeing you.","I look forward to saw you.","I look forward to be seeing you."],"answer":1,"why":"look forward to 中的 to 是介词，后接动名词 seeing。"},{"id":"cr6","topic":"present-perfect","type":"correct","stem":"下面哪一句是正确的？","options":["I have finished it yesterday.","I finished it yesterday.","I have finish it yesterday.","I finished it since yesterday."],"answer":1,"why":"yesterday 是明确过去时间，只能用一般过去时，不能用现在完成时。"},{"id":"cr7","topic":"passive-form","type":"correct","stem":"下面哪一句是正确的？","options":["The window was broke by the boy.","The window was broken by the boy.","The window broke by the boy.","The window is broke by the boy."],"answer":1,"why":"被动语态是 be + 过去分词 broken，不是过去式 broke。"},{"id":"cr8","topic":"object-clause","type":"correct","stem":"下面哪一句是正确的？","options":["I don't know where does he live.","I don't know where he lives.","I don't know where he live.","I don't know where did he live."],"answer":1,"why":"宾语从句用陈述句语序，且主语 he 是第三人称单数，动词加 s。"},{"id":"cr9","topic":"grammatical-agreement","type":"correct","stem":"下面哪一句是正确的？","options":["The number of students are 500.","The number of students is 500.","A number of students is playing.","The number of student is 500."],"answer":1,"why":"the number of 谓语用单数 is；a number of 谓语用复数。"},{"id":"cr10","topic":"there-be","type":"correct","stem":"下面哪一句是正确的？","options":["There have a book on the desk.","There is a book on the desk.","There are a book on the desk.","There has a book on the desk."],"answer":1,"why":"there be 表存在，不能用 have/has；a book 单数用 is。"},{"id":"f1","topic":"present-simple","type":"fill","stem":"My sister often ___ (go) to school by bike.","answer":"goes","accept":["goes"],"why":"often 表习惯用一般现在时；主语 My sister 第三人称单数，go 加 es。"},{"id":"f2","topic":"present-perfect","type":"fill","stem":"I ___ (live) in Beijing since 2018.","answer":"have lived","accept":["have lived","'ve lived"],"why":"since 2018 是现在完成时标志，主语 I 用 have + 过去分词 lived。"},{"id":"f3","topic":"passive-form","type":"fill","stem":"The classroom ___ (clean) every day by the students.","answer":"is cleaned","accept":["is cleaned"],"why":"教室是「被打扫」的，every day 表一般现在时，用 is cleaned。"},{"id":"f4","topic":"comparative","type":"fill","stem":"This question is much ___ (easy) than that one.","answer":"easier","accept":["easier"],"why":"than 提示比较级；easy 是辅音字母 + y，变 ier。"},{"id":"f5","topic":"gerund","type":"fill","stem":"Thank you for ___ (help) me with my English.","answer":"helping","accept":["helping"],"why":"for 是介词，后接动名词 helping。"},{"id":"f6","topic":"plural","type":"fill","stem":"There are many ___ (child) playing in the park.","answer":"children","accept":["children"],"why":"child 的复数是 children，不规则变化。"},{"id":"f7","topic":"infinitive","type":"fill","stem":"My mother asked me ___ (clean) my room.","answer":"to clean","accept":["to clean"],"why":"ask sb to do sth：ask me to clean。"},{"id":"f8","topic":"past-simple","type":"fill","stem":"We ___ (visit) the museum last Sunday.","answer":"visited","accept":["visited"],"why":"last Sunday 是明确过去时间，用一般过去时 visited。"},{"id":"f9","topic":"conditional","type":"fill","stem":"If it ___ (rain) tomorrow, we will stay at home.","answer":"rains","accept":["rains"],"why":"真实条件句主将从现：if 从句用一般现在时，主语 it 用 rains。"},{"id":"f10","topic":"adj-position","type":"fill","stem":"The soup tastes ___ (delicious).","answer":"delicious","accept":["delicious"],"why":"taste 是系动词，后接形容词作表语，用原形 delicious。"},{"id":"f11","topic":"object-clause","type":"fill","stem":"Could you tell me where the library ___ (be)?","answer":"is","accept":["is"],"why":"宾语从句用陈述句语序；the library 是单数，用 is。"},{"id":"f12","topic":"reflexive","type":"fill","stem":"The children enjoyed ___ (them) at the party.","answer":"themselves","accept":["themselves"],"why":"enjoy oneself 固定搭配；主语 children 是复数，用 themselves。"},{"id":"f13","topic":"superlative","type":"fill","stem":"He is the ___ (tall) boy in our class.","answer":"tallest","accept":["tallest"],"why":"in our class 表示三者以上范围，用最高级 tallest。"},{"id":"f14","topic":"must-have-to","type":"fill","stem":"You ___ (not) smoke here. It's a hospital.","answer":"mustn't","accept":["mustn't","must not"],"why":"医院禁止吸烟，用 mustn't（禁止）。"},{"id":"f15","topic":"indefinite-article","type":"fill","stem":"He is ___ honest boy that everyone likes him.","answer":"an","accept":["an"],"why":"honest 的 h 不发音，以元音音素开头，用 an。"}];</script><script>
+ZK.ready(function(){
+  var Q = ZK_DATA.QUESTIONS;
+  var scope='all', type='all', len=20, topic='';
+
+  function refreshKv(){
+    var ql = ZK.qLog();
+    var n=0, right=0;
+    Object.keys(ql.topicStats).forEach(function(k){ var t=ql.topicStats[k]; n+=t.right+t.wrong; right+=t.right; });
+    document.getElementById('kQn').textContent = n;
+    document.getElementById('kRate').textContent = n ? Math.round(right/n*100)+'%' : '—';
+    var wn = ZK.wrongIds().length;
+    document.getElementById('kWrong').textContent = wn;
+    document.getElementById('wrongN').textContent = wn;
+    var now = Date.now(), due=0;
+    Q.forEach(function(q){ var d=ZK.qDue(q.id); if(!d || !d.due || d.due<=now) due++; });
+    document.getElementById('kDue').textContent = due;
+    document.getElementById('dueN').textContent = due;
+  }
+
+  function buildPool(){
+    var list = Q.slice();
+    if (topic) list = list.filter(function(q){ return q.topic===topic; });
+    if (type !== 'all') list = list.filter(function(q){ return q.type===type; });
+    if (scope === 'wrong') {
+      var ids = ZK.wrongIds();
+      list = list.filter(function(q){ return ids.indexOf(q.id)>=0; });
+    } else if (scope === 'weak') {
+      var rates = ZK.topicRates();
+      var weakIds = rates.slice(0,3).map(function(r){ return r.id; });
+      var weak = list.filter(function(q){ return weakIds.indexOf(q.topic)>=0; });
+      if (weak.length) list = weak;
+    }
+    // 未到期的题不重复出（错题本与最弱考点范围不过滤，保证能针对性练）
+    if (scope === 'all') {
+      var now = Date.now();
+      var fresh = list.filter(function(q){ var d=ZK.qDue(q.id); return !d || !d.due || d.due<=now; });
+      if (fresh.length >= 5) list = fresh;
+    }
+    return list;
+  }
+
+  function start(){
+    var pool = ZK.shuffle(buildPool()).slice(0, len);
+    if (!pool.length) {
+      document.getElementById('quizMount').innerHTML = '<div class="empty"><b>当前条件下没有可练的题</b>换个范围或题型试试</div>';
+      return;
+    }
+    ZK.quiz({
+      mount:'#quizMount', questions: pool, shuffle:false,
+      onAnswer: function(){ refreshKv(); },
+      onFinish: function(){ refreshKv(); },
+      onRestart: function(){ start(); },
+    });
+  }
+
+  document.querySelectorAll('#scopeChips .chip').forEach(function(c){
+    c.addEventListener('click', function(){
+      document.querySelectorAll('#scopeChips .chip').forEach(function(x){ x.classList.remove('on'); });
+      c.classList.add('on'); scope = c.getAttribute('data-scope');
+    });
+  });
+  document.querySelectorAll('#typeChips .chip').forEach(function(c){
+    c.addEventListener('click', function(){
+      document.querySelectorAll('#typeChips .chip').forEach(function(x){ x.classList.remove('on'); });
+      c.classList.add('on'); type = c.getAttribute('data-t');
+    });
+  });
+  document.querySelectorAll('#lenChips .chip').forEach(function(c){
+    c.addEventListener('click', function(){
+      document.querySelectorAll('#lenChips .chip').forEach(function(x){ x.classList.remove('on'); });
+      c.classList.add('on'); len = parseInt(c.getAttribute('data-l'),10);
+    });
+  });
+  document.getElementById('topicSel').addEventListener('change', function(e){
+    topic = e.target.value;
+  });
+  document.getElementById('startBtn').addEventListener('click', function(){
+    start();
+    document.getElementById('quizMount').scrollIntoView({behavior:'smooth', block:'start'});
+  });
+  document.getElementById('resetBtn').addEventListener('click', function(){
+    if (!window.confirm('确定清空所有语法练习记录与错题本？此操作不可撤销。')) return;
+    ZK.qReset(); refreshKv(); ZK.toast('已清空练习记录');
+  });
+
+  // 从语法页带 topic 参数进来
+  var m = location.search.match(/[?&]topic=([^&]+)/);
+  if (m) {
+    topic = decodeURIComponent(m[1]);
+    var sel = document.getElementById('topicSel');
+    if (sel) { sel.value = topic; }
+    setTimeout(function(){ start(); document.getElementById('quizMount').scrollIntoView({behavior:'smooth'}); }, 120);
+  }
+
+  refreshKv();
+});
+</script>
+</body>
+</html>

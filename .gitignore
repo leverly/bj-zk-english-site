@@ -1,0 +1,6 @@
+node_modules/
+.venv/
+.venv-tts/
+reference/ecdict.csv
+reference/raw.txt
+.DS_Store
