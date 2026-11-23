@@ -12,8 +12,6 @@ import { WORDS, THEMES, STATS } from './src/data-words.js';
 import { GRAMMAR, GRAMMAR_STATS } from './src/data-grammar.js';
 import { QUESTIONS } from './src/data-quiz.js';
 import { QUESTIONS_2 } from './src/data-quiz2.js';
-import { CLOZE, READING } from './src/data-reading.js';
-import { WRITING, SPEAKING } from './src/data-writing.js';
 
 const __dir = dirname(fileURLToPath(import.meta.url));
 const OUT = __dir;
@@ -54,10 +52,7 @@ const Q_STATS = {
   fill: ALL_Q.filter((q) => q.type === 'fill').length,
   batch1: QUESTIONS.length,
   batch2: QUESTIONS_2.length,
-  cloze: CLOZE.reduce((s, c) => s + c.blanks.length, 0),
-  reading: READING.reduce((s, r) => s + r.questions.length, 0),
 };
-const READING_TOTAL = Q_STATS.reading;
 
 /* ---------------- 工具 ---------------- */
 const esc = (s) => String(s == null ? '' : s)
@@ -85,9 +80,6 @@ const NAV = [
   { href: 'index.html', label: '首页', key: 'home' },
   { href: 'quiz.html', label: '背单词', key: 'words-study' },
   { href: 'review.html', label: '练语法', key: 'grammar-drill' },
-  { href: 'reading.html', label: '完形阅读', key: 'reading' },
-  { href: 'writing.html', label: '书面表达', key: 'writing' },
-  { href: 'speaking.html', label: '听说机考', key: 'speaking' },
   { href: 'words.html', label: '词库', key: 'words' },
   { href: 'grammar.html', label: '语法', key: 'grammar' },
   { href: 'wrong.html', label: '错题本', key: 'wrong' },
@@ -125,7 +117,7 @@ const FOOTER = (base) => `<footer class="foot">
         <span>${SITE_SHORT}</span>
         <span class="logo-badge">中考</span>
       </div>
-      <p style="line-height:1.7;margin:0;color:var(--text-2)">面向北京中考英语的系统备考站。${STATS.total} 条大纲词条、${GRAMMAR_STATS.topics} 个语法考点、${Q_STATS.total} 道语法精练、${Q_STATS.cloze} 个完形空、${READING_TOTAL} 道阅读题与听说写作专项。</p>
+      <p style="line-height:1.7;margin:0;color:var(--text-2)">面向北京中考英语的系统备考站。${STATS.total} 条大纲词条、${GRAMMAR_STATS.topics} 个语法考点、${Q_STATS.total} 道语法精练。</p>
     </div>
     <div class="col">
       <h4>每日备考</h4>
@@ -133,12 +125,6 @@ const FOOTER = (base) => `<footer class="foot">
       <a href="${base}review.html">练语法</a>
       <a href="${base}wrong.html">错题本</a>
       <a href="${base}plan.html">备考计划</a>
-    </div>
-    <div class="col">
-      <h4>题型专项</h4>
-      <a href="${base}reading.html">完形与阅读</a>
-      <a href="${base}writing.html">书面表达</a>
-      <a href="${base}speaking.html">听说机考</a>
     </div>
     <div class="col">
       <h4>知识体系</h4>
@@ -162,7 +148,7 @@ const FOOTER = (base) => `<footer class="foot">
 /* ---------------- 数据内联 ---------------- */
 const __inlineCache = new Map();
 function inlineData(keys, extra) {
-  const ALL = { WORDS, THEMES, STATS, GRAMMAR, GRAMMAR_STATS, QUESTIONS: ALL_Q, QUESTIONS_2, CLOZE, READING, WRITING, SPEAKING };
+  const ALL = { WORDS, THEMES, STATS, GRAMMAR, GRAMMAR_STATS, QUESTIONS: ALL_Q, QUESTIONS_2 };
   const extraKeys = Object.keys(extra || {});
   const id = keys.join(',') + '|' + extraKeys.join(',');
   if (__inlineCache.has(id)) return __inlineCache.get(id);
@@ -227,11 +213,11 @@ function buildHome() {
   <div class="hero-split">
     <div>
       <div class="hero-badge"><span class="dot-live"></span>对齐北京中考英语考试说明 · 100 分制</div>
-      <h1>北京中考英语，<br><span class="accent-word">词汇 · 语法 · 题型</span>一站通关</h1>
+      <h1>北京中考英语，<br><span class="accent-word">词汇 · 语法</span>一站通关</h1>
       <p class="lede">
  专为北京初中生打造的中考英语备考系统：<b>${STATS.total} 条大纲词条</b>（含 ${STATS.phrases} 条高频短语），
  <b>${GRAMMAR_STATS.topics} 个语法考点配中式易错避坑</b>，<b>${Q_STATS.total} 道语法精练</b>，
- 外加完形填空、阅读理解、书面表达与听说机考专项。每天 20 分钟跟着遗忘曲线闯关，进步看得见。
+ 每天 20 分钟跟着遗忘曲线闯关，进步看得见。
  </p>
       <div class="hero-cta">
         <a class="btn primary" href="quiz.html">开始背单词 <span aria-hidden="true">→</span></a>
@@ -289,7 +275,7 @@ function buildHome() {
 
   <div class="stats reveal">
     <div class="stat"><b data-count="${STATS.words}">${STATS.words}</b><span>大纲单词</span><small>含音标与中文释义</small></div>
-    <div class="stat"><b data-count="${STATS.phrases}">${STATS.phrases}</b><span>高频短语</span><small>单选与完形提分点</small></div>
+    <div class="stat"><b data-count="${STATS.phrases}">${STATS.phrases}</b><span>高频短语</span><small>单选与完形的高频搭配</small></div>
     <div class="stat"><b data-count="${GRAMMAR_STATS.topics}">${GRAMMAR_STATS.topics}</b><span>语法考点</span><small>覆盖 ${GRAMMAR_STATS.families} 大语法族</small></div>
     <div class="stat"><b data-count="${GRAMMAR_STATS.traps}">${GRAMMAR_STATS.traps}</b><span>易错对比</span><small>✕ 错句 vs ✓ 对句</small></div>
     <div class="stat"><b data-count="${Q_STATS.total}">${Q_STATS.total}</b><span>语法精练</span><small>单选 · 改错 · 填空</small></div>
@@ -301,10 +287,10 @@ function buildHome() {
     <div class="section-head-left">
       <span class="kicker">北京卷结构</span>
       <h2>先看清考什么，再决定怎么练</h2>
-      <span class="sub">北京中考英语总分 100 分，笔试 60 分 + 听说机考 40 分，笔试 90 分钟、共 38 小题</span>
+      <span class="sub">笔试 90 分钟、共 38 小题。本站聚焦其中的语法与词汇部分：单项填空 12 分、完形填空 8 分、阅读与写作所需的语法基础</span>
     </div>
   </div>
-  <div class="grid c2">
+  <div class="grid c1">
     <div class="card">
       <div class="card-ico">📝</div>
       <h3>笔试 60 分 · 五道大题</h3>
@@ -318,20 +304,6 @@ function buildHome() {
           <tr><td>五、书面表达</td><td>1 题</td><td>10 分</td></tr>
         </tbody>
       </table>
-    </div>
-    <div class="card">
-      <div class="card-ico purple">🎤</div>
-      <h3>听说机考 40 分 · 四节</h3>
-      <table class="tbl" style="margin-top:12px">
-        <thead><tr><th>节次</th><th>题量</th><th>分值</th></tr></thead>
-        <tbody>
-          <tr><td>一、听后选择</td><td>6 小题</td><td>12 分</td></tr>
-          <tr><td>二、听后回答</td><td>4 小题</td><td>8 分</td></tr>
-          <tr><td>三、听后记录并转述</td><td>1 篇</td><td>12 分</td></tr>
-          <tr><td>四、朗读短文</td><td>1 篇</td><td>8 分</td></tr>
-        </tbody>
-      </table>
-      <div class="note" style="margin-top:10px">听说机考与笔试分开进行，通常有两次机会取高分。</div>
     </div>
   </div>
 </section>
@@ -358,7 +330,7 @@ function buildHome() {
     <div class="card step-card">
       <span class="step-num">STEP 03</span>
       <h3>对齐北京卷题型</h3>
-      <p class="desc">单选、改错、语法填空混编，完形与阅读按 A/B/C/D 篇难度递进，每题即时给解析。</p>
+      <p class="desc">单选、改错、语法填空混编，每题即时给解析，自动定位正确率最低的考点。</p>
     </div>
     <div class="card step-card">
       <span class="step-num">STEP 04</span>
@@ -372,8 +344,8 @@ function buildHome() {
   <div class="section-head">
     <div class="section-head-left">
       <span class="kicker">核心模块</span>
-      <h2>词汇、语法、题型三线联动</h2>
-      <span class="sub">每一项都对齐北京中考英语的考查范围</span>
+      <h2>词汇与语法双线联动</h2>
+      <span class="sub">两项都对齐北京中考英语的考查范围</span>
     </div>
   </div>
   <div class="grid c3">
@@ -394,24 +366,6 @@ function buildHome() {
       <h3>考点专项练 · ${Q_STATS.total} 题</h3>
       <p class="desc">覆盖全部 ${GRAMMAR_STATS.topics} 个考点，自动统计各考点正确率，支持「专攻最弱考点」与「只练错题本」。</p>
       <div class="meta" style="margin-top:12px">单选 ${Q_STATS.choice} · 改错 ${Q_STATS.correct} · 填空 ${Q_STATS.fill}</div>
-    </a>
-    <a class="card" href="reading.html">
-      <div class="card-ico">📖</div>
-      <h3>完形与阅读 · ${Q_STATS.cloze + READING_TOTAL} 题</h3>
-      <p class="desc">${CLOZE.length} 篇完形填空（${Q_STATS.cloze} 空）与 ${READING.length} 篇阅读理解（A/B/C/D 篇，${READING_TOTAL} 题），逐题解析。</p>
-      <div class="meta" style="margin-top:12px">含词义猜测、主旨大意、推理判断</div>
-    </a>
-    <a class="card" href="writing.html">
-      <div class="card-ico purple">✒️</div>
-      <h3>书面表达 · ${WRITING.length} 个题型</h3>
-      <p class="desc">通知、书信、议论文三类中考常考文体，给出写作提纲、必备句式、范文与评分要点。</p>
-      <div class="meta" style="margin-top:12px">对齐北京卷 10 分写作</div>
-    </a>
-    <a class="card" href="speaking.html">
-      <div class="card-ico ok">🎤</div>
-      <h3>听说机考 · 40 分</h3>
-      <p class="desc">听后选择、听后回答、听后记录并转述、朗读短文四节全解，含答题技巧与样题。</p>
-      <div class="meta" style="margin-top:12px">12 + 8 + 12 + 8 分</div>
     </a>
   </div>
 </section>
@@ -450,7 +404,7 @@ function buildHome() {
   <div class="faq-list">
     <details class="faq-item" open>
       <summary>这套系统适合哪个年级的学生？</summary>
-      <p>适合北京初中 7–9 年级正在准备中考英语的学生。初一初二可以按主题循序推进，初三建议直接从「核心高频 ${STATS.core} 词」和标注为「难点」的语法考点切入，配合每周一套完形阅读。</p>
+      <p>适合北京初中 7–9 年级正在准备中考英语的学生。初一初二可以按主题循序推进，初三建议直接从「核心高频 ${STATS.core} 词」和标注为「难点」的语法考点切入，配合每周一次「专攻最弱考点」专项练习。</p>
     </details>
     <details class="faq-item">
       <summary>每天需要花多长时间？</summary>
@@ -517,7 +471,7 @@ function buildHome() {
 `;
   write('index.html', page({
     title: '北京中考英语备考系统',
-    desc: `对齐北京中考英语考试说明的备考站：${STATS.total} 条大纲词条、${GRAMMAR_STATS.topics} 个语法考点、${Q_STATS.total} 道精练，含完形阅读、书面表达与听说机考专项。`,
+    desc: `对齐北京中考英语考试说明的备考站：${STATS.total} 条大纲词条、${GRAMMAR_STATS.topics} 个语法考点、${Q_STATS.total} 道语法精练。`,
     active: 'home',
     body, script, dataKeys: [],
   }));
@@ -1166,316 +1120,7 @@ ZK.ready(function(){
 }
 
 /* ==========================================================
-   7. 完形与阅读
-   ========================================================== */
-function buildReading() {
-  const clozeHtml = CLOZE.map((c) => {
-    const paras = c.passage.split('\n\n').map((p) => `<p class="passage-p">${esc(p).replace(/___\((\d+)\)___/g, '<span class="blank-num">($1)</span>')}</p>`).join('');
-    const blanks = c.blanks.map((b) => `<div class="cloze-item" data-ans="${b.answer}">
-      <div class="cloze-head"><span class="cloze-n">(${b.n})</span></div>
-      <div class="qopts">
-        ${b.options.map((o, k) => `<button class="qopt" data-k="${k}"><span class="key">${'ABCD'[k]}</span><span>${esc(o)}</span></button>`).join('')}
-      </div>
-      <div class="cloze-fb"></div>
-    </div>`).join('');
-    return `<div class="card article-card" id="${c.id}">
-      <div class="article-head">
-        <h3>${esc(c.title)}</h3>
-        <div class="meta">完形填空 · ${c.blanks.length} 空 · ${esc(c.level)}</div>
-      </div>
-      <div class="passage">${paras}</div>
-      <div class="cloze-list">${blanks}</div>
-      <div class="article-actions">
-        <button class="btn soft sm" data-toggle-trans="${c.id}">显示中文译文</button>
-        <span class="cloze-score" id="score-${c.id}">0 / ${c.blanks.length}</span>
-      </div>
-      <div class="trans" id="trans-${c.id}" hidden>${c.translation.split('\n\n').map((p) => `<p>${esc(p)}</p>`).join('')}</div>
-    </div>`;
-  }).join('');
-
-  const readHtml = READING.map((r) => {
-    const paras = r.passage.split('\n\n').map((p) => `<p class="passage-p">${esc(p)}</p>`).join('');
-    const qs = r.questions.map((q, qi) => `<div class="read-q" data-ans="${q.answer}">
-      <div class="read-q-stem"><b>${qi + 1}.</b> ${esc(q.q)}</div>
-      <div class="qopts">
-        ${q.options.map((o, k) => `<button class="qopt" data-k="${k}"><span class="key">${'ABCD'[k]}</span><span>${esc(o)}</span></button>`).join('')}
-      </div>
-      <div class="read-fb"></div>
-    </div>`).join('');
-    return `<div class="card article-card" id="${r.id}">
-      <div class="article-head">
-        <h3>${esc(r.title)}</h3>
-        <div class="meta">阅读理解 ${r.id.split('-')[1].toUpperCase()} 篇 · ${esc(r.type)} · ${esc(r.level)}</div>
-      </div>
-      <div class="note" style="margin-bottom:10px">${esc(r.intro)}</div>
-      <div class="passage">${paras}</div>
-      <div class="read-list">${qs}</div>
-      <div class="article-actions"><span class="cloze-score" id="score-${r.id}">0 / ${r.questions.length}</span></div>
-    </div>`;
-  }).join('');
-
-  const body = `
-<div class="page-head">
-  <div class="crumb"><a href="index.html">首页</a> / 完形阅读</div>
-  <h1>完形填空与阅读理解</h1>
-  <p class="lede">北京卷笔试中，完形填空 8 分、阅读理解 26 分、阅读表达 4 分，合计 <b>38 分</b>，是笔试的绝对主力。这里按真实题型给你可即时判分的练习。</p>
-</div>
-
-<section class="section" style="margin-top:22px">
-  <div class="kv">
-    <div class="k"><b data-count="${CLOZE.length}">${CLOZE.length}</b><span>完形填空</span></div>
-    <div class="k"><b data-count="${Q_STATS.cloze}">${Q_STATS.cloze}</b><span>完形空数</span></div>
-    <div class="k"><b data-count="${READING.length}">${READING.length}</b><span>阅读篇目</span></div>
-    <div class="k"><b data-count="${READING_TOTAL}">${READING_TOTAL}</b><span>阅读小题</span></div>
-  </div>
-</section>
-
-<section class="section" style="margin-top:26px">
-  <div class="section-head">
-    <div class="section-head-left">
-      <span class="kicker">第一部分</span>
-      <h2>完形填空 · ${CLOZE.length} 篇</h2>
-      <span class="sub">先通读全文抓大意，再逐空选词。做完点「显示中文译文」对照理解。</span>
-    </div>
-  </div>
-  ${clozeHtml}
-</section>
-
-<section class="section" style="margin-top:34px">
-  <div class="section-head">
-    <div class="section-head-left">
-      <span class="kicker">第二部分</span>
-      <h2>阅读理解 · ${READING.length} 篇</h2>
-      <span class="sub">A 篇信息查找、B 篇记叙、C 篇科普说明、D 篇观点议论，难度按北京卷递进。</span>
-    </div>
-  </div>
-  ${readHtml}
-</section>
-
-<section class="section">
-  <div class="card">
-    <h3>📌 应试提醒</h3>
-    <p class="desc" style="margin-top:8px">完形填空每题只有 1 分，但错 3 题就等于丢一道阅读大题。做完务必回读全文，确认逻辑通顺。阅读理解每题 2 分，是笔试里单题分值最高的题型——细节题回原文定位，主旨题看首末段，词义猜测题看上下文。</p>
-  </div>
-</section>
-`;
-  const script = `
-ZK.ready(function(){
-  document.querySelectorAll('.cloze-item, .read-q').forEach(function(item){
-    var ans = parseInt(item.getAttribute('data-ans'), 10);
-    var fb = item.querySelector('.cloze-fb') || item.querySelector('.read-fb');
-    var card = item.closest('.article-card');
-    var scoreEl = card ? document.getElementById('score-' + card.id) : null;
-    var total = card ? card.querySelectorAll('.cloze-item, .read-q').length : 0;
-    item.querySelectorAll('.qopt').forEach(function(b){
-      b.addEventListener('click', function(){
-        if (item.__done) return;
-        item.__done = true;
-        var k = parseInt(b.getAttribute('data-k'), 10);
-        var ok = k === ans;
-        item.querySelectorAll('.qopt').forEach(function(x){
-          var xi = parseInt(x.getAttribute('data-k'), 10);
-          x.classList.add('locked');
-          if (xi === ans) x.classList.add('right');
-          else if (xi === k) x.classList.add('wrong');
-        });
-        if (fb) fb.innerHTML = '<div class="feedback ' + (ok?'auto-next':'bad') + '"><b>' + (ok?'✓ 正确':'✕ 再想想') + '</b></div>';
-        ZK.sfx(ok ? 'ok' : 'bad');
-        ZK.bumpDay('questions', 1);
-        // 更新该篇得分：按「本题是否答对」累计，不能数 .right（正确项无论答对答错都会被标绿）
-        if (card) {
-          card.__right = (card.__right || 0) + (ok ? 1 : 0);
-          if (scoreEl) scoreEl.textContent = card.__right + ' / ' + total;
-        }
-      });
-    });
-  });
-
-  document.querySelectorAll('[data-toggle-trans]').forEach(function(b){
-    b.addEventListener('click', function(){
-      var id = b.getAttribute('data-toggle-trans');
-      var el = document.getElementById('trans-' + id);
-      if (!el) return;
-      el.hidden = !el.hidden;
-      b.textContent = el.hidden ? '显示中文译文' : '隐藏中文译文';
-    });
-  });
-});
-`;
-  write('reading.html', page({
-    title: '完形填空与阅读理解',
-    desc: `北京中考英语完形填空 ${Q_STATS.cloze} 空与阅读理解 ${READING_TOTAL} 题，逐题即时判分并附解析。`,
-    active: 'reading', body, script, dataKeys: [],
-  }));
-}
-
-/* ==========================================================
-   8. 书面表达
-   ========================================================== */
-function buildWriting() {
-  const cards = WRITING.map((w) => `<div class="card article-card">
-    <div class="article-head">
-      <h3>${esc(w.title)}</h3>
-      <div class="meta">${esc(w.type)} · ${esc(w.level)} · 10 分</div>
-    </div>
-    <div class="gsec">
-      <div class="gsec-t">题目要求</div>
-      <p style="white-space:pre-line">${esc(w.prompt)}</p>
-    </div>
-    ${w.given ? `<div class="gsec"><div class="gsec-t">已给出的开头/结尾</div><pre class="given">${esc(w.given)}</pre></div>` : ''}
-    <div class="gsec">
-      <div class="gsec-t">写作提纲</div>
-      <ol class="outline">${w.outline.map((o) => `<li>${esc(o)}</li>`).join('')}</ol>
-    </div>
-    <div class="gsec">
-      <div class="gsec-t">必备句式</div>
-      <div class="kp-list">${w.keyPoints.map((k) => `<div class="kp"><span class="kp-en">${esc(k.en)}</span><span class="kp-zh">${esc(k.zh)}</span></div>`).join('')}</div>
-    </div>
-    <div class="gsec">
-      <div class="gsec-t">范文</div>
-      <pre class="model">${esc(w.model)}</pre>
-      <button class="btn soft sm" data-copy="${w.id}">复制范文</button>
-      <span class="note" id="copyTip-${w.id}"></span>
-    </div>
-    <div class="gsec">
-      <div class="gsec-t">评分要点</div>
-      <ul class="tips">${w.tips.map((t) => `<li>${esc(t)}</li>`).join('')}</ul>
-    </div>
-  </div>`).join('');
-
-  const body = `
-<div class="page-head">
-  <div class="crumb"><a href="index.html">首页</a> / 书面表达</div>
-  <h1>书面表达专项</h1>
-  <p class="lede">北京卷笔试第五部分，<b>10 分</b>，通常要求 80–100 词。这里覆盖通知、书信、议论文三类常考文体，给出提纲、必备句式、范文与评分要点。</p>
-</div>
-
-<section class="section" style="margin-top:22px">
-  <div class="card">
-    <h3>📝 10 分写作的评分逻辑</h3>
-    <p class="desc" style="margin-top:8px">阅卷通常从三个维度给分：<b>内容要点齐全</b>（题目要求的每一条都写到）、<b>语言准确通顺</b>（时态、人称、拼写不出错）、<b>结构连贯得体</b>（有开头结尾，用连接词分层）。三档对应：9–10 分要点齐全语言准确；6–8 分要点基本齐全有少量错误；4–5 分要点缺失或语言错误较多。</p>
-    <p class="desc" style="margin-top:8px">提分优先级：<b>先把要点写全</b>（这是硬分），再改语言错误，最后才追求高级句式。字数不足 60 词会明显扣分。</p>
-  </div>
-</section>
-
-<section class="section" style="margin-top:26px">
-  ${cards}
-</section>
-`;
-  const script = `
-ZK.ready(function(){
-  document.querySelectorAll('[data-copy]').forEach(function(b){
-    b.addEventListener('click', function(){
-      var id = b.getAttribute('data-copy');
-      var card = b.closest('.article-card');
-      var pre = card.querySelector('.model');
-      var txt = pre ? pre.textContent : '';
-      var tip = document.getElementById('copyTip-' + id);
-      function done(ok){
-        if (tip) tip.textContent = ok ? ' 已复制到剪贴板' : ' 复制失败，请手动选中';
-        ZK.toast(ok ? '范文已复制' : '复制失败');
-      }
-      if (navigator.clipboard && navigator.clipboard.writeText) {
-        navigator.clipboard.writeText(txt).then(function(){ done(true); }, function(){ done(false); });
-      } else {
-        try {
-          var ta = document.createElement('textarea');
-          ta.value = txt; document.body.appendChild(ta); ta.select();
-          document.execCommand('copy'); document.body.removeChild(ta);
-          done(true);
-        } catch(e){ done(false); }
-      }
-    });
-  });
-});
-`;
-  write('writing.html', page({
-    title: '书面表达 · 10 分写作专项',
-    desc: `北京中考英语书面表达专项：通知、书信、议论文三类文体，含提纲、必备句式、范文与评分要点。`,
-    active: 'writing', body, script, dataKeys: [],
-  }));
-}
-
-/* ==========================================================
-   9. 听说机考
-   ========================================================== */
-function buildSpeaking() {
-  const secHtml = SPEAKING.sections.map((s, i) => {
-    const sampleHtml = s.sample ? `
-      <div class="gsec">
-        <div class="gsec-t">样题演示</div>
-        ${s.sample.audio ? `<div class="sample-audio"><span class="tag">听力原文</span><div style="white-space:pre-line;margin-top:6px">${esc(s.sample.audio)}</div></div>` : ''}
-        ${s.sample.text ? `<div class="sample-audio"><span class="tag">朗读短文</span><div style="margin-top:6px;font-family:var(--en);line-height:1.9">${esc(s.sample.text)}</div></div>` : ''}
-        ${s.sample.focus ? `<div style="margin-top:10px"><b>朗读要点：</b><ul class="tips">${s.sample.focus.map((f) => `<li>${esc(f)}</li>`).join('')}</ul></div>` : ''}
-        ${s.sample.question ? `<div style="margin-top:10px"><b>问题：</b>${esc(s.sample.question)}</div>` : ''}
-        ${s.sample.options ? `<div class="chips" style="margin-top:8px">${s.sample.options.map((o, k) => `<span class="chip${k === s.sample.answer ? ' on' : ''}">${'ABC'[k]}. ${esc(o)}</span>`).join('')}</div>` : ''}
-        ${s.sample.answer ? `<div style="margin-top:10px"><b>参考答案：</b><span style="color:var(--ok);font-weight:600">${esc(s.sample.answer)}</span></div>` : ''}
-        ${s.sample.table ? `<div class="tbl-wrap" style="margin-top:10px"><table class="tbl">
-          <thead><tr>${s.sample.table.head.map((h) => `<th>${esc(h)}</th>`).join('')}</tr></thead>
-          <tbody>${s.sample.table.rows.map((r) => `<tr>${r.map((c) => `<td>${esc(c)}</td>`).join('')}</tr>`).join('')}</tbody>
-        </table></div>
-        <div class="note" style="margin-top:8px">参考答案：${s.sample.answers.map((a, k) => `(${k + 1}) ${esc(a)}`).join(' · ')}</div>` : ''}
-        ${s.sample.retell ? `<div style="margin-top:12px"><b>转述示范：</b><div class="model" style="margin-top:6px">${esc(s.sample.retell)}</div></div>` : ''}
-        ${s.sample.why ? `<div class="note" style="margin-top:8px">${esc(s.sample.why)}</div>` : ''}
-      </div>` : '';
-
-    return `<details class="gcard"${i === 0 ? ' open' : ''}>
-      <summary>
-        <span class="gcard-name">${esc(s.name)}</span>
-        <span class="lv lv-b1">${s.score} 分</span>
-        <span class="gcard-meta">${esc(s.count)}</span>
-      </summary>
-      <div class="gcard-body">
-        <div class="gsec"><div class="gsec-t">考什么</div><p>${esc(s.desc)}</p></div>
-        <div class="gsec"><div class="gsec-t">得分技巧</div><ul class="tips">${s.skills.map((k) => `<li>${esc(k)}</li>`).join('')}</ul></div>
-        ${sampleHtml}
-      </div>
-    </details>`;
-  }).join('');
-
-  const body = `
-<div class="page-head">
-  <div class="crumb"><a href="index.html">首页</a> / 听说机考</div>
-  <h1>英语听说机考专项</h1>
-  <p class="lede">${esc(SPEAKING.intro)}</p>
-</div>
-
-<section class="section" style="margin-top:22px">
-  <div class="kv">
-    <div class="k"><b data-count="40">40</b><span>满分</span></div>
-    <div class="k"><b data-count="4">4</b><span>节次</span></div>
-    <div class="k"><b>12+8</b><span>听后选择/回答</span></div>
-    <div class="k"><b>12+8</b><span>记录转述/朗读</span></div>
-  </div>
-</section>
-
-<section class="section" style="margin-top:26px">
-  <div class="section-head">
-    <div class="section-head-left">
-      <span class="kicker">四节全解</span>
-      <h2>每节考什么、怎么拿分</h2>
-      <span class="sub">点开每一节看考查目标、得分技巧与样题演示</span>
-    </div>
-  </div>
-  ${secHtml}
-</section>
-
-<section class="section" style="margin-top:28px">
-  <div class="card">
-    <h3>🎧 机考通用注意事项</h3>
-    <ul class="tips" style="margin-top:10px">${SPEAKING.tips.map((t) => `<li>${esc(t)}</li>`).join('')}</ul>
-  </div>
-</section>
-`;
-  write('speaking.html', page({
-    title: '听说机考 · 40 分专项',
-    desc: '北京中考英语听说机考四节全解：听后选择、听后回答、听后记录并转述、朗读短文，含技巧与样题。',
-    active: 'speaking', body, dataKeys: [],
-  }));
-}
-
-/* ==========================================================
-   10. 错题本
+   7. 错题本
    ========================================================== */
 function buildWrong() {
   const body = `
@@ -1612,7 +1257,7 @@ ZK.ready(function(){
 }
 
 /* ==========================================================
-   11. 备考计划
+   8. 备考计划
    ========================================================== */
 const PLAN = [
   {
@@ -1651,7 +1296,7 @@ const PLAN = [
     tasks: [
       '读「从句」族 4 个考点，宾语从句的「陈述句语序」要默写一遍。',
       '「练语法」范围选「专攻最弱考点」，做 20 题。',
-      '做「完形阅读」里的 A 篇与 B 篇，限时 15 分钟。',
+      '把「从句」族的 4 个考点各练 5 题，直到正确率上到 80%。',
     ],
     focus: ['clause', 'conjunction'],
   },
@@ -1661,37 +1306,37 @@ const PLAN = [
     tasks: [
       '读「形容词与副词」「介词」「数词」三族。',
       '「练语法」练「语法填空」题型 15 题。',
-      '做「完形阅读」的 C 篇，注意科普文的数据细节题。',
+      '练「易混点」类题目：since/for、few/little、used to/be used to 各 3 题。',
     ],
     focus: ['adjadv', 'prep', 'numeral'],
   },
   {
-    week: 6, title: '阅读提速，完形抓逻辑',
-    goal: '阅读四篇控制在 30 分钟内，完形填空错不超过 2 个。',
+    week: 6, title: '综合强化，扫清剩余薄弱点',
+    goal: '全部 57 个考点的正确率都上到 80% 以上，错题本清零一轮。',
     tasks: [
-      '做「完形阅读」全部 2 篇完形 + D 篇阅读，限时 35 分钟。',
-      '每道错题回原文找依据，把定位句抄下来。',
+      '「练语法」范围选「专攻最弱考点」，连续做 3 组、每组 20 题。',
       '背单词范围切到「只背短语」，155 条短语过一遍。',
+      '把错题本里的语法错题全部重做，直到清零。',
     ],
-    focus: ['reading'],
+    focus: ['agreement', 'sentence'],
   },
   {
-    week: 7, title: '写作成文，背熟三类模板',
-    goal: '通知、书信、议论文各写一篇，字数达标、要点齐全。',
+    week: 7, title: '题型专攻，三种题型各打一轮',
+    goal: '单选、改错、语法填空三种题型各做一轮，掌握各自的解题节奏。',
     tasks: [
-      '读「书面表达」三篇，各抄一遍范文，标出连接词。',
-      '自己限时 20 分钟写一篇，再对照范文改。',
-      '读「听说机考」四节，重点看听后转述的连接词用法。',
+      '「练语法」只练「单项填空」题型，做 20 题，控制在 8 分钟内。',
+      '只练「写作改错」题型 15 题，专治固定搭配与中式表达。',
+      '只练「语法填空」题型 15 题，注意词形变化与时态。',
     ],
-    focus: ['writing', 'speaking'],
+    focus: ['nonfinite', 'modal'],
   },
   {
     week: 8, title: '全真模拟，回归错题',
     goal: '按真实时间做一套完整笔试，错题本清零。',
     tasks: [
-      '限时 90 分钟：单选 12 题 + 完形 8 空 + 阅读 17 题 + 写一篇作文。',
+      '限时 12 分钟：单选 12 题（按真实卷面节奏做）。',
       '把错题本里剩下的错题全部重做，直到清零。',
-      '每天朗读一篇短文，练听说机考的朗读节。',
+      '背单词范围选「核心高频」，快速过一遍，把标「已掌握」的再确认一次。',
     ],
     focus: ['mock'],
   },
@@ -1709,7 +1354,7 @@ function buildPlan() {
     <div class="plan-links">${p.focus.map((f) => {
       const g = GRAMMAR.find((x) => x.id === f);
       if (g) return `<a class="chip" href="grammar/${g.id}.html">${esc(g.name)}</a>`;
-      const map = { reading: ['reading.html', '完形阅读'], writing: ['writing.html', '书面表达'], speaking: ['speaking.html', '听说机考'], mock: ['review.html', '全真练习'] };
+      const map = { mock: ['review.html', '全真练习'] };
       const m = map[f];
       return m ? `<a class="chip" href="${m[0]}">${m[1]}</a>` : '';
     }).join('')}</div>
@@ -1719,7 +1364,7 @@ function buildPlan() {
 <div class="page-head">
   <div class="crumb"><a href="index.html">首页</a> / 备考计划</div>
   <h1>8 周中考英语备考计划</h1>
-  <p class="lede">按「基础 → 时态 → 非谓语情态 → 从句 → 细节 → 阅读 → 写作 → 模拟」的顺序推进，每周一个主攻方向，每天 20–30 分钟。</p>
+  <p class="lede">按「基础 → 时态 → 非谓语情态 → 从句 → 细节 → 综合 → 题型 → 模拟」的顺序推进，每周一个主攻方向，每天 20–30 分钟。</p>
 </div>
 
 <section class="section" style="margin-top:22px">
@@ -1744,7 +1389,7 @@ function buildPlan() {
       <tbody>
         <tr><td>第 1 段</td><td>背单词（到期复习 + 新词）</td><td>10 分钟</td></tr>
         <tr><td>第 2 段</td><td>练语法（10 题左右）</td><td>10 分钟</td></tr>
-        <tr><td>周末加练</td><td>一篇完形或阅读 + 清错题本</td><td>20–30 分钟</td></tr>
+        <tr><td>周末加练</td><td>清错题本 + 专攻最弱考点</td><td>20–30 分钟</td></tr>
       </tbody>
     </table>
     <p class="note" style="margin-top:10px">关键是每天不断，而不是某天学很久。连续打卡天数会记录在首页与背单词页。</p>
@@ -1787,7 +1432,7 @@ ZK.ready(function(){
 }
 
 /* ==========================================================
-   12. 学习数据
+   9. 学习数据
    ========================================================== */
 function buildStats() {
   const body = `
@@ -1924,7 +1569,7 @@ ZK.ready(function(){
 }
 
 /* ==========================================================
-   13. 内容说明
+   10. 内容说明
    ========================================================== */
 function buildContent() {
   const body = `
@@ -1937,7 +1582,7 @@ function buildContent() {
 <section class="section" style="margin-top:22px">
   <div class="card">
     <h3>一、考试结构（北京中考英语）</h3>
-    <p class="desc" style="margin-top:8px">总分 <b>100 分</b> = 笔试 <b>60 分</b> + 听说机考 <b>40 分</b>。笔试 90 分钟、共 38 小题、五道大题：</p>
+    <p class="desc" style="margin-top:8px">北京中考英语总分 <b>100 分</b>，其中笔试 <b>60 分</b>、听说机考 <b>40 分</b>。本站聚焦笔试中的语法与词汇部分。笔试 90 分钟、共 38 小题、五道大题：</p>
     <table class="tbl" style="margin-top:10px">
       <thead><tr><th>题型</th><th>题量</th><th>分值</th></tr></thead>
       <tbody>
@@ -1948,7 +1593,6 @@ function buildContent() {
         <tr><td>五、书面表达</td><td>1 题</td><td>10 分</td></tr>
       </tbody>
     </table>
-    <p class="note" style="margin-top:10px">听说机考四节：听后选择 12 分、听后回答 8 分、听后记录并转述 12 分、朗读短文 8 分。</p>
   </div>
 </section>
 
@@ -1965,10 +1609,6 @@ function buildContent() {
         <tr><td>语法考点</td><td>${GRAMMAR_STATS.topics}</td><td>每个含规则、构成、例句、易错对比</td></tr>
         <tr><td>易错对比</td><td>${GRAMMAR_STATS.traps}</td><td>✕ 错句 / ✓ 对句 / 一句错因</td></tr>
         <tr><td>语法精练</td><td>${Q_STATS.total}</td><td>单选 ${Q_STATS.choice} · 改错 ${Q_STATS.correct} · 填空 ${Q_STATS.fill}，覆盖全部 ${GRAMMAR_STATS.topics} 个考点</td></tr>
-        <tr><td>完形填空</td><td>${Q_STATS.cloze} 空</td><td>${CLOZE.length} 篇原创短文，按北京卷 8 空设置</td></tr>
-        <tr><td>阅读理解</td><td>${READING_TOTAL} 题</td><td>${READING.length} 篇，A 应用文 / B 记叙文 / C 说明文 / D 议论文</td></tr>
-        <tr><td>书面表达</td><td>${WRITING.length} 题</td><td>通知、书信、议论文三类常考文体</td></tr>
-        <tr><td>听说机考</td><td>4 节</td><td>四节全解，含样题与技巧</td></tr>
       </tbody>
     </table>
   </div>
@@ -2004,7 +1644,7 @@ function buildContent() {
     <p class="desc" style="margin-top:8px">词表由脚本从词典生成，改完重跑即可：</p>
     <pre class="given">python3 reference/build_words.py   # 生成 src/data-words.js
 node build-site.mjs                # 重新生成全部页面</pre>
-    <p class="desc" style="margin-top:8px">语法、题目、阅读、写作数据是手写源文件（src/data-grammar.js、data-quiz.js、data-reading.js、data-writing.js），直接编辑后重跑构建即可。</p>
+    <p class="desc" style="margin-top:8px">语法与题目数据是手写源文件（src/data-grammar.js、data-quiz.js、data-quiz2.js），直接编辑后重跑构建即可。</p>
   </div>
 </section>
 `;
@@ -2024,9 +1664,6 @@ buildThemes();
 buildQuiz();
 buildGrammar();
 buildReview();
-buildReading();
-buildWriting();
-buildSpeaking();
 buildWrong();
 buildPlan();
 buildStats();
@@ -2038,8 +1675,6 @@ console.log(`词条 ${STATS.total}（单词 ${STATS.words} · 短语 ${STATS.phr
 console.log(`主题 ${THEME_SORTED.length} 个`);
 console.log(`语法 ${GRAMMAR_STATS.families} 族 ${GRAMMAR_STATS.topics} 考点 ${GRAMMAR_STATS.traps} 易错`);
 console.log(`语法题 ${Q_STATS.total}（选择 ${Q_STATS.choice} · 改错 ${Q_STATS.correct} · 填空 ${Q_STATS.fill}）`);
-console.log(`完形 ${CLOZE.length} 篇 ${Q_STATS.cloze} 空 · 阅读 ${READING.length} 篇 ${READING_TOTAL} 题`);
-console.log(`写作 ${WRITING.length} 题 · 听说 ${SPEAKING.sections.length} 节`);
 
 if (Q_MISS.length) {
   console.error('✕ 以下考点没有对应题目：', Q_MISS.join(', '));

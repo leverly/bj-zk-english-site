@@ -22,7 +22,7 @@
   <span class="logo-badge">中考</span>
 </a>
     <nav class="hdr-nav">
-      <a href="index.html">首页</a><a href="quiz.html">背单词</a><a href="review.html">练语法</a><a href="reading.html">完形阅读</a><a href="writing.html">书面表达</a><a href="speaking.html">听说机考</a><a href="words.html">词库</a><a href="grammar.html">语法</a><a href="wrong.html">错题本</a><a href="plan.html">备考计划</a><a href="stats.html">学习数据</a>
+      <a href="index.html">首页</a><a href="quiz.html">背单词</a><a href="review.html">练语法</a><a href="words.html">词库</a><a href="grammar.html">语法</a><a href="wrong.html">错题本</a><a href="plan.html">备考计划</a><a href="stats.html">学习数据</a>
     </nav>
     <div class="hdr-tools">
       <button class="theme-btn" aria-label="切换主题">☾</button>
@@ -42,7 +42,7 @@
 <section class="section" style="margin-top:22px">
   <div class="card">
     <h3>一、考试结构（北京中考英语）</h3>
-    <p class="desc" style="margin-top:8px">总分 <b>100 分</b> = 笔试 <b>60 分</b> + 听说机考 <b>40 分</b>。笔试 90 分钟、共 38 小题、五道大题：</p>
+    <p class="desc" style="margin-top:8px">北京中考英语总分 <b>100 分</b>，其中笔试 <b>60 分</b>、听说机考 <b>40 分</b>。本站聚焦笔试中的语法与词汇部分。笔试 90 分钟、共 38 小题、五道大题：</p>
     <table class="tbl" style="margin-top:10px">
       <thead><tr><th>题型</th><th>题量</th><th>分值</th></tr></thead>
       <tbody>
@@ -53,7 +53,6 @@
         <tr><td>五、书面表达</td><td>1 题</td><td>10 分</td></tr>
       </tbody>
     </table>
-    <p class="note" style="margin-top:10px">听说机考四节：听后选择 12 分、听后回答 8 分、听后记录并转述 12 分、朗读短文 8 分。</p>
   </div>
 </section>
 
@@ -70,10 +69,6 @@
         <tr><td>语法考点</td><td>57</td><td>每个含规则、构成、例句、易错对比</td></tr>
         <tr><td>易错对比</td><td>125</td><td>✕ 错句 / ✓ 对句 / 一句错因</td></tr>
         <tr><td>语法精练</td><td>304</td><td>单选 249 · 改错 25 · 填空 30，覆盖全部 57 个考点</td></tr>
-        <tr><td>完形填空</td><td>16 空</td><td>2 篇原创短文，按北京卷 8 空设置</td></tr>
-        <tr><td>阅读理解</td><td>17 题</td><td>4 篇，A 应用文 / B 记叙文 / C 说明文 / D 议论文</td></tr>
-        <tr><td>书面表达</td><td>3 题</td><td>通知、书信、议论文三类常考文体</td></tr>
-        <tr><td>听说机考</td><td>4 节</td><td>四节全解，含样题与技巧</td></tr>
       </tbody>
     </table>
   </div>
@@ -109,7 +104,7 @@
     <p class="desc" style="margin-top:8px">词表由脚本从词典生成，改完重跑即可：</p>
     <pre class="given">python3 reference/build_words.py   # 生成 src/data-words.js
 node build-site.mjs                # 重新生成全部页面</pre>
-    <p class="desc" style="margin-top:8px">语法、题目、阅读、写作数据是手写源文件（src/data-grammar.js、data-quiz.js、data-reading.js、data-writing.js），直接编辑后重跑构建即可。</p>
+    <p class="desc" style="margin-top:8px">语法与题目数据是手写源文件（src/data-grammar.js、data-quiz.js、data-quiz2.js），直接编辑后重跑构建即可。</p>
   </div>
 </section>
 
@@ -123,7 +118,7 @@ node build-site.mjs                # 重新生成全部页面</pre>
         <span>中考领航</span>
         <span class="logo-badge">中考</span>
       </div>
-      <p style="line-height:1.7;margin:0;color:var(--text-2)">面向北京中考英语的系统备考站。1755 条大纲词条、57 个语法考点、304 道语法精练、16 个完形空、17 道阅读题与听说写作专项。</p>
+      <p style="line-height:1.7;margin:0;color:var(--text-2)">面向北京中考英语的系统备考站。1755 条大纲词条、57 个语法考点、304 道语法精练。</p>
     </div>
     <div class="col">
       <h4>每日备考</h4>
@@ -131,12 +126,6 @@ node build-site.mjs                # 重新生成全部页面</pre>
       <a href="review.html">练语法</a>
       <a href="wrong.html">错题本</a>
       <a href="plan.html">备考计划</a>
-    </div>
-    <div class="col">
-      <h4>题型专项</h4>
-      <a href="reading.html">完形与阅读</a>
-      <a href="writing.html">书面表达</a>
-      <a href="speaking.html">听说机考</a>
     </div>
     <div class="col">
       <h4>知识体系</h4>
