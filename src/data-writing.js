@@ -8,7 +8,7 @@
      given     已给出的开头结尾（不计入词数）
      outline   写作提纲（每段写什么）
      keyPoints 必备句式（en + zh，可直接套用）
-     model     范文（词数与要求一致）
+     model     范文（可选；页面已不展示，范文留给学生自己写，保留字段备日后恢复）
      tips      评分要点（讲清「为什么这样写能得分」）
 
    【学习方法】
@@ -22,6 +22,7 @@
 export const WRITING = [
   {
     id: 'w1', level: '基础', type: '应用文·通知', title: '写一则英语角通知',
+    scene: '英语角活动通知：学生会向全校同学发布活动安排。',
     prompt: '假定你是学生会主席李华。学校将于下周五下午举办英语角活动，请你用英语写一则通知。内容包括：\n1. 活动时间与地点；\n2. 活动内容（如英语歌曲、短剧表演、自由交流）；\n3. 邀请同学们参加。\n\n注意：1. 词数 80–100；2. 开头和结尾已给出，不计入总词数。',
     given: 'Boys and girls,\n\nMay I have your attention, please?\n\n______________________\n\nThank you.\n\nThe Students\' Union',
     outline: [
@@ -52,6 +53,12 @@ I hope you will take an active part in it. It is a good chance to improve your s
 Thank you.
 
 The Students' Union`,
+    highlights: [
+      { en: 'Our school is going to hold an English Corner next Friday afternoon.', zh: '用 be going to 表将来，一句话交代事件与时间，是通知的开场标准写法。' },
+      { en: 'It will take place in the school hall from 3:00 to 5:00.', zh: '时间 + 地点用一句说全；take place 比 have 更正式，适合通知文体。' },
+      { en: 'It is a good chance to improve your spoken English and make new friends.', zh: '用 It is a good chance to… 把「意义」写出来，是通知争取参与者的高分句式。' },
+      { en: 'We are looking forward to seeing you there.', zh: 'look forward to doing 是固定搭配，结尾用它比 Please come 得体得多。' },
+    ],
     tips: [
       '通知必须有称呼和 "May I have your attention, please?" 这类提示语——这是应用文的格式分，缺了就丢。',
       '时间地点要写全：next Friday afternoon + school hall + 3:00 to 5:00。只写「下周五」不写具体时段，内容分会被扣。',
@@ -62,6 +69,7 @@ The Students' Union`,
   },
   {
     id: 'w2', level: '重点', type: '应用文·书信', title: '给外国笔友回信介绍北京',
+    scene: '回信介绍北京：笔友寒假来京，需要你介绍景点与建议。',
     prompt: '你的英国笔友 Peter 打算寒假来北京旅游，来信询问北京的情况。请你给他回一封信，内容包括：\n1. 推荐一个你认为最值得去的地方，并说明理由；\n2. 提醒他来北京需要注意的一件事（如天气、交通、饮食）；\n3. 表示欢迎并期待见面。\n\n注意：1. 词数 80–100；2. 开头和结尾已给出，不计入总词数。',
     given: 'Dear Peter,\n\nI\'m very glad to hear that you are coming to Beijing this winter.\n\n______________________\n\nBest wishes,\n\nLi Hua',
     outline: [
@@ -92,6 +100,12 @@ I can't wait to see you. I will show you around the city.
 Best wishes,
 
 Li Hua`,
+    highlights: [
+      { en: "I'm glad to hear that you are coming to Beijing this winter holiday.", zh: '回信开头用 I\'m glad to hear that… 承接来信，是最自然得体的起句。' },
+      { en: 'Beijing is a city with a long history and many places of interest.', zh: 'with 短语作后置定语，一句话把「历史 + 景点」两个要点压缩进同一句。' },
+      { en: 'You can visit the Great Wall, which is famous all over the world.', zh: '非限制性定语从句补充说明，让句子信息量变大又不啰嗦。' },
+      { en: 'I hope you will have a wonderful time here.', zh: '结尾祝愿句，把「期待」落到对方身上，比 I hope you like it 更具体。' },
+    ],
     tips: [
       '书信要有「回应来信」的句子（I\'m glad to hear that…）——这是书信体的交际功能分，不是可有可无的客套。',
       '推荐理由要具体：history / view / photos 三点，比只说 "It is beautiful." 更容易拿高分。',
@@ -102,6 +116,7 @@ Li Hua`,
   },
   {
     id: 'w3', level: '重点', type: '议论文·观点', title: '谈谈中学生该不该做家务',
+    scene: '投稿议论文：就「中学生该不该做家务」表明观点并说明理由。',
     prompt: '某英文报社正在开展讨论：中学生应不应该做家务？请你写一篇短文投稿，内容包括：\n1. 你的观点；\n2. 两条支持你观点的理由；\n3. 你平时做的家务及感受。\n\n注意：1. 词数 80–100；2. 文中不得出现真实姓名和校名。',
     given: '',
     outline: [
@@ -126,16 +141,23 @@ First, doing housework helps us learn to be independent. If we learn to cook and
 As for me, I often help my mother do the dishes and take out the rubbish at weekends. Although it takes only a few minutes, I feel proud of myself.
 
 In a word, doing housework is our duty and a good way to grow up.`,
+    highlights: [
+      { en: 'In my opinion, middle school students should do some housework at home.', zh: 'In my opinion 直接亮明观点，议论文第一句就该让读者知道你站哪边。' },
+      { en: 'First, doing housework helps us learn to look after ourselves.', zh: 'First 引出第一条理由，动名词短语作主语，是议论文的标准骨架句。' },
+      { en: 'Second, it can make us understand how hard our parents work.', zh: 'Second 引出第二条理由；how hard 引导宾语从句，比 our parents work hard 更自然。' },
+      { en: 'In a word, doing housework is not a waste of time but a way to grow up.', zh: 'In a word 收束全文，用 not…but… 对比结构升华，是议论文的高分结尾。' },
+    ],
     tips: [
       '议论文结构要清晰：亮观点 → 两条理由 → 自身例子 → 总结。阅卷老师一眼能看到层次，就是「结构分」。',
       '理由用 First… Second… 明确标号，比混在一段里更容易得分。',
       '「自身例子」这一段是题目明确要求的要点，不能省略——很多人只写观点和理由就交了。',
       '结尾用 In a word 收束并升华（not a waste of time / a way to grow up），是议论文的高分写法。',
-      '注意：题目说「不得出现真实姓名和校名」，范文用 As for me 回避了这个问题。',
+      '注意：题目说「不得出现真实姓名和校名」，用 As for me 这类说法回避，不要写出自己的真名。',
     ],
   },
   {
     id: 'w4', level: '难点', type: '应用文·申请信', title: '写一封志愿者申请信',
+    scene: '申请信：向负责老师申请成为国际文化节志愿者。',
     prompt: '假定你是李华，你校正在招募国际文化节的志愿者。请你给负责老师 Mr Smith 写一封申请信，内容包括：\n1. 你申请的原因；\n2. 你的优势（如英语水平、相关经验）；\n3. 你希望能承担的工作。\n\n注意：1. 词数 80–100；2. 开头和结尾已给出，不计入总词数。',
     given: 'Dear Mr Smith,\n\nI am Li Hua, a student from Class 3, Grade 9. I am writing to apply to be a volunteer for the International Culture Festival.\n\n______________________\n\nYours sincerely,\n\nLi Hua',
     outline: [
@@ -166,6 +188,12 @@ I would appreciate it if you could give me the chance.
 Yours sincerely,
 
 Li Hua`,
+    highlights: [
+      { en: 'I am writing to apply to be a volunteer for the International Culture Festival.', zh: 'I am writing to… 是申请信的标准开场，一句话点明写信目的。' },
+      { en: 'I think I am fit for this job because I am good at English.', zh: 'be fit for + be good at 两个短语连用，把「申请理由 + 优势」写在一句里。' },
+      { en: 'Last year I helped at the school sports meeting, so I have some experience.', zh: '用具体经历证明优势，比空说 I am helpful 有说服力得多。' },
+      { en: 'I would appreciate it if you could give me this chance.', zh: 'I would appreciate it if… 是申请信最得体的请求句式，礼貌又高级。' },
+    ],
     tips: [
       '申请信的三个要素必须齐全：申请原因、个人优势、希望承担的岗位。缺一项就丢内容分。',
       '「优势」不能只说 I am good at English，要用事实支撑（获奖、去年做过什么）——这是 9 分与 7 分的差别。',
@@ -179,7 +207,7 @@ Li Hua`,
 /* ==========================================================
    写作通用方法论：技巧 / 结构模板 / 句型库
    这些是「换什么题都能用」的底层内容，
-   与具体篇目的范文互补。
+   与具体篇目的写作练习互补（练习只给题目与提纲，不附范文）。
    ========================================================== */
 
 /* 一、写作五步法 */

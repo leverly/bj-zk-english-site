@@ -104,9 +104,10 @@ CLOZE.forEach((c) => {
 });
 
 /* ---------------- 3. 书面表达 ---------------- */
+/* 页面不再展示范文（范文留给学生自己写），所以 model 字段是可选的：
+   保留它是为了日后需要时能恢复，只在存在时校验词数。 */
 WRITING.forEach((w) => {
   if (!w.prompt) err(`${w.id}: 缺题目要求`);
-  if (!w.model) err(`${w.id}: 缺范文`);
   if (!w.keyPoints || !w.keyPoints.length) err(`${w.id}: 缺必备句式`);
   if (!w.tips || !w.tips.length) err(`${w.id}: 缺评分要点`);
   if (!w.outline || !w.outline.length) warn(`${w.id}: 缺写作提纲`);
@@ -126,6 +127,14 @@ WRITING.forEach((w) => {
   (w.keyPoints || []).forEach((k, i) => {
     if (!k.en || !k.zh) err(`${w.id} 句式 ${i + 1}: 缺 en 或 zh`);
   });
+
+  // 亮点句型：单篇页的「🔊 朗读」依赖它，缺了右栏就空了
+  if (!w.highlights || !w.highlights.length) err(`${w.id}: 缺亮点句型`);
+  (w.highlights || []).forEach((h, i) => {
+    if (!h.en) err(`${w.id} 亮点句 ${i + 1}: 缺英文句子`);
+    if (!h.zh) warn(`${w.id} 亮点句 ${i + 1}: 缺中文说明（朗读可用，但学生看不出为什么加分）`);
+  });
+  if (!w.scene) warn(`${w.id}: 缺场景说明（索引卡会退回显示题目首句）`);
 });
 
 /* ---------------- 4. 语法题 ---------------- */

@@ -319,10 +319,11 @@
 
   /* ---------------- 语法题记录（含遗忘曲线排期） ---------------- */
   var QLOG_KEY = 'zk-qlog-v1';
-  var qlog = load(QLOG_KEY, { topicStats: {}, wrongIds: {}, qdue: {} });
+  var qlog = load(QLOG_KEY, { topicStats: {}, wrongIds: {}, qdue: {}, skillStats: {} });
   if (!qlog.topicStats) qlog.topicStats = {};
   if (!qlog.wrongIds) qlog.wrongIds = {};
   if (!qlog.qdue) qlog.qdue = {};
+  if (!qlog.skillStats) qlog.skillStats = {};
   Z.qLog = function () { return qlog; };
   Z.qDue = function (id) { return qlog.qdue[id] || null; };
   Z.qRecord = function (topic, ok, id) {
@@ -359,9 +360,56 @@
   Z.wrongIds = function () { return Object.keys(qlog.wrongIds || {}); };
   Z.qClearWrong = function (id) { delete qlog.wrongIds[id]; store(QLOG_KEY, qlog); };
   Z.qReset = function () {
-    qlog = { topicStats: {}, wrongIds: {}, qdue: {} };
+    qlog = { topicStats: {}, wrongIds: {}, qdue: {}, skillStats: {} };
     store(QLOG_KEY, qlog);
     document.dispatchEvent(new CustomEvent('zk:qlog', { detail: { reset: true } }));
+  };
+
+  /* ---------------- 阅读能力维度（篇章题专用） ----------------
+     篇章题不按语法考点统计，而按「阅读能力」统计：
+     detail 细节定位 / inference 推理判断 / mainidea 主旨观点 /
+     context 上下文逻辑 / collocation 固定搭配 / grammar 语法词形。
+     与语法题共用错题本与每日题量，但单独记能力维度。 */
+  var SKILL_NAME = {
+    detail: '细节定位',
+    inference: '推理判断',
+    mainidea: '主旨与观点',
+    context: '上下文逻辑',
+    collocation: '固定搭配',
+    grammar: '语法与词形',
+  };
+  Z.skillName = function (k) { return SKILL_NAME[k] || '综合判断'; };
+  Z.skillKeys = function () { return Object.keys(SKILL_NAME); };
+  Z.pRecord = function (skill, ok, id) {
+    var key = skill || 'detail';
+    var r = qlog.skillStats[key] = qlog.skillStats[key] || { n: 0, ok: 0 };
+    r.n++;
+    if (ok) r.ok++;
+    if (id) {
+      if (ok) { delete qlog.wrongIds[id]; }
+      else { qlog.wrongIds[id] = 1; }
+    }
+    store(QLOG_KEY, qlog);
+    document.dispatchEvent(new CustomEvent('zk:qlog', { detail: { skill: key, ok: ok, id: id } }));
+  };
+  /** 各能力维度正确率，按正确率升序（最弱在前） */
+  Z.pSkillStats = function () {
+    var out = [];
+    Object.keys(qlog.skillStats || {}).forEach(function (k) {
+      var r = qlog.skillStats[k];
+      var n = r.n || 0;
+      out.push({ skill: k, name: SKILL_NAME[k] || '综合判断', n: n, ok: r.ok || 0, rate: n ? (r.ok || 0) / n : 0 });
+    });
+    return out.filter(function (x) { return x.n > 0; })
+      .sort(function (a, b) { return a.rate - b.rate; });
+  };
+  Z.pTotal = function () {
+    var n = 0, ok = 0;
+    Object.keys(qlog.skillStats || {}).forEach(function (k) {
+      n += qlog.skillStats[k].n || 0;
+      ok += qlog.skillStats[k].ok || 0;
+    });
+    return { n: n, ok: ok, rate: n ? ok / n : 0 };
   };
   /** 各考点正确率，按薄弱排序 */
   Z.topicRates = function () {
@@ -587,6 +635,46 @@
     playToken++;
     if (playTimer) { clearTimeout(playTimer); playTimer = null; }
     if (currentAudio) { try { currentAudio.onended = null; currentAudio.pause(); } catch (e) {} }
+    try { if (window.speechSynthesis) window.speechSynthesis.cancel(); } catch (e) {}
+  };
+
+  /* ---------------- 句子朗读（写作页的句型 / 短文） ----------------
+     与 playWord 不同：这里读的是任意英文句子，走浏览器语音合成，
+     优先挑一个英文音色。供写作页「🔊 朗读这句」按钮调用。 */
+  function pickEnVoice() {
+    try {
+      var vs = window.speechSynthesis.getVoices() || [];
+      var pref = ['Google UK English Female', 'Samantha', 'Microsoft Zira', 'Google US English'];
+      for (var i = 0; i < pref.length; i++) {
+        var hit = vs.filter(function (v) { return v.name === pref[i]; })[0];
+        if (hit) return hit;
+      }
+      return vs.filter(function (v) { return /^en/i.test(v.lang); })[0] || null;
+    } catch (e) { return null; }
+  }
+  var speakToken = 0;
+  Z.speak = function (text, opts) {
+    if (!text || !window.speechSynthesis) return false;
+    var o = opts || {};
+    try {
+      var token = ++speakToken;
+      window.speechSynthesis.cancel();
+      var v = pickEnVoice();
+      var u = new SpeechSynthesisUtterance(String(text));
+      u.lang = (v && v.lang) || 'en-GB';
+      if (v) u.voice = v;
+      u.rate = o.rate == null ? 0.92 : o.rate;
+      u.pitch = 1;
+      u.onend = function () {
+        if (token !== speakToken) return;
+        if (o.onend) o.onend();
+      };
+      window.speechSynthesis.speak(u);
+      return true;
+    } catch (e) { return false; }
+  };
+  Z.stopSpeak = function () {
+    speakToken++;
     try { if (window.speechSynthesis) window.speechSynthesis.cancel(); } catch (e) {}
   };
 
