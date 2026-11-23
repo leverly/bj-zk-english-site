@@ -338,7 +338,8 @@
       var n = Math.min((prev.n || 0) + 1, steps.length);
       qlog.qdue[id] = { n: n, due: Date.now() + steps[n - 1] * DAY };
     } else {
-      qlog.wrongIds[id] = 1;
+      // 值存收录时间戳，错题本混合列表靠它排序（旧数据是 1，按 0 处理排到后面）
+      qlog.wrongIds[id] = Date.now();
       qlog.qdue[id] = { n: 0, due: 0 };
     }
     store(QLOG_KEY, qlog);
@@ -358,7 +359,31 @@
   };
   Z.qDueMap = function () { return qlog.qdue || {}; };
   Z.wrongIds = function () { return Object.keys(qlog.wrongIds || {}); };
+  /** 错题 id → 收录时间戳（旧数据存的是 1，统一按 0 处理） */
+  Z.wrongAt = function (id) {
+    var v = (qlog.wrongIds || {})[id];
+    return typeof v === 'number' && v > 1000 ? v : 0;
+  };
   Z.qClearWrong = function (id) { delete qlog.wrongIds[id]; store(QLOG_KEY, qlog); };
+  /** 只清错题本，保留考点统计与遗忘曲线排期 */
+  Z.qClearAllWrong = function () {
+    qlog.wrongIds = {};
+    store(QLOG_KEY, qlog);
+    document.dispatchEvent(new CustomEvent('zk:qlog', { detail: { cleared: true } }));
+  };
+  /**
+   * 剪掉不属于当前题库的错题 id（旧版本把阅读、完形、阅读表达也收进了错题本）。
+   * 传入合法 id 的集合，其余一律删除——这些题脱离原文没法单独复习。
+   */
+  Z.pruneWrongBook = function (validIds) {
+    var set = validIds instanceof Set ? validIds : new Set(validIds || []);
+    var removed = 0;
+    Object.keys(qlog.wrongIds || {}).forEach(function (id) {
+      if (!set.has(id)) { delete qlog.wrongIds[id]; removed++; }
+    });
+    if (removed) store(QLOG_KEY, qlog);
+    return removed;
+  };
   Z.qReset = function () {
     qlog = { topicStats: {}, wrongIds: {}, qdue: {}, skillStats: {} };
     store(QLOG_KEY, qlog);
@@ -369,7 +394,8 @@
      篇章题不按语法考点统计，而按「阅读能力」统计：
      detail 细节定位 / inference 推理判断 / mainidea 主旨观点 /
      context 上下文逻辑 / collocation 固定搭配 / grammar 语法词形。
-     与语法题共用错题本与每日题量，但单独记能力维度。 */
+     只记能力维度，不进错题本——阅读、完形、阅读表达的题脱离原文
+     没法单独复习，错题本只收单词与语法题。 */
   var SKILL_NAME = {
     detail: '细节定位',
     inference: '推理判断',
@@ -385,10 +411,8 @@
     var r = qlog.skillStats[key] = qlog.skillStats[key] || { n: 0, ok: 0 };
     r.n++;
     if (ok) r.ok++;
-    if (id) {
-      if (ok) { delete qlog.wrongIds[id]; }
-      else { qlog.wrongIds[id] = 1; }
-    }
+    /* id 参数保留（调用方仍会传，便于将来统计），但不写入错题本：
+       阅读 / 完形 / 阅读表达的题脱离原文没法复习，错题本只收单词与语法题。 */
     store(QLOG_KEY, qlog);
     document.dispatchEvent(new CustomEvent('zk:qlog', { detail: { skill: key, ok: ok, id: id } }));
   };

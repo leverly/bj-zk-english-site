@@ -701,8 +701,8 @@ function buildHome() {
     <a class="card tool-card" href="wrong.html">
       <div class="card-ico rose">🎯</div>
       <h3>错题本</h3>
-      <p class="desc">单词、语法、阅读、完形、阅读表达的错题自动收纳。单词需连对 2 次才移出，其余答对一次即出册，并按遗忘曲线排期重做。</p>
-      <div class="meta" style="margin-top:12px">五类错题一处管理 · 可重做</div>
+      <p class="desc">单词与语法题的错题自动收纳，按收录时间倒序混排成一个列表、分页浏览。单词需连对 2 次才移出，语法题答对一次即出册，并按遗忘曲线排期重做。</p>
+      <div class="meta" style="margin-top:12px">单词 + 语法错题一处管理 · 可重做</div>
     </a>
     <a class="card tool-card" href="content.html">
       <div class="card-ico gold">📋</div>
@@ -2115,8 +2115,8 @@ ZK.ready(function(){
       fb.innerHTML = html;
       P.sfx(ok ? 'ok' : 'bad');
       P.bumpDay('questions', 1);
-      P.qRecord('reading-' + card.id, ok, card.id + '-e' + (eidx + 1));
-      /* 阅读表达也计入能力维度：考的是「定位原文 + 转述」，归细节定位 */
+      /* 阅读表达只计能力维度，不写错题本——脱离原文没法单独复习。
+         考的是「定位原文 + 转述」，归细节定位。 */
       P.pRecord(item.getAttribute('data-skill') || 'detail', ok, card.id + '-e' + (eidx + 1));
       if (card && card.__updateScore) card.__updateScore();
     };
@@ -2794,13 +2794,13 @@ function buildWrong() {
 <div class="page-head">
   <div class="crumb"><a href="index.html">首页</a> / 错题本</div>
   <h1>错题本</h1>
-  <p class="lede">单词、语法、阅读、完形的错题都自动收纳在这里。单词需连对 2 次才移出；其他题目答对一次即出册，并按遗忘曲线排期复习。</p>
+  <p class="lede">单词与语法题的错题都收在这里，<b>按收录时间倒序混排成一个列表</b>，分页浏览。单词需连对 2 次才移出；语法题答对一次即出册，并按遗忘曲线排期复习。<br><span style="color:var(--text-3);font-size:.92em">阅读、完形、阅读表达的错题不收录——这些题脱离原文没法单独复习，回对应篇章页重做。</span></p>
 </div>
 
 <section class="section" style="margin-top:22px">
   <div class="kv">
     <div class="k"><b id="kWn" style="color:var(--rose)">0</b><span>单词错题</span></div>
-    <div class="k"><b id="kGn" style="color:var(--rose)">0</b><span>题目错题</span></div>
+    <div class="k"><b id="kGn" style="color:var(--rose)">0</b><span>语法错题</span></div>
     <div class="k"><b id="kAll">0</b><span>合计</span></div>
   </div>
 </section>
@@ -2808,23 +2808,22 @@ function buildWrong() {
 <section class="section" style="margin-top:24px">
   <div class="section-head">
     <div class="section-head-left">
-      <h2 style="font-size:1.15rem">单词错题</h2>
-      <span class="sub">点「重做」进入背单词模式，答对即移出</span>
+      <h2 style="font-size:1.15rem">全部错题</h2>
+      <span class="sub">最近错的排在最前 · 点「重做」立即重练，答对即移出</span>
     </div>
-    <button class="btn ghost sm" id="clearW">清空单词错题</button>
-  </div>
-  <div id="wlist"></div>
-</section>
-
-<section class="section" style="margin-top:28px">
-  <div class="section-head">
-    <div class="section-head-left">
-      <h2 style="font-size:1.15rem">题目错题</h2>
-      <span class="sub">点「重做这题」立即重练，答对即移出</span>
+    <div style="display:flex;gap:8px;flex-wrap:wrap">
+      <button class="btn ghost sm" id="clearW">清空单词错题</button>
+      <button class="btn ghost sm" id="clearG">清空语法错题</button>
     </div>
-    <button class="btn ghost sm" id="clearG">清空语法错题</button>
   </div>
-  <div id="glist"></div>
+  <div class="toolbar" style="margin-top:16px">
+    <div class="chips" id="kindChips">
+      <button class="chip on" data-kind="all">全部 <b id="cAll">0</b></button>
+      <button class="chip" data-kind="word">单词 <b id="cWord">0</b></button>
+      <button class="chip" data-kind="grammar">语法题 <b id="cGram">0</b></button>
+    </div>
+  </div>
+  <div id="mixed"></div>
 </section>
 
 <section class="section" style="margin-top:28px">
@@ -2835,78 +2834,139 @@ function buildWrong() {
 ZK.ready(function(){
   var WORDS = ZK_DATA.WORDS;
   var Q = ZK_DATA.QUESTIONS;
+  var PAGE_SIZE = 10;
+
   var byWord = {};
   WORDS.forEach(function(w){ byWord[w.w.toLowerCase()] = w; });
   var byQ = {};
   Q.forEach(function(q){ byQ[q.id] = q; });
-  // 阅读与完形的错题也要能在错题本里显示——
-  // 它们的 id 形如 s1-a-3 / s1-a-e2 / cloze-1-2，需要单独建索引。
-  (ZK_DATA.PASSAGES || []).forEach(function(p){
-    p.questions.forEach(function(q, i){
-      byQ[p.id + '-' + (i + 1)] = {
-        id: p.id + '-' + (i + 1), kind: 'reading', src: p.title,
-        stem: q.q, options: q.options, answer: q.answer,
-        why: q.why, locate: q.locate, trap: q.trap,
-      };
-    });
-    (p.express || []).forEach(function(e, i){
-      byQ[p.id + '-e' + (i + 1)] = {
-        id: p.id + '-e' + (i + 1), kind: 'express', src: p.title,
-        stem: e.q, answer: e.answer, why: e.why,
-      };
-    });
-  });
-  (ZK_DATA.CLOZE || []).forEach(function(c){
-    c.blanks.forEach(function(b){
-      byQ[c.id + '-' + b.n] = {
-        id: c.id + '-' + b.n, kind: 'cloze', src: c.title,
-        stem: '第 (' + b.n + ') 空', options: b.options, answer: b.answer, why: b.why,
-      };
-    });
-  });
 
-  function drawWords(){
+  /* 旧版本把阅读、完形、阅读表达也收进了错题本（id 形如 s1-a-3 / s1-a-e2 / cloze-1-2）。
+     这些题脱离原文没法复习，加载时一次性剪掉，之后只收语法题。 */
+  var validQ = {};
+  Q.forEach(function(q){ validQ[q.id] = 1; });
+  ZK.pruneWrongBook(Object.keys(validQ));
+
+  var kind = 'all', page = 0;
+
+  function collect(){
+    var items = [];
     var wb = ZK.wordBook();
-    var keys = Object.keys(wb);
-    document.getElementById('kWn').textContent = keys.length;
-    document.getElementById('kAll').textContent = keys.length + ZK.wrongIds().length;
-    var host = document.getElementById('wlist');
-    if (!keys.length) { host.innerHTML = '<div class="empty"><b>暂无单词错题</b>去<a href="quiz.html">背单词</a>，答错的词会自动收进来</div>'; return; }
-    host.innerHTML = '<div class="wordlist">' + keys.map(function(k){
+    Object.keys(wb).forEach(function(k){
       var w = byWord[k];
-      if (!w) return '';
-      var r = wb[k];
-      return '<div class="wrow"><span class="w-cell"><button class="w-say" data-say="'+ZK.esc(w.w)+'">🔊</button>' +
-        '<span class="w">'+ZK.esc(w.w)+(w.ph?'<span class="ph">/'+ZK.esc(w.ph)+'/</span>':'')+'</span></span>' +
-        '<span class="pos">'+ZK.esc(w.posZh||'')+'</span>' +
-        '<span class="zh">'+ZK.esc(w.zh)+'</span>' +
-        '<span class="w-right"><span class="flag tag-b3">错 '+r.wrong+' 次</span></span></div>';
-    }).join('') + '</div>';
+      if (!w) return;
+      items.push({ kind:'word', at: (wb[k] && wb[k].at) || 0, word:w, rec: wb[k] });
+    });
+    ZK.wrongIds().forEach(function(id){
+      var q = byQ[id];
+      if (!q) return;
+      items.push({ kind:'grammar', at: ZK.wrongAt(id), q:q });
+    });
+    items.sort(function(a, b){ return (b.at || 0) - (a.at || 0); });
+    return items;
+  }
+
+  function wordRow(it){
+    var w = it.word, r = it.rec || {};
+    return '<div class="wrow" data-w="'+ZK.esc(w.w)+'">' +
+      '<span class="w-cell"><button class="w-say" data-say="'+ZK.esc(w.w)+'" title="朗读">🔊</button>' +
+      '<span class="w">'+ZK.esc(w.w)+(w.ph?'<span class="ph">/'+ZK.esc(w.ph)+'/</span>':'')+'</span></span>' +
+      '<span class="pos">'+ZK.esc(w.posZh||'')+'</span>' +
+      '<span class="zh">'+ZK.esc(w.zh)+'</span>' +
+      '<span class="w-right"><span class="flag tag-b3">错 '+(r.wrong||1)+' 次</span></span></div>';
+  }
+
+  function qCard(it){
+    var q = it.q;
+    var stem = ZK.esc(q.stem).replace(/___/g, '<span class="blank">　</span>');
+    var ans = q.type === 'fill' ? q.answer : (q.options ? q.options[q.answer] : '');
+    var opts = q.options
+      ? '<div class="note" style="margin-top:8px">选项：' + q.options.map(function(o,k){ return 'ABCD'[k]+'. '+ZK.esc(o); }).join(' · ') + '</div>'
+      : '';
+    return '<div class="card wrong-card" style="margin-bottom:12px;padding:18px 20px">' +
+      '<div class="qstem" style="font-size:.95rem;margin-bottom:0">'+stem+'</div>' +
+      opts +
+      '<div class="note" style="margin-top:6px;color:var(--ok)">参考答案：'+ZK.esc(ans)+'</div>' +
+      '<div class="note" style="margin-top:6px">'+ZK.esc(q.why)+'</div>' +
+      '<div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap">' +
+      '<button class="btn primary sm" data-redo="'+ZK.esc(q.id)+'">重做这题</button>' +
+      '<button class="btn ghost sm" data-drop="'+ZK.esc(q.id)+'">移出错题本</button>' +
+      '</div></div>';
+  }
+
+  function pagerHtml(pageNo, total){
+    var h = '<div class="pager">';
+    h += '<button data-pg="'+(pageNo-1)+'"'+(pageNo===0?' disabled':'')+'>‹</button>';
+    var pages = [];
+    if (total <= 9) { for (var i=0;i<total;i++) pages.push(i); }
+    else {
+      pages = [0];
+      if (pageNo > 2) pages.push('…');
+      for (var j=Math.max(1,pageNo-1); j<=Math.min(total-2,pageNo+1); j++) pages.push(j);
+      if (pageNo < total-3) pages.push('…');
+      pages.push(total-1);
+    }
+    pages.forEach(function(p){
+      if (p === '…') h += '<span class="pager dots">…</span>';
+      else h += '<button data-pg="'+p+'"'+(p===pageNo?' class="on"':'')+'>'+(p+1)+'</button>';
+    });
+    h += '<button data-pg="'+(pageNo+1)+'"'+(pageNo===total-1?' disabled':'')+'>›</button>';
+    h += '</div>';
+    return h;
+  }
+
+  function draw(){
+    var all = collect();
+    var nWord = all.filter(function(x){ return x.kind === 'word'; }).length;
+    var nGram = all.length - nWord;
+
+    document.getElementById('kWn').textContent = nWord;
+    document.getElementById('kGn').textContent = nGram;
+    document.getElementById('kAll').textContent = all.length;
+    document.getElementById('cAll').textContent = all.length;
+    document.getElementById('cWord').textContent = nWord;
+    document.getElementById('cGram').textContent = nGram;
+
+    var list = kind === 'all' ? all : all.filter(function(x){ return x.kind === kind; });
+    var host = document.getElementById('mixed');
+
+    if (!list.length) {
+      host.innerHTML = all.length
+        ? '<div class="empty"><b>这一类暂时没有错题</b>换个筛选看看，或者去<a href="quiz.html">背单词</a>、<a href="review.html">练语法</a></div>'
+        : '<div class="empty"><b>错题本还是空的</b>去<a href="quiz.html">背单词</a>或<a href="review.html">练语法</a>，答错的会自动收进来</div>';
+      return;
+    }
+
+    var total = Math.ceil(list.length / PAGE_SIZE);
+    if (page >= total) page = total - 1;
+    if (page < 0) page = 0;
+    var slice = list.slice(page * PAGE_SIZE, (page + 1) * PAGE_SIZE);
+
+    /* 单词行连着排进同一个 .wordlist 容器，题目卡片夹在中间时先收口再开新的 */
+    var html = '', open = false;
+    slice.forEach(function(it){
+      if (it.kind === 'word') {
+        if (!open) { html += '<div class="wordlist" style="margin-bottom:12px">'; open = true; }
+        html += wordRow(it);
+      } else {
+        if (open) { html += '</div>'; open = false; }
+        html += qCard(it);
+      }
+    });
+    if (open) html += '</div>';
+
+    html += pagerHtml(page, total);
+    html += '<div class="note" style="margin-top:14px">共 <b>' + list.length + '</b> 条' +
+      (list.length !== all.length ? '（已筛选，总计 ' + all.length + '）' : '') +
+      ' · 第 ' + (page + 1) + ' / ' + total + ' 页</div>';
+    host.innerHTML = html;
+
     host.querySelectorAll('[data-say]').forEach(function(b){
       b.addEventListener('click', function(){ ZK.playWord(b.getAttribute('data-say'), { times:1 }); });
     });
-  }
-
-  function drawGrammar(){
-    var ids = ZK.wrongIds();
-    document.getElementById('kGn').textContent = ids.length;
-    var host = document.getElementById('glist');
-    if (!ids.length) { host.innerHTML = '<div class="empty"><b>暂无语法错题</b>去<a href="review.html">练语法</a>，答错的题会自动收进来</div>'; return; }
-    host.innerHTML = ids.map(function(id){
-      var q = byQ[id];
-      if (!q) return '';
-      var gt = null;
-      return '<div class="card" style="margin-bottom:12px;padding:18px 20px">' +
-        '<div class="qstem" style="font-size:.95rem">'+ZK.esc(q.stem).replace(/___/g,'<span class="blank">　</span>')+'</div>' +
-        (q.options ? '<div class="note" style="margin-top:8px">选项：'+q.options.map(function(o,k){return 'ABCD'[k]+'. '+ZK.esc(o);}).join(' · ')+'</div>' : '') +
-        '<div class="note" style="margin-top:6px;color:var(--ok)">参考答案：'+ZK.esc(q.type==='fill'?q.answer:q.options[q.answer])+'</div>' +
-        '<div class="note" style="margin-top:6px">'+ZK.esc(q.why)+'</div>' +
-        '<div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap">' +
-        '<button class="btn primary sm" data-redo="'+ZK.esc(q.id)+'">重做这题</button>' +
-        '<button class="btn ghost sm" data-drop="'+ZK.esc(q.id)+'">移出错题本</button>' +
-        '</div></div>';
-    }).join('');
-
+    host.querySelectorAll('[data-pg]').forEach(function(b){
+      b.addEventListener('click', function(){ page = parseInt(b.getAttribute('data-pg'), 10); draw(); });
+    });
     host.querySelectorAll('[data-redo]').forEach(function(b){
       b.addEventListener('click', function(){
         var q = byQ[b.getAttribute('data-redo')];
@@ -2914,8 +2974,8 @@ ZK.ready(function(){
         var mount = document.getElementById('redoMount');
         mount.innerHTML = '<div class="section-head" style="margin-top:0"><div class="section-head-left"><span class="kicker">重做</span><h2 style="font-size:1.15rem">立即重练这一题</h2></div></div><div id="redoBox"></div>';
         ZK.quiz({ mount:'#redoBox', questions:[q], shuffle:false,
-          onAnswer: function(){ drawGrammar(); drawWords(); },
-          onFinish: function(){ setTimeout(function(){ drawGrammar(); drawWords(); }, 300); },
+          onAnswer: function(){ draw(); },
+          onFinish: function(){ setTimeout(draw, 300); },
         });
         mount.scrollIntoView({behavior:'smooth'});
       });
@@ -2923,32 +2983,41 @@ ZK.ready(function(){
     host.querySelectorAll('[data-drop]').forEach(function(b){
       b.addEventListener('click', function(){
         ZK.qClearWrong(b.getAttribute('data-drop'));
-        drawGrammar(); drawWords();
+        draw();
         ZK.toast('已移出错题本');
       });
     });
   }
 
+  document.querySelectorAll('#kindChips .chip').forEach(function(c){
+    c.addEventListener('click', function(){
+      document.querySelectorAll('#kindChips .chip').forEach(function(x){ x.classList.remove('on'); });
+      c.classList.add('on');
+      kind = c.getAttribute('data-kind');
+      page = 0;
+      draw();
+    });
+  });
+
   document.getElementById('clearW').addEventListener('click', function(){
     if (!window.confirm('确定清空全部单词错题？')) return;
-    ZK.wordBookReset(); drawWords(); ZK.toast('已清空单词错题');
+    ZK.wordBookReset(); draw(); ZK.toast('已清空单词错题');
   });
   document.getElementById('clearG').addEventListener('click', function(){
     if (!window.confirm('确定清空全部语法错题？')) return;
-    ZK.qReset(); drawGrammar(); drawWords(); ZK.toast('已清空语法错题');
+    ZK.qClearAllWrong(); draw(); ZK.toast('已清空语法错题');
   });
 
-  drawWords(); drawGrammar();
+  draw();
 });
 `;
   write('wrong.html', page({
     title: '错题本',
-    desc: '北京中考英语单词错题与语法错题本，支持重做与自动移出。',
-    active: 'wrong', body, script, dataKeys: ['WORDS', 'QUESTIONS', 'PASSAGES', 'CLOZE'],
+    desc: '北京中考英语单词与语法错题本，按收录时间混排成一个列表、分页浏览，支持重做与自动移出。',
+    active: 'wrong', body, script, dataKeys: ['WORDS', 'QUESTIONS'],
     audioTexts: WORDS.map((w) => w.w),
   }));
 }
-
 
 /* ==========================================================
    9. 学习数据
