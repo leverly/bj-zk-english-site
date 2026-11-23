@@ -1790,34 +1790,46 @@ ZK.ready(function(){
     </a>`;
   }).join('');
 
-  /* 完形填空：独立模块卡 */
+  /* 完形填空：4 篇直接铺在首页，每篇一张卡，不必再点一层 */
   const czMethod = READING_METHODS.CZ;
+  const homeCzCards = CLOZE.map((c, i) => {
+    const tag = c.level === '基础' ? '基础' : c.level === '重点' ? '重点' : '难点';
+    return `<a class="card passage-card" href="reading/${c.id}.html">
+      <span class="passage-no">第 ${i + 1} 篇</span>
+      <h3>${esc(c.title)}</h3>
+      <p class="desc">${esc(c.intro)}</p>
+      <div class="meta">${c.blanks.length} 空 · ${esc(c.level)}</div>
+      <span class="level-go">开始练习 →</span>
+    </a>`;
+  }).join('');
+
+  /* 完形模块的整体入口卡（放在篇目列表上方，供想先看读法的人） */
   const czCard = `<a class="card level-card" href="reading/cz.html">
     <div class="level-badge" style="background:linear-gradient(135deg,#2563eb,#4f46e5)">CZ</div>
     <h3>${czMethod.icon} ${esc(czMethod.name)}</h3>
     <p class="desc">${esc(czMethod.tagline)}</p>
     <div class="meta">${CLOZE.length} 篇 · ${CLOZE_N} 空 · 8 分</div>
-    <span class="level-go">进入 →</span>
+    <span class="level-go">先看读法 →</span>
   </a>`;
 
   write('reading.html', page({
-    title: '学阅读 · 阅读理解 + 阅读表达 · 30 分',
-    desc: `北京中考英语学阅读：${PASSAGES.length} 篇阅读理解（${READ_Q} 题）与 ${EXPRESS_Q} 道阅读表达，共 30 分。四类文章各有读法，每题给原文定位与错项分析。完形填空为独立模块。`,
+    title: '学阅读 · 完形 + 阅读理解 + 阅读表达 · 38 分',
+    desc: `北京中考英语学阅读：${CLOZE.length} 篇完形（${CLOZE_N} 空）、${PASSAGES.length} 篇阅读理解（${READ_Q} 题）、${EXPRESS_Q} 道阅读表达，共 38 分。完形与四类阅读各有读法，每题给原文定位与错项分析。`,
     active: 'reading',
     dataKeys: [],
     body: `
 <div class="page-head reader-head">
   <div class="crumb"><a href="index.html">首页</a> / 学阅读</div>
   <h1>学阅读</h1>
-  <p class="lede">北京卷第三部分阅读理解 <b>26 分</b>，第四部分阅读表达 <b>4 分</b>，合计 <b>30 分</b>，是笔试里分值最高的板块。这里按 <b>A 应用文 / B 记叙文 / C 说明文 / D 议论文</b> 四类编排，每类配独立的「读法」策略卡——<b>四类文章读法不同，先学方法再刷题</b>。<br><span style="color:var(--text-3);font-size:.92em">完形填空 8 分是独立题型，考的是上下文逻辑，另见 <a href="reading/cz.html">完形填空</a>。</span></p>
+  <p class="lede">北京卷阅读板块合计 <b>38 分</b>：完形填空 <b>8 分</b>（第二部分）、阅读理解 <b>26 分</b>（第三部分）、阅读表达 <b>4 分</b>（第四部分）。<b>完形填空与阅读理解是两种不同的读法</b>——完形考上下文还原，阅读考信息查找与观点判断，所以分开放、各有策略卡。<br><span style="color:var(--text-3);font-size:.92em">建议顺序：先练完形（8 空 8 分，单空分值低但最容易连错），再攻阅读理解（26 分，单块最大）。</span></p>
 </div>
 
 <section class="section reader-stats" style="margin-top:22px">
   <div class="kv">
+    <div class="k"><b>${CLOZE.length}</b><span>完形填空（${CLOZE_N} 空）</span></div>
     <div class="k"><b>${PASSAGES.length}</b><span>阅读理解（${READ_Q} 题）</span></div>
     <div class="k"><b>${EXPRESS_Q}</b><span>阅读表达</span></div>
-    <div class="k"><b>${PASSAGES.length / 4}</b><span>每类篇数（A/B/C/D）</span></div>
-    <div class="k"><b>30</b><span>对应分值</span></div>
+    <div class="k"><b>38</b><span>对应分值</span></div>
   </div>
 </section>
 
@@ -1835,23 +1847,32 @@ ZK.ready(function(){
 <section class="section">
   <div class="section-head">
     <div class="section-head-left">
+      <span class="kicker">完形填空 · 独立题型</span>
+      <h2>完形填空：考上下文，不考单句</h2>
+      <span class="sub">北京卷第二部分 8 分，每篇 8 空，考的是前后呼应、词汇复现与情感线索，和阅读理解是两种不同的读法</span>
+    </div>
+    <a class="btn sm soft" href="reading/cz.html">进入完形填空 →</a>
+  </div>
+  <div class="grid c2">${czCard}</div>
+  <div class="section-head" style="margin-top:26px">
+    <div class="section-head-left">
+      <span class="kicker">篇目 · 共 ${CLOZE.length} 篇 ${CLOZE_N} 空</span>
+      <h2>点开一篇开始练</h2>
+      <span class="sub">每篇 8 空，先通读全文再逐空选择，每空给上下文依据并附全文译文</span>
+    </div>
+  </div>
+  <div class="grid c4 passage-cards">${homeCzCards}</div>
+</section>
+
+<section class="section">
+  <div class="section-head">
+    <div class="section-head-left">
       <span class="kicker">阅读理解 · 四类文章</span>
       <h2>四类文章，四种读法</h2>
       <span class="sub">共 ${PASSAGES.length} 篇 ${READ_Q} 题，每类 ${PASSAGES.length / 4} 篇。先看读法，再练篇章</span>
     </div>
   </div>
   <div class="grid c4 level-cards">${levelCards}</div>
-</section>
-
-<section class="section">
-  <div class="section-head">
-    <div class="section-head-left">
-      <span class="kicker">完形填空 · 独立题型</span>
-      <h2>完形填空：考上下文，不考单句</h2>
-      <span class="sub">北京卷第二部分 8 分，8 个空考的是前后呼应、词汇复现与情感线索，和阅读理解是两种不同的读法</span>
-    </div>
-  </div>
-  <div class="grid c2">${czCard}</div>
 </section>
 
 <section class="section">

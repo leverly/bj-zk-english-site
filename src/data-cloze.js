@@ -38,7 +38,9 @@ One afternoon, a small boy came with a broken bike and tears in his eyes. Jack l
 
 The boy stopped crying and looked up. At that moment Jack understood something. Mr Lee had given him more than a skill. He had given him a way to ___(5)___ kindness.
 
-Jack is now a bike mechanic. He still keeps the first tool Mr Lee gave him. On its handle there is a small word, written in the old man's hand: ___(6)___. Jack says he reads it every morning before he starts work.`,
+Jack is now a bike mechanic. He still keeps the first tool Mr Lee gave him. On its handle there is a small word, written in the old man's hand: ___(6)___. Jack says he reads it every morning before he starts work.
+
+Last year a television station came to interview him. The reporter asked ___(7)___ he had become a bike mechanic. Jack pointed at the old tool on the wall and told the story of Mr Lee. The reporter was surprised that Jack still remembered a man who had helped him so many years ___(8)___.`,
     blanks: [
       { n: 1, options: ['bought', 'fixed', 'threw', 'hid'], answer: 1,
         why: '后文 Jack 学会了修刹车、链条、车轮，且本句说 Mr Lee 花了两个小时摆弄这辆车，说明他在「修」。buy 与开头「家里穷买不起」矛盾。' },
@@ -52,6 +54,10 @@ Jack is now a bike mechanic. He still keeps the first tool Mr Lee gave him. On i
         why: 'pass on kindness = 把善意传递下去。全文主线是「Mr Lee 帮他 → 他帮别人」，正是传递。give up 放弃、take off 起飞/脱下、look for 寻找均不合文意。' },
       { n: 6, options: ['Sorry', 'Hurry', 'Thanks', 'Quiet'], answer: 2,
         why: '老人留下的工具上刻着的话，应与全文「善意与感激」的主线一致。Jack 每天开工前读它，Thanks 呼应他对老人的感激，也呼应他把善意传下去的行为。' },
+      { n: 7, options: ['how', 'why', 'when', 'where'], answer: 1,
+        why: '记者问的是「他为什么成了自行车技师」，后文 Jack 指着旧工具讲起 Mr Lee 的故事，正是在回答「原因」。why 与后文的因果叙述一致。' },
+      { n: 8, options: ['ago', 'later', 'before', 'after'], answer: 0,
+        why: 'many years ago 是固定表达，意为「许多年前」。此处回忆多年前帮助过他的人，与 now（现在）形成时间对比；later 表示「之后」，方向相反。' },
     ],
     translation: `Jack 九岁那年，自行车坏了。家里穷，买不起新的。他坐在台阶上哭。
 
@@ -67,7 +73,9 @@ Jack 十五岁那年，Lee 先生病了，不能再干活。Jack 开始给街坊
 
 男孩止住哭，抬起头。那一刻 Jack 明白了些什么。Lee 先生给他的不只是一门手艺，还给了他一个把善意传递下去的方式。
 
-Jack 现在是自行车技师。他仍留着 Lee 先生给他的第一件工具。手柄上刻着一个词，是老人的笔迹：Thanks。Jack 说，他每天早上开工前都会读一遍。`,
+Jack 现在是自行车技师。他仍留着 Lee 先生给他的第一件工具。手柄上刻着一个词，是老人的笔迹：Thanks。Jack 说，他每天早上开工前都会读一遍。
+
+去年有家电视台来采访他。记者问他为什么成了自行车技师。Jack 指着墙上的旧工具，讲起了 Lee 先生的故事。记者很意外，Jack 竟然还记得许多年前帮过他的一个人。`,
   },
 ];
 
@@ -126,4 +134,122 @@ When asked why he kept planting for forty years, Wang once said a simple sentenc
 这个村庄如今出了名，游客来看绿色的山。但村民说，最重要的不是游客，而是他们的孩子能喝上干净的水、呼吸新鲜的空气——这些东西再多钱也买不到。
 
 有人问王老汉为什么坚持种了四十年，他说过一句朴素的话：「种树最好的时间是四十年前，第二好的时间是现在。」`,
+});
+
+/* 第三篇：记叙文型完形，8 空。题材「一次失败的演讲 → 学会面对紧张」，与现有两篇不重复 */
+CLOZE.push({
+  id: 'cloze-3',
+  title: 'The Speech I Almost Gave Up',
+  level: '重点',
+  topic: 'self-life',
+  intro: '记叙文，主线是「上台前的紧张 → 说出口之后的转变」。注意心理描写的词。',
+  passage: `Last term, our English teacher asked me to give a speech at the school meeting. I said yes before I had time to think. Then I went home and could not sleep for two nights.
+
+The problem was not the English. I had written the speech and read it aloud twenty times. The problem was the people. Every time I imagined standing in front of six hundred students, my hands went ___(1)___ and my mouth felt dry.
+
+I told my father I wanted to give it up. He listened and then asked me one question: "What is the worst thing that can happen?" I thought about it for a long time. The worst thing was that I would forget my words. And then? People would ___(2)___ a little, and I would sit down, and the meeting would go on. Nobody would remember it a week later.
+
+That answer did not make me brave. But it made me ___(3)___. On the morning of the meeting, my legs were still shaking when I walked to the front. I looked at the sea of faces and for a second I could not remember the first line.
+
+Then I looked down at my paper, took a breath, and started. My voice was ___(4)___ at first, so soft that the students in the back could hardly hear me. But by the third sentence I began to feel something different. People were listening. Some of them were even smiling.
+
+I finished two minutes later. There was a short silence, and then the hall was full of ___(5)___. I walked back to my seat and found that my shirt was wet through.
+
+That afternoon, a girl from another class came to me and said she had wanted to speak at the meeting too, but she was ___(6)___ of the same thing. I told her what my father had told me. I told her the worst thing that could happen was much smaller than she thought.
+
+I still do not enjoy speaking in public. But I no longer ___(7)___ it. I have learned that being afraid and doing it anyway are two different things, and the second one is ___(8)___ that changes you.`,
+  blanks: [
+    { n: 1, options: ['warm', 'cold', 'clean', 'strong'], answer: 1,
+      why: '前文说「想到站在六百人面前」就睡不着，后文说「嘴发干」，都是紧张的生理反应。手「发凉」与嘴干并列，共同构成紧张的表现。' },
+    { n: 2, options: ['laugh', 'leave', 'clap', 'shout'], answer: 0,
+      why: '父亲让他想「最坏会怎样」：忘词后听众「笑一笑」，然后坐下，会照常进行。laugh a little 语气轻，说明事情没那么严重；clap 是正面反应，与「最坏」矛盾。' },
+    { n: 3, options: ['proud', 'calm', 'angry', 'famous'], answer: 1,
+      why: '紧接着说「这没有让我变勇敢，但让我____」，与 brave 形成让步关系——不是不怕了，而是心里「安定」下来。calm 与后文「深吸一口气再开口」呼应。' },
+    { n: 4, options: ['loud', 'clear', 'low', 'happy'], answer: 2,
+      why: '后文 so soft that the students in the back could hardly hear me 直接解释这个空：声音「低」。low 与 soft 同义复现，是典型的后文线索题。' },
+    { n: 5, options: ['noise', 'music', 'anger', 'applause'], answer: 3,
+      why: '讲完后「短暂的安静，然后大厅里充满了____」，紧接着说衬衫湿透，说明是紧张之后的放松。掌声（applause）是演讲结束的正面反馈。' },
+    { n: 6, options: ['tired', 'afraid', 'fond', 'sure'], answer: 1,
+      why: '女孩说她也想在会上发言，但「____同样的事」。全文都在讲「紧张、害怕」，be afraid of 是固定搭配，与前文 my hands went cold 呼应。' },
+    { n: 7, options: ['enjoy', 'avoid', 'remember', 'forget'], answer: 1,
+      why: '前句说「我仍然不喜欢当众讲话」，用 But 转折，后句说「不再____它」——即不再回避。avoid 与上句「不喜欢」形成「虽不喜欢但不再躲」的逻辑。' },
+    { n: 8, options: ['it', 'one', 'this', 'that'], answer: 0,
+      why: '此处指代前半句的 the second one（第二种做法：害怕但照做），用 it 指代这一件事，作 is 后的表语从句主语。that 通常指较远的事物，此处用 it 最自然。' },
+  ],
+  translation: `上个学期，英语老师让我在校会上做个演讲。我还没来得及想就答应了。然后我回家，两个晚上没睡着。
+
+问题不在英语。稿子我写好了，也大声读过二十遍。问题在于人。每次我想到要站在六百名学生面前，手就发凉，嘴就发干。
+
+我告诉父亲我想放弃。他听完，问了我一个问题：「最坏能坏到哪去？」我想了很久。最坏就是忘词。然后呢？大家笑一笑，我坐下，会照常开下去。一个星期后没人会记得。
+
+那个答案没有让我变勇敢，但让我安定了下来。开会那天早上，我走向台前时腿还在抖。我看着台下的一片脸，有那么一秒，我想不起第一句。
+
+然后我低头看稿，吸了口气，开始讲。一开始声音很低，低到后排几乎听不见。但说到第三句，我开始感觉到不一样——有人在听，有人甚至在笑。
+
+两分钟后我讲完了。短暂的安静之后，大厅里响起掌声。我走回座位，发现衬衫已经湿透了。
+
+那天下午，另一个班的一个女孩来找我，说她也想在会上发言，但害怕同样的事。我把父亲对我说的话告诉了她。我告诉她，最坏的事比她想的要小得多。
+
+我仍然不喜欢当众讲话，但我不再回避它。我明白了，「害怕」和「害怕却照做」是两回事，而后者才是会改变你的那一个。`,
+});
+
+/* 第四篇：说明文型完形，8 空。题材「城市里的蜜蜂与屋顶花园」，与现有两篇不重复 */
+CLOZE.push({
+  id: 'cloze-4',
+  title: 'Bees on the Roof',
+  level: '难点',
+  topic: 'nature-env',
+  intro: '说明文，主线是「城市屋顶养蜂这件事：为什么做、怎么做、有什么用」。注意因果与数据。',
+  passage: `When people think of bees, they usually think of the countryside. But in the past ten years, more and more bees have been living in cities — on the roofs of office buildings, hotels and schools.
+
+The reason is simple. In the countryside, farmers often use chemicals to kill insects. These chemicals kill harmful insects, but they also kill bees. Cities are ___(1)___ for bees in one surprising way: there are fewer chemicals there.
+
+City bees also have more food than people expect. Parks, gardens and even the small flowers on balconies give them something to eat all year round. A study in Paris found that city bees produced ___(2)___ honey per hive than bees in the countryside nearby.
+
+Keeping bees on a roof is not as difficult as it sounds. A hive needs only a small space, about one square metre. The bees fly out in the morning and come back before dark. They do not need to be ___(3)___ every day, and they never hurt people who stay away from the hive.
+
+Of course, there are rules. A beekeeper must make sure the bees have water nearby, so they do not go looking for it in other people's gardens. The hive must also be placed ___(4)___ from the door, so that people who are afraid of bees do not meet them by accident.
+
+Why do companies want bees on their roofs? Some say it is good for their image. Others do it because their workers enjoy watching the bees. But the most important reason is ___(5)___: bees pollinate the plants around them, and more plants mean cleaner air and cooler streets.
+
+Scientists are still studying ___(6)___ city bees do so well. Some believe it is the warmth of the buildings; others think it is the variety of flowers. What is clear is that the number of city hives is growing fast.
+
+For the beekeepers, the work brings something else as well. Standing on a roof at sunset, listening to the low hum of a hundred thousand bees, many of them say they feel ___(7)___ than they have felt in years. It is a strange kind of peace, they say — one that no office meeting can give.
+
+So the next time you look up at a tall building, remember: there may be a small city of bees living above your head, quietly doing the work that keeps our ___(8)___ alive.`,
+  blanks: [
+    { n: 1, options: ['worse', 'better', 'busier', 'colder'], answer: 1,
+      why: '前文说乡下的农药会杀死蜜蜂，破折号后解释「城市里农药更少」，所以城市对蜜蜂来说「更好」。better 与前半段乡下对蜜蜂不利形成对比。' },
+    { n: 2, options: ['less', 'more', 'dirtier', 'sweeter'], answer: 1,
+      why: '前句说城市蜜蜂食物比人们想的更多（公园、花园、阳台的花），因此研究结果是「每箱产蜜更多」。more 与前句 more food 形成因果呼应。' },
+    { n: 3, options: ['fed', 'moved', 'washed', 'counted'], answer: 0,
+      why: '后文说蜜蜂早上飞出去、天黑前回来，自己找食，所以「不需要每天喂」。fed 与上文「城市里有的是花」呼应；moved / washed 与养蜂常识不符。' },
+    { n: 4, options: ['far', 'near', 'high', 'close'], answer: 0,
+      why: '后句说「让怕蜜蜂的人不会偶然碰到它们」，所以蜂箱要放在离门「远」的地方。far from 与后半句的目的形成因果。' },
+    { n: 5, options: ['money', 'space', 'nature', 'safety'], answer: 2,
+      why: '后文解释：蜜蜂给植物授粉，植物多意味着空气更干净、街道更凉——这些都是「自然」层面的好处。nature 概括了后面整句的内容。' },
+    { n: 6, options: ['why', 'when', 'where', 'who'], answer: 0,
+      why: '后文给出两种解释（建筑的温度、花的种类），说明科学家在研究「为什么」城市蜜蜂过得好。why 与后文 Some believe… others think… 呼应。' },
+    { n: 7, options: ['busier', 'calmer', 'richer', 'luckier'], answer: 1,
+      why: '后句说「这是一种奇怪的平静（peace）」，说明他们感到「更平静」。calmer 与 peace 同义复现，是明确的后文线索。' },
+    { n: 8, options: ['city', 'farm', 'school', 'garden'], answer: 0,
+      why: '全文讲的是城市屋顶养蜂，结尾回扣主题：蜜蜂在悄悄做着让「我们的城市」活下去的工作。city 与开头 cities 首尾呼应。' },
+  ],
+  translation: `人们想到蜜蜂，通常想到乡村。但在过去十年里，越来越多的蜜蜂住进了城市——在写字楼、酒店和学校的屋顶上。
+
+原因很简单。在乡下，农民常使用化学药剂杀虫。这些药剂杀死害虫，也杀死了蜜蜂。城市在一个意想不到的方面对蜜蜂更友好：那里农药更少。
+
+城市蜜蜂的食物也比人们想的要多。公园、花园，甚至阳台上的小花，一年四季都能给它们吃的。巴黎的一项研究发现，城市蜜蜂每箱产的蜜比附近乡下的蜜蜂更多。
+
+在屋顶养蜂没有听起来那么难。一个蜂箱只要大约一平方米。蜜蜂早上飞出去，天黑前回来。它们不需要每天喂，也从不伤害远离蜂箱的人。
+
+当然，也有规矩。养蜂人必须保证附近有水，这样蜜蜂不会去别人家的花园里找水。蜂箱还必须放在离门远的地方，免得怕蜜蜂的人不小心撞上。
+
+公司为什么愿意在屋顶养蜂？有的说对形象有好处，有的说员工喜欢看蜜蜂。但最重要的原因是自然：蜜蜂为周围的植物授粉，植物多了，空气更干净，街道更凉快。
+
+科学家还在研究城市蜜蜂为什么过得这么好。有人认为是建筑的温度，有人认为是花的种类多。清楚的是，城市蜂箱的数量正在快速增长。
+
+对养蜂人来说，这份工作还带来别的东西。日落时站在屋顶上，听着十万只蜜蜂低低的嗡鸣，很多人说他们多年来从没这么平静过。他们说，这是一种奇怪的安宁——任何会议都给不了。
+
+所以下次你抬头看一栋高楼时，请记得：你头顶上可能住着一个小小的蜜蜂城市，正安静地做着让我们的城市活下去的工作。`,
 });
