@@ -945,27 +945,28 @@ function buildGrammar() {
    6. 练语法
    ========================================================== */
 function buildReview() {
-  const topicOpts = GRAMMAR.map((g) => `<optgroup label="${esc(g.name)}">
-    ${g.topics.map((t) => `<option value="${t.id}">${esc(t.name)}（${(Q_BY_TOPIC.get(t.id) || []).length} 题）</option>`).join('')}
-  </optgroup>`).join('');
+  // 按语法族汇总题量，用于「按语法族筛选」的 chip 标签
+  const groupChips = GRAMMAR.map((g) => {
+    const n = g.topics.reduce((a, t) => a + (Q_BY_TOPIC.get(t.id) || []).length, 0);
+    return `<button class="chip" data-g="${g.id}">${esc(g.name)} · ${n}</button>`;
+  }).join('');
 
   const body = `
 <div class="page-head">
-  <div class="crumb"><a href="index.html">首页</a> / 练语法</div>
-  <h1>考点专项练语法</h1>
-  <p class="lede">${Q_STATS.total} 道精练题覆盖 <b>${GRAMMAR_STATS.topics} 个中考核心考点</b>。系统实时追踪各考点正确率，答错的题自动进错题本，答对后按遗忘曲线排期复习。</p>
+  <div class="crumb"><a href="index.html">首页</a> / 题型练语法</div>
+  <h1>中考题型练语法</h1>
+  <p class="lede">${Q_STATS.total} 道精练题完整覆盖 <b>${GRAMMAR_STATS.topics} 个中考核心考点</b>，题型对齐北京卷面：单项填空、写作改错、语法填空。系统实时追踪各考点正确率，自动把薄弱项浮到最前，答错的题一键收进错题本。</p>
 </div>
 
-<section class="section" style="margin-top:22px">
+<section class="section" style="margin-top:24px">
   <div class="kv">
-    <div class="k"><b id="kQn">0</b><span>累计练习题数</span></div>
+    <div class="k"><b id="kQn">0</b><span>累计精练题数</span></div>
     <div class="k"><b id="kRate" style="color:var(--accent)">—</b><span>综合正确率</span></div>
     <div class="k"><b id="kWrong" style="color:var(--rose)">0</b><span>语法错题本</span></div>
-    <div class="k"><b id="kDue">—</b><span>到期复习题</span></div>
   </div>
 </section>
 
-<section class="section" style="margin-top:24px" id="setup">
+<section class="section" style="margin-top:28px" id="setup">
   <div class="card setup-card">
     <div class="setup-head">
       <h3>配置本组练习</h3>
@@ -987,14 +988,14 @@ function buildReview() {
       </div>
 
       <div class="setup-group">
-        <div class="kicker">题型</div>
+        <div class="kicker">中考题型</div>
         <div class="chips" id="typeChips">
           <button class="chip on" data-t="all">混合题型</button>
-          <button class="chip" data-t="choice">单项填空</button>
-          <button class="chip" data-t="correct">写作改错</button>
-          <button class="chip" data-t="fill">语法填空</button>
+          <button class="chip" data-t="choice">单项填空 · ${Q_STATS.choice}</button>
+          <button class="chip" data-t="correct">写作改错 · ${Q_STATS.correct}</button>
+          <button class="chip" data-t="fill">语法填空 · ${Q_STATS.fill}</button>
         </div>
-        <p class="setup-hint">混合模式最贴近真实卷面顺序</p>
+        <p class="setup-hint">混合题型最贴近真实卷面顺序；改错题专治写作常见语法失分</p>
       </div>
 
       <div class="setup-group">
@@ -1007,126 +1008,145 @@ function buildReview() {
         <p class="setup-hint">20 题约 8–10 分钟，适合日常打卡</p>
       </div>
 
-      <div class="setup-group">
-        <div class="kicker">指定考点（可选）</div>
-        <select id="topicSel" class="select">
-          <option value="">全部考点</option>
-          ${topicOpts}
-        </select>
-        <p class="setup-hint">从语法页点进来时会自动选中对应考点</p>
+      <div class="setup-group wide">
+        <div class="kicker">按语法族筛选 <span style="text-transform:none;letter-spacing:0;font-weight:500">· 仅在「全部考点」时生效</span></div>
+        <div class="chips" id="groupChips">
+          <button class="chip on" data-g="all">不限语法族</button>
+          ${groupChips}
+        </div>
       </div>
+    </div>
+
+    <div class="note setup-note">
+      快捷键：<b>1–4</b> 选答案、<b>Enter</b> 下一题；填空题按 <b>Enter</b> 提交。答错自动进入<a href="wrong.html">错题本</a>。
     </div>
   </div>
 </section>
 
-<section class="section" style="margin-top:20px">
-  <div id="quizMount">
-    <div class="empty"><b>点上方「开始刷题」进入练习</b>先配置范围、题型和题量</div>
-  </div>
-</section>
+<section class="section" id="zone" style="display:none"><div id="qz"></div></section>
 `;
   const script = `
-ZK.ready(function(){
-  var Q = ZK_DATA.QUESTIONS;
-  var scope='all', type='all', len=20, topic='';
+const { QUESTIONS, GRAMMAR } = window.ZK_DATA;
+const Z = window.ZK;
+const ALL = QUESTIONS;
+const BY_TOPIC = new Map();
+ALL.forEach(q => { if (!BY_TOPIC.has(q.topic)) BY_TOPIC.set(q.topic, []); BY_TOPIC.get(q.topic).push(q); });
+const GT = new Map();      // topic -> family id
+const TNAME = new Map();   // topic -> 考点中文名
+GRAMMAR.forEach(g => g.topics.forEach(t => { GT.set(t.id, g.id); TNAME.set(t.id, t.name); }));
 
-  function refreshKv(){
-    var ql = ZK.qLog();
-    var n=0, right=0;
-    Object.keys(ql.topicStats).forEach(function(k){ var t=ql.topicStats[k]; n+=t.right+t.wrong; right+=t.right; });
-    document.getElementById('kQn').textContent = n;
-    document.getElementById('kRate').textContent = n ? Math.round(right/n*100)+'%' : '—';
-    var wn = ZK.wrongIds().length;
-    document.getElementById('kWrong').textContent = wn;
-    document.getElementById('wrongN').textContent = wn;
-    var now = Date.now(), due=0;
-    Q.forEach(function(q){ var d=ZK.qDue(q.id); if(!d || !d.due || d.due<=now) due++; });
-    document.getElementById('kDue').textContent = due;
-    document.getElementById('dueN').textContent = due;
+let scope = 'all', grp = 'all', type = 'all', len = 20, topic = null;
+
+function pick(sel, attr, cb) {
+  document.querySelectorAll(sel + ' .chip').forEach(c => c.addEventListener('click', () => {
+    document.querySelectorAll(sel + ' .chip').forEach(x => x.classList.remove('on'));
+    c.classList.add('on'); cb(c.getAttribute(attr));
+  }));
+}
+pick('#scopeChips', 'data-scope', v => scope = v);
+pick('#groupChips', 'data-g', v => grp = v);
+pick('#typeChips', 'data-t', v => type = v);
+pick('#lenChips', 'data-l', v => len = parseInt(v, 10));
+
+/** 最弱考点：至少练过 3 题、正确率最低。
+    只认真正有题目的考点 id——历史数据或异常写入可能留下族 id，
+    若不校验会静默出一组空题。 */
+function weakestTopic() {
+  const st = Z.qTopicStats()
+    .filter(x => x.n >= 3 && BY_TOPIC.has(x.topic))
+    .sort((a, b) => a.rate - b.rate);
+  return st.length ? st[0].topic : null;
+}
+
+function refreshStats() {
+  const st = Z.qTopicStats();
+  const n = st.reduce((a, x) => a + x.n, 0);
+  const ok = st.reduce((a, x) => a + x.ok, 0);
+  const wrong = Z.wrongIds().length;
+  const set = (id, v) => { const e = document.querySelector(id); if (e) e.textContent = v; };
+  set('#kQn', n);
+  set('#kRate', n ? Math.round(ok / n * 100) + '%' : '—');
+  set('#kWrong', wrong);
+  const wn = document.querySelector('#wrongN'); if (wn) wn.textContent = wrong;
+  const dueEl = document.querySelector('#dueN');
+  if (dueEl) {
+    const dm = Z.qDueMap();
+    const t = Date.now();
+    dueEl.textContent = ALL.filter(q => { const d = dm[q.id]; return !d || (d.due || 0) <= t; }).length;
   }
+}
+refreshStats();
+document.addEventListener('zk:qlog', refreshStats);
 
-  function buildPool(){
-    var list = Q.slice();
-    if (topic) list = list.filter(function(q){ return q.topic===topic; });
-    if (type !== 'all') list = list.filter(function(q){ return q.type===type; });
-    if (scope === 'wrong') {
-      var ids = ZK.wrongIds();
-      list = list.filter(function(q){ return ids.indexOf(q.id)>=0; });
-    } else if (scope === 'weak') {
-      var rates = ZK.topicRates();
-      var weakIds = rates.slice(0,3).map(function(r){ return r.id; });
-      var weak = list.filter(function(q){ return weakIds.indexOf(q.topic)>=0; });
-      if (weak.length) list = weak;
+// 从语法族页带 ?topic= 进来时，锁定该考点专项
+const tp = new URLSearchParams(location.search).get('topic');
+if (tp && TNAME.has(tp)) {
+  topic = tp;
+  const scopeChips = document.querySelector('#scopeChips');
+  if (scopeChips) scopeChips.style.display = 'none';
+  const banner = document.createElement('div');
+  banner.className = 'note';
+  banner.style.cssText = 'margin-top:18px;border-left-color:var(--accent)';
+  banner.innerHTML = '当前专项考点：<b>' + Z.esc(TNAME.get(tp)) + '</b> · 共 ' +
+    (BY_TOPIC.get(tp) || []).length + ' 题 · <a href="review.html">切回全部自由练习 →</a>';
+  const setup = document.querySelector('#setup');
+  if (setup) setup.parentNode.insertBefore(banner, setup);
+}
+
+document.querySelector('#startBtn').addEventListener('click', () => {
+  let pool = ALL.slice();
+  if (topic) {
+    pool = pool.filter(q => q.topic === topic);
+  } else if (scope === 'wrong') {
+    const ids = new Set(Z.wrongIds());
+    pool = pool.filter(q => ids.has(q.id));
+    if (!pool.length) { Z.toast('错题本目前是空的，先练一组吧！'); return; }
+  } else if (scope === 'weak') {
+    const w = weakestTopic();
+    if (!w) { Z.toast('先练满几题（同一考点至少 3 题），系统就能自动识别最弱考点'); return; }
+    pool = pool.filter(q => q.topic === w);
+  } else {
+    if (grp !== 'all') pool = pool.filter(q => GT.get(q.topic) === grp);
+  }
+  if (type !== 'all') pool = pool.filter(q => (q.type || 'choice') === type);
+  if (!pool.length) { Z.toast('当前筛选组合下没有题目，换个条件试试'); return; }
+
+  // 遗忘曲线排期：未练过或已到期的题优先；未到复习时间的答对题不再重复塞进本轮。
+  // 「只练错题本」「专攻最弱考点」是用户点名的范围，按原样出，不做排期过滤。
+  let finalPool = pool;
+  if (scope !== 'wrong' && scope !== 'weak' && !topic) {
+    const now = Date.now();
+    const dueMap = Z.qDueMap();
+    const isDue = q => { const d = dueMap[q.id]; return !d || (d.due || 0) <= now; };
+    const duePool = pool.filter(isDue);
+    if (duePool.length) {
+      finalPool = duePool;
+    } else {
+      // 全部都在复习周期内：挑最早到期的凑一组，避免「没题可练」
+      finalPool = pool.slice().sort((a, b) =>
+        (dueMap[a.id] ? dueMap[a.id].due : 0) - (dueMap[b.id] ? dueMap[b.id].due : 0));
+      Z.toast('当前范围的题都在复习周期内，本轮复习最早到期的题');
     }
-    // 未到期的题不重复出（错题本与最弱考点范围不过滤，保证能针对性练）
-    if (scope === 'all') {
-      var now = Date.now();
-      var fresh = list.filter(function(q){ var d=ZK.qDue(q.id); return !d || !d.due || d.due<=now; });
-      if (fresh.length >= 5) list = fresh;
-    }
-    return list;
   }
 
-  function start(){
-    var pool = ZK.shuffle(buildPool()).slice(0, len);
-    if (!pool.length) {
-      document.getElementById('quizMount').innerHTML = '<div class="empty"><b>当前条件下没有可练的题</b>换个范围或题型试试</div>';
-      return;
-    }
-    ZK.quiz({
-      mount:'#quizMount', questions: pool, shuffle:false,
-      onAnswer: function(){ refreshKv(); },
-      onFinish: function(){ refreshKv(); },
-      onRestart: function(){ start(); },
-    });
-  }
+  document.querySelector('#setup').style.display = 'none';
+  document.querySelector('#zone').style.display = '';
+  Z.quiz({ mount: '#qz', questions: finalPool, limit: len, shuffle: true,
+    reviewHref: 'grammar.html', reviewLabel: '回顾语法考点',
+    onRestart: () => location.reload(),
+    onFinish: refreshStats });
+  const zone = document.querySelector('#zone');
+  window.scrollTo({ top: Math.max(0, zone.getBoundingClientRect().top + window.scrollY - 80), behavior: 'smooth' });
+});
 
-  document.querySelectorAll('#scopeChips .chip').forEach(function(c){
-    c.addEventListener('click', function(){
-      document.querySelectorAll('#scopeChips .chip').forEach(function(x){ x.classList.remove('on'); });
-      c.classList.add('on'); scope = c.getAttribute('data-scope');
-    });
-  });
-  document.querySelectorAll('#typeChips .chip').forEach(function(c){
-    c.addEventListener('click', function(){
-      document.querySelectorAll('#typeChips .chip').forEach(function(x){ x.classList.remove('on'); });
-      c.classList.add('on'); type = c.getAttribute('data-t');
-    });
-  });
-  document.querySelectorAll('#lenChips .chip').forEach(function(c){
-    c.addEventListener('click', function(){
-      document.querySelectorAll('#lenChips .chip').forEach(function(x){ x.classList.remove('on'); });
-      c.classList.add('on'); len = parseInt(c.getAttribute('data-l'),10);
-    });
-  });
-  document.getElementById('topicSel').addEventListener('change', function(e){
-    topic = e.target.value;
-  });
-  document.getElementById('startBtn').addEventListener('click', function(){
-    start();
-    document.getElementById('quizMount').scrollIntoView({behavior:'smooth', block:'start'});
-  });
-  document.getElementById('resetBtn').addEventListener('click', function(){
-    if (!window.confirm('确定清空所有语法练习记录与错题本？此操作不可撤销。')) return;
-    ZK.qReset(); refreshKv(); ZK.toast('已清空练习记录');
-  });
-
-  // 从语法页带 topic 参数进来
-  var m = location.search.match(/[?&]topic=([^&]+)/);
-  if (m) {
-    topic = decodeURIComponent(m[1]);
-    var sel = document.getElementById('topicSel');
-    if (sel) { sel.value = topic; }
-    setTimeout(function(){ start(); document.getElementById('quizMount').scrollIntoView({behavior:'smooth'}); }, 120);
-  }
-
-  refreshKv();
+document.querySelector('#resetBtn').addEventListener('click', () => {
+  if (confirm('确定清空全部语法练习记录与错题本？')) { Z.qReset(); refreshStats(); Z.toast('已清空语法记录'); }
 });
 `;
   write('review.html', page({
-    title: '练语法 · 考点专项',
-    desc: `${Q_STATS.total} 道北京中考英语语法精练题，覆盖 ${GRAMMAR_STATS.topics} 个考点，自动定位薄弱项。`,
-    active: 'grammar-drill', body, script, dataKeys: ['QUESTIONS'],
+    title: '题型练语法 · 考点专项精练',
+    desc: `${Q_STATS.total} 道北京中考英语题型精练题，覆盖全部 ${GRAMMAR_STATS.topics} 个考点，自动定位最弱考点并收集错题。`,
+    active: 'grammar-drill', body, script, dataKeys: ['QUESTIONS', 'GRAMMAR'],
   }));
 }
 

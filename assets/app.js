@@ -341,20 +341,34 @@
       qlog.qdue[id] = { n: 0, due: 0 };
     }
     store(QLOG_KEY, qlog);
+    document.dispatchEvent(new CustomEvent('zk:qlog', { detail: { topic: topic, ok: ok, id: id } }));
   };
-  Z.qTopicStats = function () { return qlog.topicStats; };
+  /**
+   * 各考点统计，返回数组形式（对齐河北 review 页的用法）：
+   * [{ topic, n, ok, rate }]，按正确率升序（最弱在前）
+   */
+  Z.qTopicStats = function () {
+    return Object.keys(qlog.topicStats).map(function (topic) {
+      var t = qlog.topicStats[topic];
+      var n = (t.right || 0) + (t.wrong || 0);
+      return { topic: topic, n: n, ok: t.right || 0, rate: n ? (t.right || 0) / n : 0 };
+    }).filter(function (x) { return x.n > 0; })
+      .sort(function (a, b) { return a.rate - b.rate; });
+  };
+  Z.qDueMap = function () { return qlog.qdue || {}; };
   Z.wrongIds = function () { return Object.keys(qlog.wrongIds || {}); };
   Z.qClearWrong = function (id) { delete qlog.wrongIds[id]; store(QLOG_KEY, qlog); };
   Z.qReset = function () {
     qlog = { topicStats: {}, wrongIds: {}, qdue: {} };
     store(QLOG_KEY, qlog);
+    document.dispatchEvent(new CustomEvent('zk:qlog', { detail: { reset: true } }));
   };
   /** 各考点正确率，按薄弱排序 */
   Z.topicRates = function () {
     return Object.keys(qlog.topicStats).map(function (id) {
       var t = qlog.topicStats[id];
-      var n = t.right + t.wrong;
-      return { id: id, right: t.right, wrong: t.wrong, total: n, rate: n ? t.right / n : 0 };
+      var n = (t.right || 0) + (t.wrong || 0);
+      return { id: id, right: t.right || 0, wrong: t.wrong || 0, total: n, rate: n ? (t.right || 0) / n : 0 };
     }).filter(function (x) { return x.total > 0; })
       .sort(function (a, b) { return a.rate - b.rate; });
   };
