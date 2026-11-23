@@ -591,6 +591,26 @@
     return base + rel;
   };
   var currentAudio = null, playTimer = null, playToken = 0;
+  /* 自动播放被浏览器策略拦截时，把这次请求挂起，等用户第一次点击/按键时补播。
+     否则「每题自动朗读」在多数浏览器上会静默失败，用户以为功能坏了。 */
+  var pendingAuto = null;
+  function armUnlock() {
+    if (armUnlock.done) return;
+    armUnlock.done = true;
+    var fire = function () {
+      if (pendingAuto) {
+        var p = pendingAuto;
+        pendingAuto = null;
+        try { Z.playWord(p.w, p.o); } catch (e) {}
+      }
+      document.removeEventListener('pointerdown', fire, true);
+      document.removeEventListener('keydown', fire, true);
+      document.removeEventListener('touchstart', fire, true);
+    };
+    document.addEventListener('pointerdown', fire, true);
+    document.addEventListener('keydown', fire, true);
+    document.addEventListener('touchstart', fire, true);
+  }
   Z.playWord = function (w, opts) {
     var o = opts || {};
     var src = Z.audioSrc(w);
@@ -627,7 +647,15 @@
         } else if (o.onend) o.onend();
       };
       var p = a.play();
-      if (p && p.catch) p.catch(function () {});
+      if (p && p.catch) {
+        p.catch(function (err) {
+          /* 自动播放被拦截：挂起，等用户第一次交互时补播（手动点击不该补播） */
+          if (err && err.name === 'NotAllowedError' && o.auto) {
+            pendingAuto = { w: w, o: o };
+            armUnlock();
+          }
+        });
+      }
       return true;
     } catch (e) { return false; }
   };
@@ -653,9 +681,29 @@
     } catch (e) { return null; }
   }
   var speakToken = 0;
+  /* 句子朗读：优先播 Edge TTS 预生成音频（音色统一、专业），
+     没有对应音频时才退回浏览器语音合成。 */
   Z.speak = function (text, opts) {
-    if (!text || !window.speechSynthesis) return false;
+    if (!text) return false;
     var o = opts || {};
+    var key = String(text).trim();
+    var src = Z.audioSrc(key);
+    if (src) {
+      try {
+        var token0 = ++speakToken;
+        if (currentAudio) { try { currentAudio.onended = null; currentAudio.pause(); } catch (e) {} }
+        var a = currentAudio || (currentAudio = new Audio());
+        a.onended = function () {
+          if (token0 !== speakToken) return;
+          if (o.onend) o.onend();
+        };
+        a.src = src;
+        var p = a.play();
+        if (p && p.catch) p.catch(function () {});
+        return true;
+      } catch (e) { /* 落到下面的语音合成 */ }
+    }
+    if (!window.speechSynthesis) return false;
     try {
       var token = ++speakToken;
       window.speechSynthesis.cancel();
@@ -675,6 +723,7 @@
   };
   Z.stopSpeak = function () {
     speakToken++;
+    if (currentAudio) { try { currentAudio.onended = null; currentAudio.pause(); } catch (e) {} }
     try { if (window.speechSynthesis) window.speechSynthesis.cancel(); } catch (e) {}
   };
 
@@ -1056,6 +1105,8 @@
     var autoNextTimer = null;
     var pendingAdvance = false;
     var AUTO_NEXT_MS = 780;
+    /* 自动朗读默认读两遍：第一遍听清，第二遍跟着默读 */
+    var AUTO_SAY_TIMES = 2;
 
     function advance() {
       if (!pendingAdvance) return;
@@ -1161,7 +1212,7 @@
       setTimeout(function () {
         var say = host.querySelector('#sayBtn');
         if (say) say.addEventListener('click', function (e) { e.stopPropagation(); Z.playWord(w.w); });
-        if (canPlay && autoSayOn) Z.playWord(w.w);
+        if (canPlay && autoSayOn) Z.playWord(w.w, { times: AUTO_SAY_TIMES, gap: 420, auto: true });
         var b = host.querySelector('#fshow');
         if (b) b.addEventListener('click', revealRecall);
       }, 0);
@@ -1214,7 +1265,7 @@
       setTimeout(function () {
         var say = host.querySelector('#sayBtn');
         if (say) say.addEventListener('click', function (e) { e.stopPropagation(); Z.playWord(w.w); });
-        if (canPlay && autoSayOn) Z.playWord(w.w);
+        if (canPlay && autoSayOn) Z.playWord(w.w, { times: AUTO_SAY_TIMES, gap: 420, auto: true });
         host.querySelectorAll('.qopt').forEach(function (b) {
           b.addEventListener('click', function () {
             judgeChoice(w, parseInt(b.getAttribute('data-k'), 10), ans);

@@ -7,6 +7,11 @@
      n       空号（与原文 ___（n）___ 对应，必须连续）
      options 四个选项
      answer  正确项索引
+     skill   能力维度，用于阅读能力诊断（六项之一）：
+               context     上下文逻辑（靠前文线索 / 后文呼应 / 情感色彩还原）
+               inference   推理判断（要结合多处信息推一步）
+               collocation 固定搭配（动词短语 / 介词搭配 / 习语）
+               grammar     语法与词形（代词、反身代词、冠词、限定词等）
      why     为什么对——必须结合上下文逻辑（前文线索 / 后文呼应 / 搭配），
              不能只写「意思是…所以选它」
 
@@ -42,21 +47,21 @@ Jack is now a bike mechanic. He still keeps the first tool Mr Lee gave him. On i
 
 Last year a television station came to interview him. The reporter asked ___(7)___ he had become a bike mechanic. Jack pointed at the old tool on the wall and told the story of Mr Lee. The reporter was surprised that Jack still remembered a man who had helped him so many years ___(8)___.`,
     blanks: [
-      { n: 1, options: ['bought', 'fixed', 'threw', 'hid'], answer: 1,
+      { n: 1, options: ['bought', 'fixed', 'threw', 'hid'], answer: 1, skill: 'context',
         why: '后文 Jack 学会了修刹车、链条、车轮，且本句说 Mr Lee 花了两个小时摆弄这辆车，说明他在「修」。buy 与开头「家里穷买不起」矛盾。' },
-      { n: 2, options: ['forgot', 'wanted', 'needed', 'dared'], answer: 0,
+      { n: 2, options: ['forgot', 'wanted', 'needed', 'dared'], answer: 0, skill: 'context',
         why: 'never forgot to say thank you = 从没忘记道谢，与「Mr Lee 从不收钱」形成呼应，体现 Jack 的感激。其他三项与 never 连用会变成否定感激之意，不合逻辑。' },
-      { n: 3, options: ['agreed', 'refused', 'laughed', 'waited'], answer: 1,
+      { n: 3, options: ['agreed', 'refused', 'laughed', 'waited'], answer: 1, skill: 'context',
         why: '前句说 Jack 给邻居孩子修车不收费，因此家长想付钱时他「拒绝」。just as Mr Lee had never charged him 是对 refused 的解释。' },
-      { n: 4, options: ['her', 'his', 'their', 'its'], answer: 1,
+      { n: 4, options: ['her', 'his', 'their', 'its'], answer: 1, skill: 'grammar',
         why: '此处指 Jack 自己那辆第一辆坏掉的自行车，主语是 Jack，用 his。这是物主代词的指代题。' },
-      { n: 5, options: ['pass on', 'give up', 'take off', 'look for'], answer: 0,
+      { n: 5, options: ['pass on', 'give up', 'take off', 'look for'], answer: 0, skill: 'collocation',
         why: 'pass on kindness = 把善意传递下去。全文主线是「Mr Lee 帮他 → 他帮别人」，正是传递。give up 放弃、take off 起飞/脱下、look for 寻找均不合文意。' },
-      { n: 6, options: ['Sorry', 'Hurry', 'Thanks', 'Quiet'], answer: 2,
+      { n: 6, options: ['Sorry', 'Hurry', 'Thanks', 'Quiet'], answer: 2, skill: 'inference',
         why: '老人留下的工具上刻着的话，应与全文「善意与感激」的主线一致。Jack 每天开工前读它，Thanks 呼应他对老人的感激，也呼应他把善意传下去的行为。' },
-      { n: 7, options: ['how', 'why', 'when', 'where'], answer: 1,
+      { n: 7, options: ['how', 'why', 'when', 'where'], answer: 1, skill: 'context',
         why: '记者问的是「他为什么成了自行车技师」，后文 Jack 指着旧工具讲起 Mr Lee 的故事，正是在回答「原因」。why 与后文的因果叙述一致。' },
-      { n: 8, options: ['ago', 'later', 'before', 'after'], answer: 0,
+      { n: 8, options: ['ago', 'later', 'before', 'after'], answer: 0, skill: 'collocation',
         why: 'many years ago 是固定表达，意为「许多年前」。此处回忆多年前帮助过他的人，与 now（现在）形成时间对比；later 表示「之后」，方向相反。' },
     ],
     translation: `Jack 九岁那年，自行车坏了。家里穷，买不起新的。他坐在台阶上哭。
@@ -98,25 +103,25 @@ Forty years later, the hills turned green. The soil stopped washing away. The ri
 
 Wang died in 2008. On the hill where he planted his first tree, the villagers put up a small stone. It says: "He planted trees so that we could have a home." Every spring, the children of the village go up the hill and plant new trees. They are ___(6)___ what Wang started.
 
-The village is now famous, and visitors come to see the green hills. But the villagers say the most important thing is not the visitors. It is that their children can drink clean water and breathe fresh air — the things that ___(7)___ money cannot buy.
+The village is now famous, and visitors come to see the green hills. But the villagers say the most important thing is not the visitors. It is that their children can drink clean water and breathe fresh air — the things that ___(7)___ money can buy.
 
 When asked why he kept planting for forty years, Wang once said a simple sentence: "The best time to plant a tree was forty years ago. The second best time is ___(8)___.`,
   blanks: [
-    { n: 1, options: ['quickly', 'badly', 'easily', 'safely'], answer: 1,
+    { n: 1, options: ['quickly', 'badly', 'easily', 'safely'], answer: 1, skill: 'context',
       why: '前文说雨水冲走土壤，后文说「许多家庭在挨饿」，说明庄稼长得「差」。badly 与前后的负面语境一致。' },
-    { n: 2, options: ['spent', 'saved', 'wasted', 'found'], answer: 0,
+    { n: 2, options: ['spent', 'saved', 'wasted', 'found'], answer: 0, skill: 'collocation',
       why: 'spend time doing sth 是固定搭配，意为「花两小时挖坑种树」。其他三项不能接「两小时 + 动名词」结构。' },
-    { n: 3, options: ['more', 'less', 'clean', 'warm'], answer: 1,
+    { n: 3, options: ['more', 'less', 'clean', 'warm'], answer: 1, skill: 'context',
       why: '前文说山太干、第一批树大多死了，所以第二次改选「需要更少水」的树种，这是针对失败原因的调整。' },
-    { n: 4, options: ['him', 'them', 'us', 'themselves'], answer: 3,
+    { n: 4, options: ['him', 'them', 'us', 'themselves'], answer: 3, skill: 'grammar',
       why: '句意是「树是为孩子种的，不是为自己」，主语是 they（村民），反身代词用 themselves，与 for their children 形成对照。' },
-    { n: 5, options: ['dirty', 'clear', 'dry', 'wide'], answer: 1,
+    { n: 5, options: ['dirty', 'clear', 'dry', 'wide'], answer: 1, skill: 'context',
       why: '前文说河水原本是 muddy（浑浊的），种树后水土不再流失，河水重新变「清澈」，clear 与 muddy 构成反义对照。' },
-    { n: 6, options: ['forgetting', 'continuing', 'stopping', 'changing'], answer: 1,
+    { n: 6, options: ['forgetting', 'continuing', 'stopping', 'changing'], answer: 1, skill: 'context',
       why: '孩子们每年春天上山种树，是在「继续」王老汉开创的事。continuing 与后文 plant new trees 呼应。' },
-    { n: 7, options: ['some', 'any', 'no', 'much'], answer: 2,
-      why: '「干净的水和新鲜的空气是钱买不到的东西」，用 no money cannot buy 表达「再多钱也买不到」，强调其珍贵。' },
-    { n: 8, options: ['tomorrow', 'yesterday', 'now', 'later'], answer: 2,
+    { n: 7, options: ['some', 'any', 'no', 'much'], answer: 2, skill: 'grammar',
+      why: '句意是「干净的水和新鲜的空气是钱买不到的东西」。no money can buy = 再多的钱也买不到，no 放在主语位置否定整句；some / any / much 都无法表达「买不到」，且 no 与前面的 the things that 构成完整的限定关系。' },
+    { n: 8, options: ['tomorrow', 'yesterday', 'now', 'later'], answer: 2, skill: 'context',
       why: '这是著名的谚语：「种树最好的时间是四十年前，第二好的时间是现在。」now 与前半句「四十年前」形成时间对照，是全篇的点睛句。' },
   ],
   translation: `1960 年，中国北方山区的一个村庄几乎没有树。一下雨，水就顺着山坡冲下来，把土带走。庄稼长得很差，许多家庭在挨饿。
@@ -159,21 +164,21 @@ That afternoon, a girl from another class came to me and said she had wanted to 
 
 I still do not enjoy speaking in public. But I no longer ___(7)___ it. I have learned that being afraid and doing it anyway are two different things, and the second one is ___(8)___ that changes you.`,
   blanks: [
-    { n: 1, options: ['warm', 'cold', 'clean', 'strong'], answer: 1,
+    { n: 1, options: ['warm', 'cold', 'clean', 'strong'], answer: 1, skill: 'context',
       why: '前文说「想到站在六百人面前」就睡不着，后文说「嘴发干」，都是紧张的生理反应。手「发凉」与嘴干并列，共同构成紧张的表现。' },
-    { n: 2, options: ['laugh', 'leave', 'clap', 'shout'], answer: 0,
+    { n: 2, options: ['laugh', 'leave', 'clap', 'shout'], answer: 0, skill: 'inference',
       why: '父亲让他想「最坏会怎样」：忘词后听众「笑一笑」，然后坐下，会照常进行。laugh a little 语气轻，说明事情没那么严重；clap 是正面反应，与「最坏」矛盾。' },
-    { n: 3, options: ['proud', 'calm', 'angry', 'famous'], answer: 1,
+    { n: 3, options: ['proud', 'calm', 'angry', 'famous'], answer: 1, skill: 'context',
       why: '紧接着说「这没有让我变勇敢，但让我____」，与 brave 形成让步关系——不是不怕了，而是心里「安定」下来。calm 与后文「深吸一口气再开口」呼应。' },
-    { n: 4, options: ['loud', 'clear', 'low', 'happy'], answer: 2,
+    { n: 4, options: ['loud', 'clear', 'low', 'happy'], answer: 2, skill: 'context',
       why: '后文 so soft that the students in the back could hardly hear me 直接解释这个空：声音「低」。low 与 soft 同义复现，是典型的后文线索题。' },
-    { n: 5, options: ['noise', 'music', 'anger', 'applause'], answer: 3,
+    { n: 5, options: ['noise', 'music', 'anger', 'applause'], answer: 3, skill: 'inference',
       why: '讲完后「短暂的安静，然后大厅里充满了____」，紧接着说衬衫湿透，说明是紧张之后的放松。掌声（applause）是演讲结束的正面反馈。' },
-    { n: 6, options: ['tired', 'afraid', 'fond', 'sure'], answer: 1,
+    { n: 6, options: ['tired', 'afraid', 'fond', 'sure'], answer: 1, skill: 'collocation',
       why: '女孩说她也想在会上发言，但「____同样的事」。全文都在讲「紧张、害怕」，be afraid of 是固定搭配，与前文 my hands went cold 呼应。' },
-    { n: 7, options: ['enjoy', 'avoid', 'remember', 'forget'], answer: 1,
+    { n: 7, options: ['enjoy', 'avoid', 'remember', 'forget'], answer: 1, skill: 'context',
       why: '前句说「我仍然不喜欢当众讲话」，用 But 转折，后句说「不再____它」——即不再回避。avoid 与上句「不喜欢」形成「虽不喜欢但不再躲」的逻辑。' },
-    { n: 8, options: ['it', 'one', 'this', 'that'], answer: 0,
+    { n: 8, options: ['it', 'one', 'this', 'that'], answer: 0, skill: 'grammar',
       why: '此处指代前半句的 the second one（第二种做法：害怕但照做），用 it 指代这一件事，作 is 后的表语从句主语。that 通常指较远的事物，此处用 it 最自然。' },
   ],
   translation: `上个学期，英语老师让我在校会上做个演讲。我还没来得及想就答应了。然后我回家，两个晚上没睡着。
@@ -218,21 +223,21 @@ For the beekeepers, the work brings something else as well. Standing on a roof a
 
 So the next time you look up at a tall building, remember: there may be a small city of bees living above your head, quietly doing the work that keeps our ___(8)___ alive.`,
   blanks: [
-    { n: 1, options: ['worse', 'better', 'busier', 'colder'], answer: 1,
+    { n: 1, options: ['worse', 'better', 'busier', 'colder'], answer: 1, skill: 'context',
       why: '前文说乡下的农药会杀死蜜蜂，破折号后解释「城市里农药更少」，所以城市对蜜蜂来说「更好」。better 与前半段乡下对蜜蜂不利形成对比。' },
-    { n: 2, options: ['less', 'more', 'dirtier', 'sweeter'], answer: 1,
+    { n: 2, options: ['less', 'more', 'dirtier', 'sweeter'], answer: 1, skill: 'context',
       why: '前句说城市蜜蜂食物比人们想的更多（公园、花园、阳台的花），因此研究结果是「每箱产蜜更多」。more 与前句 more food 形成因果呼应。' },
-    { n: 3, options: ['fed', 'moved', 'washed', 'counted'], answer: 0,
+    { n: 3, options: ['fed', 'moved', 'washed', 'counted'], answer: 0, skill: 'context',
       why: '后文说蜜蜂早上飞出去、天黑前回来，自己找食，所以「不需要每天喂」。fed 与上文「城市里有的是花」呼应；moved / washed 与养蜂常识不符。' },
-    { n: 4, options: ['far', 'near', 'high', 'close'], answer: 0,
+    { n: 4, options: ['far', 'near', 'high', 'close'], answer: 0, skill: 'collocation',
       why: '后句说「让怕蜜蜂的人不会偶然碰到它们」，所以蜂箱要放在离门「远」的地方。far from 与后半句的目的形成因果。' },
-    { n: 5, options: ['money', 'space', 'nature', 'safety'], answer: 2,
+    { n: 5, options: ['money', 'space', 'nature', 'safety'], answer: 2, skill: 'inference',
       why: '后文解释：蜜蜂给植物授粉，植物多意味着空气更干净、街道更凉——这些都是「自然」层面的好处。nature 概括了后面整句的内容。' },
-    { n: 6, options: ['why', 'when', 'where', 'who'], answer: 0,
+    { n: 6, options: ['why', 'when', 'where', 'who'], answer: 0, skill: 'context',
       why: '后文给出两种解释（建筑的温度、花的种类），说明科学家在研究「为什么」城市蜜蜂过得好。why 与后文 Some believe… others think… 呼应。' },
-    { n: 7, options: ['busier', 'calmer', 'richer', 'luckier'], answer: 1,
+    { n: 7, options: ['busier', 'calmer', 'richer', 'luckier'], answer: 1, skill: 'context',
       why: '后句说「这是一种奇怪的平静（peace）」，说明他们感到「更平静」。calmer 与 peace 同义复现，是明确的后文线索。' },
-    { n: 8, options: ['city', 'farm', 'school', 'garden'], answer: 0,
+    { n: 8, options: ['city', 'farm', 'school', 'garden'], answer: 0, skill: 'inference',
       why: '全文讲的是城市屋顶养蜂，结尾回扣主题：蜜蜂在悄悄做着让「我们的城市」活下去的工作。city 与开头 cities 首尾呼应。' },
   ],
   translation: `人们想到蜜蜂，通常想到乡村。但在过去十年里，越来越多的蜜蜂住进了城市——在写字楼、酒店和学校的屋顶上。

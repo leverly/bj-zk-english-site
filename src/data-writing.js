@@ -21,7 +21,7 @@
 
 export const WRITING = [
   {
-    id: 'w1', level: '基础', type: '应用文·通知', title: '写一则英语角通知',
+    id: 'w1', level: '基础', type: '应用文·通知', structId: 'notice', title: '写一则英语角通知',
     scene: '英语角活动通知：学生会向全校同学发布活动安排。',
     prompt: '假定你是学生会主席李华。学校将于下周五下午举办英语角活动，请你用英语写一则通知。内容包括：\n1. 活动时间与地点；\n2. 活动内容（如英语歌曲、短剧表演、自由交流）；\n3. 邀请同学们参加。\n\n注意：1. 词数 80–100；2. 开头和结尾已给出，不计入总词数。',
     given: 'Boys and girls,\n\nMay I have your attention, please?\n\n______________________\n\nThank you.\n\nThe Students\' Union',
@@ -68,7 +68,7 @@ The Students' Union`,
     ],
   },
   {
-    id: 'w2', level: '重点', type: '应用文·书信', title: '给外国笔友回信介绍北京',
+    id: 'w2', level: '重点', type: '应用文·书信', structId: 'letter', title: '给外国笔友回信介绍北京',
     scene: '回信介绍北京：笔友寒假来京，需要你介绍景点与建议。',
     prompt: '你的英国笔友 Peter 打算寒假来北京旅游，来信询问北京的情况。请你给他回一封信，内容包括：\n1. 推荐一个你认为最值得去的地方，并说明理由；\n2. 提醒他来北京需要注意的一件事（如天气、交通、饮食）；\n3. 表示欢迎并期待见面。\n\n注意：1. 词数 80–100；2. 开头和结尾已给出，不计入总词数。',
     given: 'Dear Peter,\n\nI\'m very glad to hear that you are coming to Beijing this winter.\n\n______________________\n\nBest wishes,\n\nLi Hua',
@@ -115,7 +115,7 @@ Li Hua`,
     ],
   },
   {
-    id: 'w3', level: '重点', type: '议论文·观点', title: '谈谈中学生该不该做家务',
+    id: 'w3', level: '重点', type: '议论文·观点', structId: 'opinion', title: '谈谈中学生该不该做家务',
     scene: '投稿议论文：就「中学生该不该做家务」表明观点并说明理由。',
     prompt: '某英文报社正在开展讨论：中学生应不应该做家务？请你写一篇短文投稿，内容包括：\n1. 你的观点；\n2. 两条支持你观点的理由；\n3. 你平时做的家务及感受。\n\n注意：1. 词数 80–100；2. 文中不得出现真实姓名和校名。',
     given: '',
@@ -156,7 +156,7 @@ In a word, doing housework is our duty and a good way to grow up.`,
     ],
   },
   {
-    id: 'w4', level: '难点', type: '应用文·申请信', title: '写一封志愿者申请信',
+    id: 'w4', level: '难点', type: '应用文·申请信', structId: 'apply', title: '写一封志愿者申请信',
     scene: '申请信：向负责老师申请成为国际文化节志愿者。',
     prompt: '假定你是李华，你校正在招募国际文化节的志愿者。请你给负责老师 Mr Smith 写一封申请信，内容包括：\n1. 你申请的原因；\n2. 你的优势（如英语水平、相关经验）；\n3. 你希望能承担的工作。\n\n注意：1. 词数 80–100；2. 开头和结尾已给出，不计入总词数。',
     given: 'Dear Mr Smith,\n\nI am Li Hua, a student from Class 3, Grade 9. I am writing to apply to be a volunteer for the International Culture Festival.\n\n______________________\n\nYours sincerely,\n\nLi Hua',
@@ -203,6 +203,171 @@ Li Hua`,
     ],
   },
 ];
+
+/* ==========================================================
+   以下 4 篇为补充的高分范文（对齐河北项目的 8 篇规格）
+   体裁与现有 4 篇不重复：发言稿 / 倡议书 / 日记 / 邀请信
+   ========================================================== */
+WRITING.push(
+  {
+    id: 'w5', level: '重点', type: '应用文·发言稿', structId: 'opinion', title: '在英语班会上谈「我为学校骄傲」',
+    scene: '英语班会上，老师请同学们以 Proud of My School 为题发言。',
+    prompt: '假设你是李华，英语班会上老师请同学们以 Proud of My School 为题发言。请你写一篇发言稿，内容包括：\n1. 学校最美的地方；\n2. 你最喜欢的一门课或一位老师；\n3. 你对学校的祝愿。\n\n注意：1. 词数 80–100；2. 开头和结尾已给出，不计入总词数。',
+    given: 'Good morning, everyone.\n\n______________________\n\nThank you.',
+    outline: [
+      '第一段：点题 + 学校最美之处（一句话带出）',
+      '第二段：具体写课程或老师（用细节，不要空泛）',
+      '第三段：祝愿 + 收束（呼应开头）',
+    ],
+    keyPoints: [
+      { en: 'I want to talk about why I am proud of…', zh: '点题（why 引导宾语从句）' },
+      { en: 'The most beautiful place in our school is…', zh: '最高级点出「最美的地方」' },
+      { en: 'What I love most is…', zh: '「我最喜欢的是…」（what 引导主语从句）' },
+      { en: 'never makes us afraid of making mistakes', zh: '从不让我们害怕犯错' },
+      { en: 'a place where students feel safe to try', zh: '一个学生敢于尝试的地方（where 定语从句）' },
+      { en: 'I hope our school will always be…', zh: '祝愿句（结尾）' },
+    ],
+    model: `Good morning, everyone. Today I want to talk about why I am proud of our school.
+
+The most beautiful place in our school is the library. It has large windows, and in the afternoon the sunlight falls on the desks. The room is so quiet that I can hear the pages turning.
+
+What I love most is our English class. Ms. Wang never makes us afraid of making mistakes. She says a mistake is just a step on the way to being right.
+
+I hope our school will always be a place where students feel safe to try. Thank you.`,
+    highlights: [
+      { en: 'Today I want to talk about why I am proud of our school.', zh: '点题句：用 why 引导宾语从句，直接亮出主题，不绕弯。' },
+      { en: 'the sunlight falls on the desks', zh: '细节描写：不说「图书馆很美」，而是写阳光落在桌上，画面感一下就出来了。' },
+      { en: 'so quiet that I can hear the pages turning', zh: 'so…that 结果状语从句，用「听见翻页声」侧面写安静，比直接说 quiet 高明。' },
+      { en: 'She says a mistake is just a step on the way to being right.', zh: '高分句：用比喻把抽象道理讲具体，是拉开档次的写法。' },
+      { en: 'I hope our school will always be a place where students feel safe to try.', zh: '收束句：where 引导定语从句，把主题从「学校」升华到「敢尝试」。' },
+    ],
+    tips: [
+      '发言稿必须有称呼（Good morning, everyone.）和致谢（Thank you.），这是格式分。',
+      '三个提示点必须一一对应：最美之处、课程或老师、祝愿。漏一个就降档。',
+      '「最美之处」不要只写 beautiful，要写具体细节（阳光、声音、气味）——这是 8 分与 10 分的差别。',
+      '全文用一般现在时（学校是常态），祝愿句用 will，时态不要串。',
+    ],
+  },
+  {
+    id: 'w6', level: '重点', type: '应用文·倡议书', structId: 'proposal', title: '写一篇节约用水的倡议书',
+    scene: '你班要出一期「节约用水」主题黑板报，需要一篇倡议书。',
+    prompt: '假设你是班长李华，你班要出一期以「节约用水」为主题的黑板报。请你写一篇倡议书，内容包括：\n1. 为什么要节约用水；\n2. 同学们可以怎么做（至少两条）；\n3. 发出号召。\n\n注意：1. 词数 80–100；2. 开头和结尾已给出，不计入总词数。',
+    given: 'Dear classmates,\n\n______________________\n\nThe Students\' Union',
+    outline: [
+      '第一段：点明问题——水很宝贵，但浪费随处可见',
+      '第二段：给出 2 条具体做法（关紧水龙头、重复利用水）',
+      '第三段：号召大家一起行动',
+    ],
+    keyPoints: [
+      { en: 'Water is precious, but…', zh: '水很宝贵，但是…（转折点题）' },
+      { en: 'turn off the tap in time', zh: '及时关紧水龙头' },
+      { en: 'reuse the water for…', zh: '把水重复利用于…' },
+      { en: 'Every small action makes a difference.', zh: '每个小行动都有意义（倡议常用）' },
+      { en: 'Let\'s take action right now.', zh: '让我们现在就行动起来（号召句）' },
+    ],
+    model: `Dear classmates,
+
+Water is precious, but we often forget it. In our school, taps are often left running, and half-full bottles are thrown away.
+
+There are simple things we can do. First, turn off the tap in time and make sure it is not dripping. Second, reuse water whenever possible — the water used to wash vegetables can be used to clean the floor.
+
+Saving water is not a big thing for one person, but it is a big thing for all of us. Let's take action right now, starting from the tap in our own classroom.
+
+The Students' Union`,
+    highlights: [
+      { en: 'taps are often left running, and half-full bottles are thrown away', zh: '用两个具体细节（长流的水龙头、剩半瓶的水）代替空泛的 we waste water，画面感强。' },
+      { en: 'half-full bottles are thrown away', zh: 'half-full 一个复合形容词就写出「没喝完就扔」，比 a lot of water is wasted 精确。' },
+      { en: 'First… Second…', zh: '分点用序数词，阅卷老师一眼看到两条做法，结构分稳拿。' },
+      { en: 'Saving water is not a big thing for one person, but it is a big thing for all of us.', zh: '对偶 + 转折，把「个人小事」和「集体大事」对照，是倡议书的高分句。' },
+      { en: "Let's take action right now, starting from the tap in our own classroom.", zh: '号召句落到具体动作（教室的水龙头），比空喊口号有力。' },
+    ],
+    tips: [
+      '倡议书要有称呼和落款，缺一个就丢格式分。',
+      '「为什么节约」不要写成大段说教，用一两个身边细节（没关的水龙头、剩半瓶的水）就够了。',
+      '做法至少写两条，用 First / Second 明确标号，方便阅卷老师按点给分。',
+      '结尾的号召要具体，落到「教室的水龙头」比「请大家节约用水」更有说服力。',
+    ],
+  },
+  {
+    id: 'w7', level: '基础', type: '记叙文·日记', structId: 'diary', title: '写一篇参观博物馆的日记',
+    scene: '学校组织参观博物馆，请写一篇日记。',
+    prompt: '假设你是李华，今天学校组织参观了中国科学技术馆。请你用英语写一篇日记，内容包括：\n1. 今天去了哪里、和谁一起；\n2. 你看到了什么、做了什么；\n3. 你的感受。\n\n注意：1. 词数 80–100；2. 日记格式已给出，不计入总词数。',
+    given: 'Sunday, June 15   Sunny\n\n______________________',
+    outline: [
+      '第一段：交代时间、地点、同行的人',
+      '第二段：写看到的展品与亲手体验的项目（用细节）',
+      '第三段：写感受与收获',
+    ],
+    keyPoints: [
+      { en: 'Today our class visited…', zh: '今天我们班参观了…' },
+      { en: 'What impressed me most was…', zh: '最让我印象深刻的是…（what 主语从句）' },
+      { en: 'I tried… with my own hands', zh: '我亲手试了…' },
+      { en: 'It made me realize that…', zh: '这让我意识到…（感受句）' },
+      { en: 'What a meaningful day!', zh: '多么有意义的一天！（感叹收尾）' },
+    ],
+    model: `Sunday, June 15   Sunny
+
+Today our class visited the China Science and Technology Museum. We arrived at nine in the morning.
+
+What impressed me most was a room about space. I tried to pick up a "stone" with a special glove, just like an astronaut. It looked easy, but my fingers could hardly hold anything. Later I watched a robot play the piano, and it played better than I do.
+
+On the way back, I kept thinking about the visit. Science is not only in books — it is something you can touch and try. What a meaningful day!`,
+    highlights: [
+      { en: 'What impressed me most was a room about space.', zh: 'what 引导主语从句 + 最高级，一句话点出全文重点，日记的高分开头。' },
+      { en: 'tried to pick up a "stone" with a special glove, just like an astronaut', zh: '具体动作 + 比喻（just like an astronaut），把体验写得可感。' },
+      { en: 'It looked easy, but my fingers could hardly hold anything.', zh: '「看着容易、做起来难」的对比，用 hardly 体现真实感受，不是空夸。' },
+      { en: 'it played better than I do', zh: '比较级 + 自嘲，读起来自然有趣，比 it was wonderful 生动得多。' },
+      { en: 'science is not only in books — it is something you can touch and try.', zh: 'not only…but 的变体 + 破折号解释，收束有思想深度。' },
+    ],
+    tips: [
+      '日记必须有日期、星期、天气三要素（题目已给），正文用第一人称、过去时。',
+      '不要写成流水账「我们看了 A，又看了 B」。挑一件最难忘的写细，其余一句带过。',
+      '写感受要具体：「科学不只在书里，还能摸到」比「我学到了很多」有分量。',
+      '结尾可用感叹句收束（What a meaningful day!），日记里很自然。',
+    ],
+  },
+  {
+    id: 'w8', level: '难点', type: '应用文·邀请信', structId: 'letter', title: '邀请外教参加英语角',
+    scene: '你们班将举办英语角活动，想邀请外教 Ms. Green 参加。',
+    prompt: '假设你是李华，你们班将于本周五下午举办英语角活动，想邀请外教 Ms. Green 参加。请你给她写一封邀请信，内容包括：\n1. 活动的时间、地点与主题；\n2. 希望她做什么（如做简短发言、与学生交流）；\n3. 表达期待。\n\n注意：1. 词数 80–100；2. 开头和结尾已给出，不计入总词数。',
+    given: 'Dear Ms. Green,\n\n______________________\n\nYours sincerely,\nLi Hua',
+    outline: [
+      '第一段：说明写信目的——邀请她参加英语角',
+      '第二段：交代时间、地点、主题，以及希望她做的事',
+      '第三段：表达期待与感谢',
+    ],
+    keyPoints: [
+      { en: 'I am writing to invite you to…', zh: '写信目的（邀请信标准开场）' },
+      { en: 'It will be held in… on…', zh: '活动时间地点（被动语态）' },
+      { en: 'We would be grateful if you could…', zh: '礼貌请求（虚拟语气）' },
+      { en: 'share your experience with us', zh: '和我们分享你的经历' },
+      { en: 'We are looking forward to your reply.', zh: '期待回复（结尾句）' },
+    ],
+    model: `Dear Ms. Green,
+
+I am writing to invite you to our English Corner this Friday afternoon. The topic is "My Favourite Book", and we all thought of you at once.
+
+The activity will be held in Room 302 from 3:00 to 4:30. We would be grateful if you could give us a short talk about a book you love, and then talk with us in small groups. Your ideas always make us see things in a new way.
+
+We know you are busy, but we do hope you can come. We are looking forward to your reply.
+
+Yours sincerely,
+Li Hua`,
+    highlights: [
+      { en: 'I am writing to invite you to our English Corner this Friday afternoon.', zh: '邀请信标准开场，一句话交代「写信目的 + 活动 + 时间」。' },
+      { en: 'we all thought of you at once', zh: '一句「我们立刻想到了您」，把邀请写得真诚，比 I hope you can come 有温度。' },
+      { en: 'We would be grateful if you could give us a short talk…', zh: '虚拟语气表达礼貌请求，是邀请信拉开档次的关键句式。' },
+      { en: 'Your ideas always make us see things in a new way.', zh: '具体夸赞（让我们换个角度看问题），比 You are a good teacher 得体得多。' },
+      { en: 'We know you are busy, but we do hope you can come.', zh: '先体谅再请求，用 do 强调，分寸感好，不显得强人所难。' },
+    ],
+    tips: [
+      '邀请信三要素：说明目的、交代细节（时间地点主题）、表达期待，缺一不可。',
+      '「希望她做什么」要具体：做简短发言 + 分小组交流，比「来参加一下」显得有准备。',
+      '礼貌请求用 We would be grateful if you could…，比 Please come 得体得多。',
+      '结尾要表达期待并致谢，注意落款用 Yours sincerely，署名 Li Hua。',
+    ],
+  },
+);
 
 /* ==========================================================
    写作通用方法论：技巧 / 结构模板 / 句型库
@@ -283,6 +448,28 @@ export const WRITING_STRUCTURES = [
       { label: '优势一（带事实）', en: 'First, I am good at …. Last year, I ….' },
       { label: '优势二 / 希望承担的工作', en: 'Second, I have experience in …. If I am chosen, I would like to ….' },
       { label: '礼貌收尾', en: 'I would appreciate it if you could give me the chance.' },
+    ],
+  },
+  {
+    id: 'proposal', name: '倡议书', icon: '🌱',
+    use: '节约用水、保护环境、光盘行动、文明上网',
+    blocks: [
+      { label: '称呼 + 指出问题', en: 'Dear classmates, … is precious, but we often forget it.' },
+      { label: '具体做法一', en: 'First, turn off the tap in time and make sure it is not dripping.' },
+      { label: '具体做法二', en: 'Second, reuse water whenever possible.' },
+      { label: '号召行动', en: 'Let\'s take action right now, starting from ….' },
+      { label: '落款', en: 'The Students\' Union / Li Hua' },
+    ],
+  },
+  {
+    id: 'diary', name: '日记 / 经历', icon: '📔',
+    use: '记一次活动、一次难忘的经历、一天的生活',
+    blocks: [
+      { label: '日期 + 星期 + 天气', en: 'Sunday, June 15   Sunny' },
+      { label: '交代时间地点人物', en: 'Today our class visited …. We arrived at ….' },
+      { label: '最难忘的一件事（写细节）', en: 'What impressed me most was …. I tried to ….' },
+      { label: '感受与收获', en: 'It made me realize that …. / I learned that ….' },
+      { label: '感叹收尾', en: 'What a meaningful day!' },
     ],
   },
 ];
