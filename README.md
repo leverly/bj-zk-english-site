@@ -161,7 +161,7 @@ zhongkao-site/
 │   ├── data-cloze.js     完形填空 4 篇 32 空（手写）
 │   ├── data-writing.js   书面表达方法体系 + 8 篇范文（手写）
 │   └── data-audio.js     朗读音频映射（tools/gen_audio.py 自动生成）
-├── audio/                1913 条 Edge TTS 朗读音频（单词/范文/原文）
+├── audio/                1893 条 Edge TTS 朗读音频（单词 / 范文 / 句型）
 ├── tools/                构建校验、音频生成、文本导出脚本
 ├── reference/            词典、解析脚本、短语源
 └── *.html themes/ grammar/ reading/ writing/    构建产物
@@ -183,7 +183,7 @@ zhongkao-site/
 - 听说机考 40 分需专用音频与录音评测，**不在本站范围**。
 - 词频分档是启发式推断，不要当作官方难度等级。
 - 学习记录存在浏览器 localStorage，换浏览器或清缓存会丢失，请用「学习数据」页导出备份。
-- 全站朗读音频由 **Edge TTS（en-GB-SoniaNeural）预生成**，共 1913 条 25MB，音色统一；个别新增文本若尚未生成音频，才退回浏览器语音合成。
+- 朗读音频由 **Edge TTS（en-GB-SoniaNeural）预生成**，共 1893 条 17MB，音色统一；个别新增文本若尚未生成音频，才退回浏览器语音合成。阅读原文不提供朗读。
 
 ## 题型专项（2025 补充）
 
@@ -199,7 +199,7 @@ zhongkao-site/
 
 ### 朗读音频生成
 
-站点所有朗读（单词、范文、句型、阅读原文）都用 **Edge TTS** 预生成，音色统一为
+站点所有朗读（单词、范文、句型）都用 **Edge TTS** 预生成，音色统一为
 `en-GB-SoniaNeural`（英式女声），rate `-10%`，转成 mono 32kbps 的 mp3。
 
 ```bash

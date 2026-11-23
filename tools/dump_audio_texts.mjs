@@ -3,8 +3,6 @@
    这样避免用正则去解析带转义的 JS 字面量。 */
 import { WORDS } from '../src/data-words.js';
 import { WRITING, WRITING_PHRASES, WRITING_STRUCTURES } from '../src/data-writing.js';
-import { PASSAGES } from '../src/data-reading.js';
-import { CLOZE } from '../src/data-cloze.js';
 
 const texts = [];
 const add = (t) => {
@@ -22,10 +20,6 @@ WRITING.forEach((w) => {
 });
 WRITING_PHRASES.forEach((g) => (g.items || []).forEach((it) => add(it.en)));
 WRITING_STRUCTURES.forEach((s) => (s.blocks || []).forEach((b) => add(b.en)));
-
-/* 6) 阅读 + 完形原文（「朗读全文」用）；完形的空位标记换成省略号 */
-PASSAGES.forEach((p) => add(p.passage));
-CLOZE.forEach((c) => add(String(c.passage).replace(/___\(\d+\)___/g, ' ... ')));
 
 /* 去重保序 */
 const seen = new Set();

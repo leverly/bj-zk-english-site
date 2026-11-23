@@ -1762,10 +1762,7 @@ function buildReading() {
           <h3>${esc(p.title)}</h3>
           <div class="meta">${p.level} 篇 · ${m.name} · ${totalItems} 题</div>
         </div>
-        <div class="article-acts">
-          <button class="btn xs ghost say-passage" type="button" title="朗读原文">🔊 朗读原文</button>
-          <button class="btn xs ghost fold-btn" type="button">收起原文</button>
-        </div>
+        <button class="btn xs ghost fold-btn" type="button">收起原文</button>
       </div>
 
       <div class="note strategy">${esc(p.intro)}</div>
@@ -1951,46 +1948,6 @@ ZK.ready(function(){
       var hidden = pw.style.display === 'none';
       pw.style.display = hidden ? '' : 'none';
       btn.textContent = hidden ? '收起原文' : '展开原文';
-    });
-  });
-
-  /* 朗读原文：优先播 Edge TTS 预生成音频，没有则退回浏览器合成 */
-  var PASSAGE_BY_ID = {};
-  (window.ZK_DATA.READ_ALL || window.ZK_DATA.PASSAGES || []).forEach(function(p){ PASSAGE_BY_ID[p.id] = p; });
-  document.querySelectorAll('.reading-stage').forEach(function(card){
-    var btn = card.querySelector('.say-passage');
-    if (!btn) return;
-    var audio = null, playing = false;
-    function reset(){
-      playing = false;
-      btn.textContent = '🔊 朗读原文';
-      btn.classList.remove('on');
-    }
-    btn.addEventListener('click', function(){
-      var p = PASSAGE_BY_ID[card.id];
-      if (!p) return;
-      if (playing) {                     // 再点一次 = 停止
-        P.stopAudio();
-        reset();
-        return;
-      }
-      var isCloze = p.level === 'CZ';
-      // 完形原文里的空位标记换成停顿，朗读时不该念出「第几空」
-      var text = String(p.passage).replace(/___\\(\\d+\\)___/g, ' ... ');
-      var src = P.audioSrc ? P.audioSrc(text.trim()) : '';
-      if (!src) {
-        P.toast && P.toast('这段原文暂无音频');
-        return;
-      }
-      playing = true;
-      btn.textContent = '⏸ 停止';
-      btn.classList.add('on');
-      if (!audio) { audio = new Audio(); }
-      audio.onended = reset;
-      audio.onerror = reset;
-      audio.src = src;
-      var pr = audio.play();
-      if (pr && pr.catch) pr.catch(function(){ reset(); });
     });
   });
 });
@@ -2288,7 +2245,6 @@ ZK.ready(function(){
         active: 'reading',
         dataKeys: ['PASSAGES'],
         dataExtra: { READ_ALL: ALL_PASSAGES },
-        audioTexts: [String(p.passage).replace(/___\(\d+\)___/g, ' ... ')],
         body: `
 <div class="page-head">
   <div class="crumb"><a href="../index.html">首页</a> / <a href="../reading.html">整篇理解学阅读</a> / <a href="${slug}.html">${lv} ${esc(m.name)}</a> / 第 ${idx + 1} 篇</div>
@@ -2405,7 +2361,6 @@ ZK.ready(function(){
       active: 'reading',
       dataKeys: ['PASSAGES'],
       dataExtra: { READ_ALL: ALL_PASSAGES },
-      audioTexts: [String(p.passage).replace(/___\(\d+\)___/g, ' ... ')],
       body: `
 <div class="page-head">
   <div class="crumb"><a href="../index.html">首页</a> / <a href="../reading.html">整篇理解学阅读</a> / <a href="cz.html">完形填空</a> / 第 ${idx + 1} 篇</div>
@@ -3023,7 +2978,7 @@ function buildContent() {
       <li>听说机考 40 分需要专用音频与录音评测，<b>不在本站范围</b>，请配合北京教育考试院官方体验系统或真题练习。</li>
       <li>词频分档是启发式推断，不要当作官方难度等级使用。</li>
       <li>学习记录保存在浏览器 localStorage，换浏览器或清缓存会丢失，请用「学习数据」页的导出备份。</li>
-      <li>全站朗读音频由 <b>Edge TTS（en-GB-SoniaNeural，英式女声）预生成</b>，共 ${Object.keys(AUDIO).length} 条、约 25MB，音色全站统一；仅在新增文本尚未生成音频时，才退回浏览器自带语音合成。</li>
+      <li>单词与写作部分（范文、句型）的朗读音频由 <b>Edge TTS（en-GB-SoniaNeural，英式女声）预生成</b>，共 ${Object.keys(AUDIO).length} 条、约 17MB，音色全站统一；仅在新增文本尚未生成音频时，才退回浏览器自带语音合成。阅读与完形的原文不提供朗读，专注读法训练。</li>
     </ul>
   </div>
 </section>
