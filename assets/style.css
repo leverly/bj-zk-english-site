@@ -1095,3 +1095,9 @@ body.js-ready .reveal.out { opacity: 0; transform: translateY(14px); }
 
 /* 每日目标区的小标签：不能复用 .quiz-count，否则会与闯关进度条的选择器撞车 */
 .goal-label { font-size: .82rem; color: var(--text-3); font-weight: 600; }
+
+/* 语法族折叠卡：<details> 收起时必须真正隐藏内容。
+   父级 .gcard 设了 overflow:hidden，视觉上看似收起，
+   但 .gcard-body 仍占布局高度（实测 1236px），会把页面撑出大片空白。
+   显式声明，不依赖浏览器默认行为。 */
+.gcard:not([open]) > .gcard-body { display: none; }

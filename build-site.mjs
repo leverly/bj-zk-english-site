@@ -893,7 +893,8 @@ function buildGrammar() {
         <div class="trap-why">${rich(tr.why)}</div>
       </div>`).join('');
 
-      return `<details class="gcard"${i === 0 ? ' open' : ''}>
+      // 语法族页面默认全部收起，由用户自行展开要看的考点
+      return `<details class="gcard">
         <summary>
           <span class="gcard-name">${esc(t.name)}</span>
           <span class="lv ${lvCls}">${esc(t.level)}</span>
