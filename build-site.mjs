@@ -598,16 +598,16 @@ function buildQuiz() {
 <section class="section" style="margin-top:16px">
   <div class="card" style="padding:20px 24px">
     <div class="today-goal-row">
-      <span>今日已背 <b id="kToday">0</b> / <b id="kGoal">20</b> 词 · 🔥 连续打卡 <b id="kStreak">0</b> 天</span>
+      <span>今日已背 <b id="kToday">0</b> / <b id="kGoal">50</b> 词 · 🔥 连续打卡 <b id="kStreak">0</b> 天</span>
       <span class="today-pct" id="kPct">0%</span>
     </div>
     <div class="bar"><i id="kBar" style="width:0%"></i></div>
     <div class="chips" style="margin-top:14px" id="goalChips">
       <span class="goal-label" style="margin-right:6px">每日目标</span>
       <button class="chip" data-goal="10">10 词</button>
-      <button class="chip on" data-goal="20">20 词</button>
+      <button class="chip" data-goal="20">20 词</button>
       <button class="chip" data-goal="30">30 词</button>
-      <button class="chip" data-goal="50">50 词</button>
+      <button class="chip on" data-goal="50">50 词</button>
     </div>
   </div>
 </section>
@@ -666,7 +666,7 @@ function buildQuiz() {
 
       <div class="setup-group">
         <div class="kicker">本轮词数</div>
-        <p class="setup-hint" style="margin-top:0">每轮出 <b id="lenEcho">20</b> 词，与上方「每日目标」保持一致</p>
+        <p class="setup-hint" style="margin-top:0">每轮出 <b id="lenEcho">50</b> 词，与上方「每日目标」保持一致</p>
       </div>
     </div>
 
@@ -732,15 +732,21 @@ function refreshDaily() {
   set('#kPct', pct + '%');
   const bar = document.querySelector('#kBar');
   if (bar) bar.style.width = pct + '%';
+  // 两侧都归一化成数字再比较，避免 goal 是字符串时高亮全灭
+  const curGoal = parseInt(Z.goal(), 10);
   document.querySelectorAll('#goalChips .chip').forEach(c => {
-    c.classList.toggle('on', parseInt(c.getAttribute('data-goal'), 10) === Z.goal());
+    c.classList.toggle('on', parseInt(c.getAttribute('data-goal'), 10) === curGoal);
   });
   set('#lenEcho', Z.goal());
 }
 refreshDaily();
 document.addEventListener('zk:day', refreshDaily);
+document.addEventListener('zk:goal', refreshDaily);
 document.querySelectorAll('#goalChips .chip').forEach(c => {
-  c.addEventListener('click', () => { Z.setGoal(c.getAttribute('data-goal')); refreshDaily(); });
+  c.addEventListener('click', () => {
+    Z.setGoal(parseInt(c.getAttribute('data-goal'), 10));
+    refreshDaily();
+  });
 });
 
 function pick(sel, attr, cb) {

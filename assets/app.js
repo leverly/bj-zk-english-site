@@ -219,7 +219,14 @@
   var DAYLOG_KEY = 'zk-daylog-v1';
   var GOAL_KEY = 'zk-goal-v1';
   var daylog = load(DAYLOG_KEY, {});
-  var goal = load(GOAL_KEY, 20);
+  // 归一化为数字：历史数据/导入档案里可能存成字符串 "50"，
+  // 若放任字符串流进 goal，todayPct 的除法与 chip 的 === 比较都会失效。
+  function normGoal(v) {
+    var n = parseInt(v, 10);
+    if (!n || n < 5) n = 50;
+    return Math.max(5, Math.min(200, n));
+  }
+  var goal = normGoal(load(GOAL_KEY, 50));
   function dayKey(d) {
     var t = d || new Date();
     return t.getFullYear() + '-' + String(t.getMonth() + 1).padStart(2, '0') + '-' + String(t.getDate()).padStart(2, '0');
@@ -228,8 +235,15 @@
   Z.todayWords = function () { return (daylog[dayKey()] || {}).words || 0; };
   Z.todayQuestions = function () { return (daylog[dayKey()] || {}).questions || 0; };
   Z.goal = function () { return goal; };
-  Z.setGoal = function (n) { goal = n; store(GOAL_KEY, goal); document.dispatchEvent(new CustomEvent('zk:goal')); };
-  Z.todayPct = function () { return Math.min(100, Math.round(Z.todayWords() / goal * 100)); };
+  Z.setGoal = function (n) {
+    // 必须归一化成数字：chip 传进来的是 data-goal 字符串，
+    // 直接存字符串会让 refreshDaily 里的 === 比较永远不成立（高亮全灭）。
+    goal = normGoal(n);
+    store(GOAL_KEY, goal);
+    document.dispatchEvent(new CustomEvent('zk:goal'));
+    return goal;
+  };
+  Z.todayPct = function () { return goal ? Math.min(100, Math.round(Z.todayWords() / goal * 100)) : 0; };
   Z.bumpDay = function (kind, n) {
     var k = dayKey();
     daylog[k] = daylog[k] || {};
@@ -364,7 +378,7 @@
       _v: 1,
       _at: new Date().toISOString(),
       known: load(KNOWN_KEY, {}), srs: load(SRS_KEY, {}), daylog: load(DAYLOG_KEY, {}),
-      goal: load(GOAL_KEY, 20), wbook: load(WBOOK_KEY, {}), qlog: load(QLOG_KEY, {}),
+      goal: load(GOAL_KEY, 50), wbook: load(WBOOK_KEY, {}), qlog: load(QLOG_KEY, {}),
       profile: load(PROFILE_KEY, {}), theme: load(THEME_KEY, null),
     };
     var blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
