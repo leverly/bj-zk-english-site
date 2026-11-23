@@ -1,5 +1,5 @@
 /* ==========================================================
-   中考英语领航 · 静态站点生成器
+   北京中考领航 · 静态站点生成器
    用法：node build-site.mjs
    输出：根目录 index.html 及各页面、themes/ grammar/ 子目录
    ========================================================== */
@@ -73,8 +73,8 @@ function write(rel, content) {
 }
 
 /* ---------------- 站点标识 ---------------- */
-const SITE_NAME = '中考英语领航';
-const SITE_SHORT = '中考领航';
+const SITE_NAME = '北京中考领航';
+const SITE_SHORT = '北京中考领航';
 
 const NAV = [
   { href: 'index.html', label: '首页', key: 'home' },
@@ -92,7 +92,7 @@ const LOGO_SVG = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" st
 const LOGO_HTML = (base) => `<a class="logo" href="${base}index.html">
   <span class="logo-mark">${LOGO_SVG}</span>
   <span>${SITE_SHORT}</span>
-  <span class="logo-badge">中考</span>
+  <span class="logo-badge">英语</span>
 </a>`;
 
 const HEADER = (base, active) => `<div class="scroll-progress"></div>
@@ -115,7 +115,7 @@ const FOOTER = (base) => `<footer class="foot">
       <div class="logo" style="margin-bottom:10px">
         <span class="logo-mark">${LOGO_SVG}</span>
         <span>${SITE_SHORT}</span>
-        <span class="logo-badge">中考</span>
+        <span class="logo-badge">英语</span>
       </div>
       <p style="line-height:1.7;margin:0;color:var(--text-2)">面向北京中考英语的系统备考站。${STATS.total} 条大纲词条、${GRAMMAR_STATS.topics} 个语法考点、${Q_STATS.total} 道语法精练。</p>
     </div>
