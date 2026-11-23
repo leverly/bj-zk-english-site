@@ -161,7 +161,7 @@ const FOOTER = (base) => `<footer class="foot">
         <span>${SITE_SHORT}</span>
         <span class="logo-badge">英语</span>
       </div>
-      <p style="line-height:1.7;margin:0;color:var(--text-2)">面向北京中考英语的系统备考站：${STATS.total} 条课标词条、${GRAMMAR_STATS.topics} 个语法考点、${Q_STATS.total} 道语法精练，加上 ${PASSAGE_N} 篇完形与阅读、${WRITING_N} 道写作练习。</p>
+      <p style="line-height:1.7;margin:0;color:var(--text-2)">面向北京中考英语的系统备考站：${STATS.total} 条课标词条、${GRAMMAR_STATS.topics} 个语法考点、${Q_STATS.total} 道语法精练，加上 ${PASSAGE_N} 篇完形与阅读，以及写作的方法与句型库。</p>
     </div>
     <div class="col">
       <h4>每日备考</h4>
@@ -264,7 +264,7 @@ function buildHome() {
       <p class="lede">
  不只背单词。本站按北京卷笔试结构铺成 <b>词汇 · 语法 · 篇章 · 写作</b> 四条主线：
  <b>${STATS.total} 条课标词条</b>打底，<b>${GRAMMAR_STATS.topics} 个语法考点</b>配 <b>${Q_STATS.total} 道精练</b>，
- 再用<b>${PASSAGE_N} 篇完形与阅读</b>（${READING_ITEM_N} 题，含阅读表达）和 <b>${WRITING_N} 道写作练习</b>把卷面走完。
+ 再用<b>${PASSAGE_N} 篇完形与阅读</b>（${READING_ITEM_N} 题，含阅读表达）和<b>写作的方法、模板与句型库</b>把卷面走完。
  笔试 <b>60 分每一块都有对应练习</b>，每题都讲清「为什么对、错项错在哪」。
  </p>
       <div class="hero-cta">
@@ -365,7 +365,7 @@ function buildHome() {
     <a class="coverage-row on" href="writing.html">
       <span class="cv-score">10</span>
       <span class="cv-part">书面表达</span>
-      <span class="cv-note">卷面 1 题 10 分 · 要求 80–100 词<span class="cv-own">本站：五步法 + ${WRITING_STRUCTURES.length} 类模板 + ${WRITING_PHRASE_N} 句句型库 + ${WRITING_N} 道练习</span></span>
+      <span class="cv-note">卷面 1 题 10 分 · 要求 80–100 词<span class="cv-own">本站：三条提分线 + 五步法 + ${WRITING_STRUCTURES.length} 类模板 + ${WRITING_PHRASE_N} 句句型库</span></span>
       <span class="cv-flag">✓ 已覆盖</span>
     </a>
     <div class="coverage-row off">
@@ -442,9 +442,9 @@ function buildHome() {
           <h3>把想法写出来，10 分稳拿</h3>
         </div>
       </div>
-      <p class="desc">唯一能完全由自己控制得分的题型。先讲<b>五步写作法</b>（审题 → 定时态人称 → 搭框架 → 套句式 → 查三样），再给 ${WRITING_STRUCTURES.length} 类文体模板、${WRITING_PHRASE_N} 句句型库、${WRITING_TRAPS.length} 个高频失分点，最后是 ${WRITING_N} 道练习供动笔。</p>
+      <p class="desc">唯一能完全由自己控制得分的题型。先讲<b>五步写作法</b>（审题 → 定时态人称 → 搭框架 → 套句式 → 查三样），再给 ${WRITING_STRUCTURES.length} 类文体模板、${WRITING_PHRASE_N} 句句型库与 ${WRITING_TRAPS.length} 个高频失分点，每个环节都落到能直接照做的一步。</p>
       <div class="track-meta">
-        <span>${WRITING_STRUCTURES.length} 类模板</span><span>${WRITING_PHRASE_N} 句句型</span><span>${WRITING_N} 道练习</span><span>对应 10 分</span>
+        <span>${WRITING_STRUCTURES.length} 类模板</span><span>${WRITING_PHRASE_N} 句句型</span><span>${WRITING_TRAPS.length} 个失分点</span><span>对应 10 分</span>
       </div>
       <span class="track-go">书面表达 · 方法与练习 →</span>
     </a>
@@ -532,7 +532,7 @@ function buildHome() {
     </details>
     <details class="faq-item">
       <summary>写作部分能练吗？为什么不给范文？</summary>
-      <p>能练，而且练习的重点就是「自己写」。写作是<b>唯一能完全由自己控制得分</b>的题型，所以本站把可操作的部分全给出来：<b>五步写作法</b>（审题划要点 → 定时态人称 → 搭三段框架 → 套句式写正文 → 查三样东西）、<b>${WRITING_STRUCTURES.length} 类文体的结构模板</b>（通知 / 书信 / 议论文 / 申请信，每类 5 个写作块）、<b>句型库</b>（按功能分 ${WRITING_PHRASES.length} 类共 ${WRITING_PHRASE_N} 句）、<b>${WRITING_TRAPS.length} 个高频失分点</b>，再加 ${WRITING_N} 道练习——每道都给题目要求、已给开头结尾、逐段提纲、必备句式与评分要点。<b>范文故意不给</b>：一旦有现成范文，多数人会先看再抄，动笔这一步就废了。写完对照评分要点和六个失分点逐条自查，效果比抄十篇范文好。</p>
+      <p>能练，而且练习的重点就是「自己写」。写作是<b>唯一能完全由自己控制得分</b>的题型，所以本站把可操作的部分全给出来：<b>五步写作法</b>（审题划要点 → 定时态人称 → 搭三段框架 → 套句式写正文 → 查三样东西）、<b>${WRITING_STRUCTURES.length} 类文体的结构模板</b>（通知 / 书信 / 议论文 / 申请信，每类 5 个写作块）、<b>句型库</b>（按功能分 ${WRITING_PHRASES.length} 类共 ${WRITING_PHRASE_N} 句）、<b>${WRITING_TRAPS.length} 个高频失分点</b>，。<b>范文故意不给</b>：一旦有现成范文，多数人会先看再抄，动笔这一步就废了。写完对照评分要点和六个失分点逐条自查，效果比抄十篇范文好。</p>
     </details>
     <details class="faq-item">
       <summary>孩子平时作业多，每天需要花多长时间？</summary>
@@ -548,7 +548,7 @@ function buildHome() {
     </details>
     <details class="faq-item">
       <summary>词表和语法点是官方发布的吗？</summary>
-      <p>词表基于义务教育英语课程标准三级词汇，并参考公开词典的中考标签整理；语法考点、练习题、完形、阅读与写作练习是按北京中考英语考试说明与北京卷真题题型编写的原创内容，不是官方出版材料。词频分档为按语料词频的启发式推断，详见<a href="content.html">内容说明</a>。</p>
+      <p>词表基于义务教育英语课程标准三级词汇，并参考公开词典的中考标签整理；语法考点、练习题、完形与阅读篇章，以及写作方法，是按北京中考英语考试说明与北京卷真题题型编写的原创内容，不是官方出版材料。词频分档为按语料词频的启发式推断，详见<a href="content.html">内容说明</a>。</p>
     </details>
   </div>
 </section>
@@ -599,7 +599,7 @@ function buildHome() {
 `;
   write('index.html', page({
     title: '北京中考英语备考系统',
-    desc: `覆盖北京中考英语笔试 60 分全部题型：${STATS.total} 条课标词条、${GRAMMAR_STATS.topics} 个语法考点与 ${Q_STATS.total} 道精练，${PASSAGE_N} 篇完形与阅读（${READING_ITEM_N} 题含阅读表达），${WRITING_N} 道写作练习。`,
+    desc: `覆盖北京中考英语笔试 60 分全部题型：${STATS.total} 条课标词条、${GRAMMAR_STATS.topics} 个语法考点与 ${Q_STATS.total} 道精练，${PASSAGE_N} 篇完形与阅读（${READING_ITEM_N} 题含阅读表达），以及写作的方法与句型库。`,
     active: 'home',
     body, script, dataKeys: [],
   }));
@@ -1114,8 +1114,7 @@ function buildGrammar() {
 function buildWriting() {
   /* ==========================================================
      书面表达（参考河北项目的模块与页面组织）
-       一级 writing.html          三条提分线 + 方法四件套 + 体裁索引
-       二级 writing/<id>.html     左右两栏：左=题目/提纲/评分要点，右=亮点句型（可朗读）+自查
+       writing.html  三条提分线 + 五步法 + 结构模板 + 句型库 + 失分点
      产品决定：不附范文，范文留给学生自己写。
      ========================================================== */
 
@@ -1139,94 +1138,18 @@ function buildWriting() {
     },
   ];
 
-  /* 单篇的左右两栏（左：题目/提纲/评分要点；右：亮点句型/自查） */
-  const practiceDetail = (w, idx) => `
-<section class="section" style="margin-top:22px">
-  <div class="wd-grid">
-    <div class="wd-col">
-      <div class="card" style="padding:20px 22px">
-        <div class="kicker">📋 题目要求</div>
-        <div class="prompt-box" style="margin-top:10px">${esc(w.prompt).replace(/\n/g, '<br>')}</div>
-        ${w.given ? `<div class="given-box" style="margin-top:12px">${esc(w.given).replace(/\n/g, '<br>')}</div>
-        <div class="note" style="margin-top:8px">↑ 已给出的开头 / 结尾，不计入词数，抄上去即可</div>` : ''}
-      </div>
 
-      <div class="card" style="padding:20px 22px;margin-top:16px">
-        <div class="kicker">🗂 逐段怎么写</div>
-        <ol class="wd-outline">${w.outline.map((o) => `<li>${esc(o)}</li>`).join('')}</ol>
-      </div>
-
-      <div class="card" style="padding:20px 22px;margin-top:16px">
-        <div class="kicker">✅ 评分要点<span class="case-note">写完后逐条自查</span></div>
-        <ul class="wd-scoring">${w.tips.map((t) => `<li>${esc(t)}</li>`).join('')}</ul>
-      </div>
-    </div>
-
-    <div class="wd-col">
-      <div class="card wd-hl-card" style="padding:20px 22px">
-        <div class="kicker" style="display:flex;align-items:center;justify-content:space-between;gap:10px">
-          <span>🔑 亮点句型（背下来直接用）</span>
-          <button class="btn xs soft" id="sayAll" type="button">🔊 全部朗读</button>
-        </div>
-        <div class="wd-hl">
-          ${(w.highlights || []).map((h, hi) => `<div class="wd-hl-item">
-            <div class="wd-hl-en">${esc(h.en)} <button class="btn xs ghost wd-say" type="button" data-hl="${hi}" title="朗读这句">🔊</button></div>
-            <div class="wd-hl-zh">${esc(h.zh)}</div>
-          </div>`).join('')}
-        </div>
-      </div>
-
-      <div class="card" style="padding:20px 22px;margin-top:16px">
-        <div class="kicker">🔑 必备句式<span class="case-note">可直接套用</span></div>
-        <div class="phrase-list" style="margin-top:10px">
-          ${w.keyPoints.map((k) => `<div class="phrase-row">
-            <span class="ph-en">${esc(k.en)}</span>
-            <span class="ph-zh">${esc(k.zh)}</span>
-          </div>`).join('')}
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<section class="section">
-  <div class="card">
-    <h3>📝 交卷前的最后检查</h3>
-    <ol class="final-check">
-      <li>题目给的 <b>3 条要点</b>，是否每条都有对应句子？</li>
-      <li>全文时态是否统一？</li>
-      <li>第三人称单数的动词都加 <b>-s</b> 了吗？</li>
-      <li>many / some / two 后面的名词加 <b>-s</b> 了吗？</li>
-      <li>每个理由前有 <b>First / Second / Besides</b> 这类连接词吗？</li>
-      <li>字数够 <b>80 词</b> 了吗？</li>
-    </ol>
-  </div>
-</section>`;
-
-  /* ---------- 一级：writing.html —— 三条提分线 + 方法 + 体裁索引 ---------- */
-  const cards = WRITING.map((w, i) => `
-    <a class="card writing-card" href="writing/${w.id}.html">
-      <span class="passage-no">练习 ${i + 1}</span>
-      <div class="pc-top">
-        <span class="card-ico gold">✎</span>
-        <span class="pc-type">${esc(w.type)}</span>
-        <span class="wt-tag lv">${esc(w.level)}</span>
-      </div>
-      <h3>${esc(w.title)}</h3>
-      <p class="pc-intro">${esc(w.scene || w.prompt.split('\n')[0])}</p>
-      <div class="pc-foot"><span>${w.outline.length} 段提纲 · ${(w.highlights || []).length} 个亮点句</span><span class="pc-go">开始写 →</span></div>
-    </a>`).join('');
-
+  /* ---------- writing.html —— 三条提分线 + 方法四件套 ---------- */
   write('writing.html', page({
     title: '书面表达 · 10 分',
-    desc: `北京中考英语书面表达专项：三条提分线、五步写作法、${WRITING_STRUCTURES.length} 类结构模板、${WRITING_PHRASE_N} 句句型库、${WRITING_TRAPS.length} 个高频失分点与 ${WRITING_N} 道写作练习。`,
+    desc: `北京中考英语书面表达专项：三条提分线、五步写作法、${WRITING_STRUCTURES.length} 类结构模板、${WRITING_PHRASE_N} 句句型库、${WRITING_TRAPS.length} 个高频失分点。`,
     active: 'writing',
     dataKeys: [],
     body: `
 <div class="page-head">
   <div class="crumb"><a href="index.html">首页</a> / 书面表达</div>
   <h1>书面表达</h1>
-  <p class="lede">北京卷第五部分 <b>10 分</b>，通常要求 80–100 词。这是<b>唯一能完全由自己控制得分</b>的题型——只要要点写全、语言不出错，稳拿 8 分以上。下面按 <b>三条提分线 → 五步法 → 结构模板 → 句型库 → 失分点</b> 的顺序讲，最后是 ${WRITING_N} 道练习：题目、提纲、句式、评分要点都给全，范文留给你自己写。</p>
+  <p class="lede">北京卷第五部分 <b>10 分</b>，通常要求 80–100 词。这是<b>唯一能完全由自己控制得分</b>的题型——只要要点写全、语言不出错，稳拿 8 分以上。下面按 <b>三条提分线 → 五步法 → 结构模板 → 句型库 → 失分点</b> 的顺序，把从审题到交卷的每一步拆开讲。</p>
 </div>
 
 <section class="section" style="margin-top:22px">
@@ -1236,7 +1159,6 @@ function buildWriting() {
     <div class="k"><b>${WRITING_STEPS.length}</b><span>写作步骤</span></div>
     <div class="k"><b>${WRITING_STRUCTURES.length}</b><span>结构模板</span></div>
     <div class="k"><b>${WRITING_PHRASE_N}</b><span>可套用句式</span></div>
-    <div class="k"><b>${WRITING_N}</b><span>写作练习</span></div>
   </div>
 </section>
 
@@ -1344,18 +1266,6 @@ function buildWriting() {
   </div>
 </section>
 
-<!-- ========== 五、写作练习索引 ========== -->
-<section class="section">
-  <div class="section-head">
-    <div class="section-head-left">
-      <span class="kicker">练习 · 共 ${WRITING_N} 道</span>
-      <h2>四类文体，各写一遍</h2>
-      <span class="sub">点开一道：题目要求、已给开头结尾、逐段提纲、亮点句型（可朗读）、评分要点 —— 不附范文，写完对照评分要点自查</span>
-    </div>
-  </div>
-  <div class="grid c2 writing-cards">${cards}</div>
-</section>
-
 <section class="section">
   <div class="card">
     <h3>📝 交卷前的最后检查</h3>
@@ -1371,75 +1281,6 @@ function buildWriting() {
 </section>
 `,
   }));
-
-  /* ---------- 二级：writing/<id>.html —— 左右两栏 ---------- */
-  WRITING.forEach((w, idx) => {
-    const prev = WRITING[idx - 1];
-    const next = WRITING[idx + 1];
-
-    write(`writing/${w.id}.html`, page({
-      base: '../',
-      title: `${w.title} · ${w.type}`,
-      desc: `${w.title}（${w.type} · ${w.level}）：题目要求、逐段提纲、亮点句型与评分要点，不附范文。`,
-      active: 'writing',
-      dataKeys: ['WRITING'],
-      dataExtra: { WRITING_ONE: w },
-      body: `
-<div class="page-head">
-  <div class="crumb"><a href="../index.html">首页</a> / <a href="../writing.html">书面表达</a> / ${esc(w.type)} / 练习 ${idx + 1}</div>
-  <h1>${esc(w.title)}</h1>
-  <p class="lede">${esc(w.scene || w.prompt.split('\n')[0])}</p>
-  <div class="chips" style="margin-top:14px">
-    <span class="chip on" style="cursor:default">${esc(w.type)}</span>
-    <span class="chip" style="cursor:default">${esc(w.level)}</span>
-    <span class="chip" style="cursor:default">80–100 词</span>
-    <span class="chip" style="cursor:default">${(w.highlights || []).length} 个亮点句</span>
-  </div>
-</div>
-
-${practiceDetail(w, idx)}
-
-<section class="section">
-  <div class="gfam-pager">
-    ${prev ? `<a class="btn sm" href="${prev.id}.html">← 上一篇</a>` : '<span></span>'}
-    <a class="btn sm soft" href="../writing.html">全部 ${WRITING_N} 道</a>
-    ${next ? `<a class="btn sm" href="${next.id}.html">下一篇 →</a>` : '<span></span>'}
-  </div>
-</section>
-`,
-      script: `
-ZK.ready(function(){
-  var P = window.ZK;
-  var ONE = window.ZK_DATA && window.ZK_DATA.WRITING_ONE;
-  if (!ONE) return;
-  var hls = ONE.highlights || [];
-
-  /* 单句朗读 */
-  document.querySelectorAll('.wd-say').forEach(function(b){
-    b.addEventListener('click', function(){
-      var i = parseInt(b.getAttribute('data-hl'), 10);
-      var h = hls[i];
-      if (h) { P.speak(h.en); }
-    });
-  });
-
-  /* 全部朗读：按顺序连读，每句之间留一点间隔 */
-  var allBtn = document.getElementById('sayAll');
-  if (allBtn) allBtn.addEventListener('click', function(){
-    if (!hls.length) return;
-    allBtn.disabled = true;
-    var i = 0;
-    function next(){
-      if (i >= hls.length) { allBtn.disabled = false; allBtn.textContent = '🔊 全部朗读'; return; }
-      allBtn.textContent = '🔊 朗读中 ' + (i + 1) + '/' + hls.length;
-      P.speak(hls[i].en, { onend: function(){ i++; setTimeout(next, 260); } });
-    }
-    next();
-  });
-});
-`,
-    }));
-  });
 }
 
 /* 四类文章的解题方法（每类独立成卡，放在该类型篇目之前） */
@@ -2597,7 +2438,7 @@ const PLAN = [
     goal: '四类文体各写一篇，字数达标、要点齐全；完形错不超过 2 个。',
     tasks: [
       '读「书面表达」的结构模板与句型库，把通知、书信两类的写作块各抄一遍。',
-      '做「书面表达」的通知与书信两道练习，各限时 20 分钟写完，再对照评分要点逐条自查。',
+      '按「书面表达」的结构模板，自己限时 20 分钟写一篇通知或书信，再对照评分要点与失分点逐条自查。',
       '「学阅读」→ 完形填空，做第 2 篇，限时 10 分钟，做完回读全文查逻辑。',
     ],
     focus: ['writing', 'cloze'],
@@ -2667,7 +2508,7 @@ function buildPlan() {
         <tr><td>第 1 段</td><td>背单词（到期复习 + 新词）</td><td>10 分钟</td></tr>
         <tr><td>第 2 段</td><td>练语法（10 题左右）</td><td>10 分钟</td></tr>
         <tr><td>周中加练</td><td>读一篇完形或阅读，做完看原文定位解析</td><td>15 分钟</td></tr>
-        <tr><td>周末加练</td><td>清错题本 + 专攻最弱考点 + 做一道写作练习并按评分要点自查</td><td>30–40 分钟</td></tr>
+        <tr><td>周末加练</td><td>清错题本 + 专攻最弱考点 + 按写作模板写一篇短文并自查</td><td>30–40 分钟</td></tr>
       </tbody>
     </table>
     <p class="note" style="margin-top:10px">关键是每天不断，而不是某天学很久。连续打卡天数会记录在首页与背单词页。四条主线的顺序是按卷面依赖关系排的：词不认识就读不懂篇章，篇章不练就写不出句子。</p>
@@ -2890,7 +2731,7 @@ function buildContent() {
         <tr><td>完形填空</td><td>${CLOZE.length} 篇 / ${CLOZE_N} 空</td><td>每空给上下文依据（前文线索 / 后文呼应 / 固定搭配），附全文中文译文</td></tr>
         <tr><td>阅读理解</td><td>${PASSAGES.length} 篇 / ${READ_Q} 题</td><td>A 应用文 · B 记叙文 · C 说明文 · D 议论文各 ${PASSAGES.length / 4} 篇，每题给原文定位句 + 为什么对 + 错项为什么错</td></tr>
         <tr><td>阅读表达</td><td>${EXPRESS_Q} 题</td><td>英文完整句作答，按关键词组判分，容忍语序差异；每题的参考答案与得分关键词均给出</td></tr>
-        <tr><td>书面表达</td><td>${WRITING_N} 道练习</td><td>三条提分线 · ${WRITING_STEPS.length} 步写作法 · ${WRITING_STRUCTURES.length} 类结构模板 · ${WRITING_PHRASE_N} 句句型库 · ${WRITING_TRAPS.length} 个失分点；每道给题目、逐段提纲、亮点句型（可逐句朗读）与评分要点，不附范文</td></tr>
+        <tr><td>书面表达</td><td>方法体系</td><td>三条提分线 · ${WRITING_STEPS.length} 步写作法 · ${WRITING_STRUCTURES.length} 类结构模板 · ${WRITING_PHRASE_N} 句句型库 · ${WRITING_TRAPS.length} 个失分点；不附范文，范文由学生自己写</td></tr>
         <tr><td>阅读能力维度</td><td>${SKILL_TALLY.detail || 0} / ${SKILL_TALLY.inference || 0} / ${SKILL_TALLY.mainidea || 0} / ${SKILL_TALLY.context || 0}</td><td>按题干规则把每道选择题归入「细节定位 / 推理判断 / 主旨与观点 / 上下文逻辑」，用于统计各维度正确率。归类是关键词规则的启发式判断，个别题可能与教学口径略有出入</td></tr>
       </tbody>
     </table>
@@ -2913,7 +2754,7 @@ function buildContent() {
     <h3>四、已知限制</h3>
     <ul class="tips" style="margin-top:10px">
       <li>词表为公开词典标签 + 人工校正，<b>不等于官方发布的考试词汇表</b>；个别词可能超出或低于本地中考范围，请以学校老师与官方文件为准。</li>
-      <li>语法考点、练习题、完形、阅读与写作练习均为按北京卷题型编写的<b>原创内容</b>，不是官方真题或官方出版材料。</li>
+      <li>语法考点、练习题、完形与阅读篇章，以及写作的方法与范文要点，均为按北京卷题型编写的<b>原创内容</b>，不是官方真题或官方出版材料。</li>
       <li>学阅读为 <b>${PASSAGES.length} 篇阅读 + ${CLOZE.length} 篇完形</b>，阅读表达 <b>${EXPRESS_Q} 题</b>；篇目数量少于真实卷面套数，用于按类型反复练读法，不是完整套卷。</li>
       <li>阅读能力维度（细节 / 推理 / 主旨 / 上下文）是按<b>题干关键词规则</b>自动归类的，不是人工逐题标注；个别题可能被归到相邻类别，用于看大致薄弱方向即可。</li>
       <li>阅读表达的判分按<b>关键词组匹配</b>，只检查信息点是否答到，不评判语法与拼写细节——真实阅卷会看语言质量，请以自己写完整句为准。</li>
