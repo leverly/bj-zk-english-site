@@ -168,6 +168,7 @@ const FOOTER = (base) => `<footer class="foot">
       <a href="${base}quiz.html">背单词</a>
       <a href="${base}review.html">练语法</a>
       <a href="${base}reading.html">学阅读</a>
+      <a href="${base}reading/cz.html">完形填空</a>
       <a href="${base}writing.html">书面表达</a>
       <a href="${base}wrong.html">错题本</a>
       <a href="${base}plan.html">备考计划</a>
@@ -314,7 +315,7 @@ function buildHome() {
         </a>
         <a class="mission-item" href="reading.html">
           <span class="mi-ico ok">📖</span>
-          <span class="mi-main"><b>篇章：完形 + 阅读 + 表达</b><small>五种类型分读法，每题给原文定位</small></span>
+          <span class="mi-main"><b>篇章：阅读 + 表达 + 完形</b><small>阅读四类分读法，完形独立成模块</small></span>
           <span class="mi-go">去读 →</span>
         </a>
         <a class="mission-item" href="wrong.html">
@@ -427,9 +428,9 @@ function buildHome() {
           <h3>在语篇里判断，拿下 38 分</h3>
         </div>
       </div>
-      <p class="desc">完形 ${CLOZE.length} 篇 ${CLOZE_N} 空 + 阅读 ${PASSAGES.length} 篇 ${READ_Q} 题 + 阅读表达 ${EXPRESS_Q} 题。五种类型各有读法卡，每题给<b>原文定位句</b>、<b>为什么对</b>、<b>错项为什么错</b>三层解析。</p>
+      <p class="desc">阅读 ${PASSAGES.length} 篇 ${READ_Q} 题（A/B/C/D 四类各配读法卡）+ 阅读表达 ${EXPRESS_Q} 题，另设<b>完形填空独立模块</b>（${CLOZE.length} 篇 ${CLOZE_N} 空）。每题给<b>原文定位句</b>、<b>为什么对</b>、<b>错项为什么错</b>三层解析。</p>
       <div class="track-meta">
-        <span>${PASSAGE_N} 篇</span><span>${READING_ITEM_N} 题</span><span>A–D 四类阅读</span><span>对应 38 分</span>
+        <span>${PASSAGE_N} 篇</span><span>${READING_ITEM_N} 题</span><span>A–D 四类</span><span>完形独立</span><span>对应 38 分</span>
       </div>
       <span class="track-go">学阅读 · 三级分页 →</span>
     </a>
@@ -1536,7 +1537,11 @@ function buildReading() {
   }));
 
   const ALL_PASSAGES = CLOZE_AS_PASSAGES.concat(PASSAGES);
+  /* 完形填空与阅读理解是两种独立题型（河北项目也是分开成两个模块），
+     所以这里拆成两组：READ_LEVELS 只放阅读理解的 ABCD 四类，
+     完形单独走 cloze.html 一条线。 */
   const LEVELS = ['CZ', 'A', 'B', 'C', 'D'];
+  const READ_LEVELS = ['A', 'B', 'C', 'D'];
   const totalQ = ALL_PASSAGES.reduce((s, p) => s + p.questions.length, 0);
   const totalE = ALL_PASSAGES.reduce((s, p) => s + (p.express || []).length, 0);
   const totalCz = CLOZE_AS_PASSAGES.length;
@@ -1801,7 +1806,8 @@ ZK.ready(function(){
   /* ==========================================================
      一级：reading.html —— 类型索引 + 能力诊断
      ========================================================== */
-  const levelCards = LEVELS.map((lv) => {
+  /* 阅读理解：ABCD 四类（不含完形） */
+  const levelCards = READ_LEVELS.map((lv) => {
     const m = READING_METHODS[lv];
     const list = lvList(lv);
     const qn = lvQn(lv);
@@ -1814,25 +1820,34 @@ ZK.ready(function(){
     </a>`;
   }).join('');
 
+  /* 完形填空：独立模块卡 */
+  const czMethod = READING_METHODS.CZ;
+  const czCard = `<a class="card level-card" href="reading/cz.html">
+    <div class="level-badge" style="background:linear-gradient(135deg,#2563eb,#4f46e5)">CZ</div>
+    <h3>${czMethod.icon} ${esc(czMethod.name)}</h3>
+    <p class="desc">${esc(czMethod.tagline)}</p>
+    <div class="meta">${CLOZE.length} 篇 · ${CLOZE_N} 空 · 8 分</div>
+    <span class="level-go">进入 →</span>
+  </a>`;
+
   write('reading.html', page({
-    title: '学阅读 · 完形 + 阅读 + 阅读表达 · 38 分',
-    desc: `北京中考英语学阅读：${CLOZE.length} 篇完形（${CLOZE_N} 空）、${PASSAGES.length} 篇阅读（${READ_Q} 题）、${EXPRESS_Q} 道阅读表达。五种类型各有读法，每题给原文定位与错项分析。`,
+    title: '学阅读 · 阅读理解 + 阅读表达 · 30 分',
+    desc: `北京中考英语学阅读：${PASSAGES.length} 篇阅读理解（${READ_Q} 题）与 ${EXPRESS_Q} 道阅读表达，共 30 分。四类文章各有读法，每题给原文定位与错项分析。完形填空为独立模块。`,
     active: 'reading',
     dataKeys: [],
     body: `
 <div class="page-head reader-head">
   <div class="crumb"><a href="index.html">首页</a> / 学阅读</div>
   <h1>学阅读</h1>
-  <p class="lede">北京卷第二部分完形填空 <b>8 分</b>，第三部分阅读理解 <b>26 分</b>，第四部分阅读表达 <b>4 分</b>，合计 <b>38 分</b>，是笔试里分值最高的板块。这里按 <b>五种类型</b>分开编排，每类配独立的「读法」策略卡——<b>五种类型读法不同，先学方法再刷题</b>。</p>
+  <p class="lede">北京卷第三部分阅读理解 <b>26 分</b>，第四部分阅读表达 <b>4 分</b>，合计 <b>30 分</b>，是笔试里分值最高的板块。这里按 <b>A 应用文 / B 记叙文 / C 说明文 / D 议论文</b> 四类编排，每类配独立的「读法」策略卡——<b>四类文章读法不同，先学方法再刷题</b>。<br><span style="color:var(--text-3);font-size:.92em">完形填空 8 分是独立题型，考的是上下文逻辑，另见 <a href="reading/cz.html">完形填空</a>。</span></p>
 </div>
 
 <section class="section reader-stats" style="margin-top:22px">
   <div class="kv">
-    <div class="k"><b>${CLOZE.length}</b><span>完形填空（${CLOZE_N} 空）</span></div>
     <div class="k"><b>${PASSAGES.length}</b><span>阅读理解（${READ_Q} 题）</span></div>
     <div class="k"><b>${EXPRESS_Q}</b><span>阅读表达</span></div>
-    <div class="k"><b>${PASSAGE_N}</b><span>篇章总数</span></div>
-    <div class="k"><b>38</b><span>对应分值</span></div>
+    <div class="k"><b>${PASSAGES.length / 4}</b><span>每类篇数（A/B/C/D）</span></div>
+    <div class="k"><b>30</b><span>对应分值</span></div>
   </div>
 </section>
 
@@ -1850,12 +1865,23 @@ ZK.ready(function(){
 <section class="section">
   <div class="section-head">
     <div class="section-head-left">
-      <span class="kicker">第一步 · 选类型</span>
-      <h2>五种类型，五种读法</h2>
-      <span class="sub">共 ${PASSAGE_N} 篇 ${totalQ + totalE} 题：完形 ${totalCz} 篇 + 阅读 ${PASSAGES.length} 篇（A/B/C/D 四类）。先看读法，再练篇章</span>
+      <span class="kicker">阅读理解 · 四类文章</span>
+      <h2>四类文章，四种读法</h2>
+      <span class="sub">共 ${PASSAGES.length} 篇 ${READ_Q} 题，每类 ${PASSAGES.length / 4} 篇。先看读法，再练篇章</span>
     </div>
   </div>
-  <div class="grid level-cards level-cards-5">${levelCards}</div>
+  <div class="grid c4 level-cards">${levelCards}</div>
+</section>
+
+<section class="section">
+  <div class="section-head">
+    <div class="section-head-left">
+      <span class="kicker">完形填空 · 独立题型</span>
+      <h2>完形填空：考上下文，不考单句</h2>
+      <span class="sub">北京卷第二部分 8 分，8 个空考的是前后呼应、词汇复现与情感线索，和阅读理解是两种不同的读法</span>
+    </div>
+  </div>
+  <div class="grid c2">${czCard}</div>
 </section>
 
 <section class="section">
@@ -1863,7 +1889,7 @@ ZK.ready(function(){
     <div class="section-head-left">
       <span class="kicker">题型分值</span>
       <h2>四类题型的备考优先级</h2>
-      <span class="sub">阅读理解 26 分是单块最大分值，先把它练稳，再补完形与表达</span>
+      <span class="sub">阅读理解 26 分是单块最大分值，先把它练稳，再补阅读表达</span>
     </div>
   </div>
   <div class="grid c3">
@@ -1901,11 +1927,11 @@ ZK.ready(function(){
   /* ==========================================================
      二级：reading/<lv>.html —— 该类读法 + 篇目列表
      ========================================================== */
-  LEVELS.forEach((lv) => {
+  READ_LEVELS.forEach((lv) => {
     const m = READING_METHODS[lv];
     const list = lvList(lv);
     const slug = lv.toLowerCase();
-    const otherLevels = LEVELS.filter((x) => x !== lv);
+    const otherLevels = READ_LEVELS.filter((x) => x !== lv);
 
     const cards = list.map((p, i) => {
       const total = p.questions.length + (p.express || []).length;
@@ -1956,7 +1982,7 @@ ZK.ready(function(){
 <section class="section">
   <div class="gfam-pager">
     <a class="btn sm soft" href="../reading.html">← 返回学阅读</a>
-    <span>${otherLevels.map((x) => `<a class="btn sm" href="${x.toLowerCase()}.html">${x} ${esc(READING_METHODS[x].name)}</a>`).join(' ')}</span>
+    <span>${otherLevels.map((x) => `<a class="btn sm" href="${x.toLowerCase()}.html">${x} ${esc(READING_METHODS[x].name)}</a>`).join(' ')}<a class="btn sm" href="cz.html">完形填空</a></span>
   </div>
 </section>
 `,
@@ -1966,7 +1992,7 @@ ZK.ready(function(){
   /* ==========================================================
      三级：reading/<篇id>.html —— 单篇练习（独立 URL）
      ========================================================== */
-  LEVELS.forEach((lv) => {
+  READ_LEVELS.forEach((lv) => {
     const m = READING_METHODS[lv];
     const list = lvList(lv);
     const slug = lv.toLowerCase();
@@ -2015,6 +2041,121 @@ ZK.ready(function(){
         script: readingScript,
       }));
     });
+  });
+
+  /* ==========================================================
+     完形填空：独立模块（不与 ABCD 混排）
+       二级 reading/cz.html        读法卡 + 篇目列表
+       三级 reading/cloze-N.html   单篇练习
+     ========================================================== */
+  const czm = READING_METHODS.CZ;
+  const czList = lvList('CZ');
+
+  const czCards = czList.map((p, i) => `
+    <a class="card passage-card" href="${p.id}.html">
+      <span class="passage-no">第 ${i + 1} 篇</span>
+      <h3>${esc(p.title)}</h3>
+      <p class="desc">${esc(p.intro)}</p>
+      <div class="meta">${p.questions.length} 空 · ${esc(p.type || '完形填空')}</div>
+      <span class="level-go">开始练习 →</span>
+    </a>`).join('');
+
+  write('reading/cz.html', page({
+    base: '../',
+    title: '完形填空 · 8 分 · 学阅读',
+    desc: `北京中考英语完形填空专项：${CLOZE.length} 篇 ${CLOZE_N} 空。先通读全文再逐空选择，考上下文逻辑，每空给依据并附全文译文。`,
+    active: 'reading',
+    dataKeys: [],
+    body: `
+<div class="page-head">
+  <div class="crumb"><a href="../index.html">首页</a> / <a href="../reading.html">学阅读</a> / 完形填空</div>
+  <h1>🧩 完形填空</h1>
+  <p class="lede">北京卷第二部分 <b>8 空 8 分</b>。考的不是单句语法，而是<b>上下文逻辑</b>——前后呼应、词汇复现、情感线索。它和阅读理解是两种不同的读法：阅读是「找信息、辨观点」，完形是「还原一篇被挖空的文章」。</p>
+</div>
+
+<section class="section" style="margin-top:22px">
+  <div class="kv">
+    <div class="k"><b>${CLOZE.length}</b><span>篇目</span></div>
+    <div class="k"><b>${CLOZE_N}</b><span>空格总数</span></div>
+    <div class="k"><b>8</b><span>对应分值</span></div>
+    <div class="k"><b>1</b><span>每空分值</span></div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="card method-card">
+    <div class="method-title">🧩 完形填空的读法</div>
+    <p class="method-tagline">${esc(czm.tagline)}</p>
+    <ol class="method-steps">
+      ${czm.steps.map((st) => `<li><b>${esc(st.t)}</b><span>${esc(st.d)}</span></li>`).join('')}
+    </ol>
+    <div class="method-trap">⚠ ${esc(czm.trap)}</div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="section-head">
+    <div class="section-head-left">
+      <span class="kicker">共 ${czList.length} 篇 ${CLOZE_N} 空</span>
+      <h2>点开一篇开始练</h2>
+      <span class="sub">答题时原文里的空位编号可回看，每空给上下文依据，附全文中文译文</span>
+    </div>
+  </div>
+  <div class="grid c2 passage-cards">${czCards}</div>
+</section>
+
+<section class="section">
+  <div class="gfam-pager">
+    <a class="btn sm soft" href="../reading.html">← 返回学阅读</a>
+    <span><a class="btn sm" href="a.html">A 应用文</a><a class="btn sm" href="b.html">B 记叙文</a><a class="btn sm" href="c.html">C 说明文</a><a class="btn sm" href="d.html">D 议论文</a></span>
+  </div>
+</section>
+`,
+  }));
+
+  /* 完形单篇页 */
+  czList.forEach((p, idx) => {
+    const prev = czList[idx - 1];
+    const next = czList[idx + 1];
+
+    write(`reading/${p.id}.html`, page({
+      base: '../',
+      title: `${p.title} · 完形填空`,
+      desc: `${p.title}（完形填空 · ${p.questions.length} 空）：先通读全文再逐空选择，每空给上下文依据，附全文中文译文。`,
+      active: 'reading',
+      dataKeys: ['PASSAGES'],
+      dataExtra: { READ_ALL: ALL_PASSAGES },
+      body: `
+<div class="page-head">
+  <div class="crumb"><a href="../index.html">首页</a> / <a href="../reading.html">学阅读</a> / <a href="cz.html">完形填空</a> / 第 ${idx + 1} 篇</div>
+  <h1>${esc(p.title)}</h1>
+  <p class="lede">${esc(p.intro)}</p>
+</div>
+
+<section class="section" style="margin-top:18px">
+  <details class="method-fold">
+    <summary>🧩 完形填空的读法（点开复习）</summary>
+    <ol class="method-steps">
+      ${czm.steps.map((st) => `<li><b>${esc(st.t)}</b><span>${esc(st.d)}</span></li>`).join('')}
+    </ol>
+    <div class="method-trap">⚠ ${esc(czm.trap)}</div>
+  </details>
+</section>
+
+<section class="section">
+  ${passageHtml(p)}
+</section>
+
+<section class="section">
+  <div class="gfam-pager">
+    ${prev ? `<a class="btn sm" href="${prev.id}.html">← 上一篇</a>` : '<span></span>'}
+    <a class="btn sm soft" href="cz.html">全部 ${czList.length} 篇</a>
+    ${next ? `<a class="btn sm" href="${next.id}.html">下一篇 →</a>` : '<span></span>'}
+  </div>
+</section>
+`,
+      script: readingScript,
+    }));
   });
 }
 
