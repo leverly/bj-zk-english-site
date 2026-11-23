@@ -1422,3 +1422,23 @@ body.js-ready .reveal.out { opacity: 0; transform: translateY(14px); }
   .write-case { padding: 18px 16px; }
   .flow-item { padding: 16px; gap: 12px; }
 }
+
+/* 完形填空：原文中的空位标号（篇章阅读内使用） */
+.cz-blank {
+  display: inline-grid; place-items: center;
+  min-width: 22px; height: 22px; padding: 0 5px;
+  margin: 0 2px; border-radius: 6px;
+  font-family: var(--mono); font-size: .78rem; font-weight: 700;
+  color: var(--accent); background: var(--accent-soft);
+  border: 1px solid color-mix(in srgb, var(--accent) 25%, transparent);
+  vertical-align: baseline; line-height: 1;
+}
+
+/* 完形译文区 */
+.cz-trans-wrap { margin-top: 12px; }
+.cz-trans-wrap .trans {
+  margin-top: 12px; padding: 14px 16px; border-radius: var(--r-sm);
+  background: var(--code-bg); font-size: .89rem; line-height: 1.85; color: var(--text-2);
+}
+.cz-trans-wrap .trans p { margin-bottom: 10px; }
+.cz-trans-wrap .trans p:last-child { margin-bottom: 0; }

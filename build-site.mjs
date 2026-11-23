@@ -88,8 +88,7 @@ const NAV = [
   { href: 'index.html', label: '首页', key: 'home' },
   { href: 'quiz.html', label: '背单词', key: 'words-study' },
   { href: 'review.html', label: '练语法', key: 'grammar-drill' },
-  { href: 'reading.html', label: '阅读', key: 'reading' },
-  { href: 'cloze.html', label: '完形', key: 'cloze' },
+  { href: 'reading.html', label: '篇章阅读', key: 'reading' },
   { href: 'writing.html', label: '写作', key: 'writing' },
   { href: 'words.html', label: '词库', key: 'words' },
   { href: 'grammar.html', label: '语法', key: 'grammar' },
@@ -355,15 +354,9 @@ function buildHome() {
     </a>
     <a class="card" href="reading.html">
       <div class="card-ico">📖</div>
-      <h3>阅读理解 · ${READ_Q} 题 + ${EXPRESS_Q} 表达</h3>
-      <p class="desc">A/B/C/D 四类文章各 2 篇，每道题给出<b>原文定位句</b>、<b>为什么对</b>、<b>错项为什么错</b>三层解析。</p>
-      <div class="meta" style="margin-top:12px">对应分值 30 分 · 含阅读表达</div>
-    </a>
-    <a class="card" href="cloze.html">
-      <div class="card-ico purple">🧩</div>
-      <h3>完形填空 · ${CLOZE_N} 空</h3>
-      <p class="desc">按北京卷 8 空规格编写，每题给出上下文依据（前文线索 / 后文呼应 / 固定搭配），附全文中文译文。</p>
-      <div class="meta" style="margin-top:12px">对应分值 8 分</div>
+      <h3>篇章阅读 · ${READ_Q} 题 + ${EXPRESS_Q} 表达</h3>
+      <p class="desc">完形填空 ${CLOZE_N} 空 + A/B/C/D 四类文章各 4 篇。每题给出<b>原文定位</b>、<b>为什么对</b>、<b>错项为什么错</b>三层解析，完形附中文译文。</p>
+      <div class="meta" style="margin-top:12px">对应分值 38 分 · 含阅读表达</div>
     </a>
     <a class="card" href="writing.html">
       <div class="card-ico ok">✒️</div>
@@ -985,131 +978,6 @@ function buildGrammar() {
 /* ==========================================================
    完形填空页（北京卷第二部分，8 分）
    ========================================================== */
-function buildCloze() {
-  const totalBlanks = CLOZE.reduce((s, c) => s + c.blanks.length, 0);
-
-  const clozeHtml = (c) => {
-    const paras = c.passage.split('\n\n').map((x) =>
-      `<p class="passage-p">${esc(x).replace(/___\((\d+)\)___/g, '<span class="blank-num">($1)</span>')}</p>`
-    ).join('');
-    const blanks = c.blanks.map((b) => `
-      <div class="cloze-item" data-ans="${b.answer}" data-id="${c.id}-${b.n}" data-n="${b.n}">
-        <div class="cloze-head"><span class="cloze-n">(${b.n})</span></div>
-        <div class="qopts">
-          ${b.options.map((o, k) => `<button class="qopt" data-k="${k}"><span class="key">${'ABCD'[k]}</span><span>${esc(o)}</span></button>`).join('')}
-        </div>
-        <div class="cloze-fb"></div>
-      </div>`).join('');
-
-    return `<div class="card article-card" id="${c.id}">
-      <div class="article-head">
-        <h3>${esc(c.title)}</h3>
-        <div class="meta">完形填空 · ${c.blanks.length} 空 · ${esc(c.level)}</div>
-      </div>
-      <div class="note strategy">${esc(c.intro)}</div>
-      <div class="passage">${paras}</div>
-      <div class="cloze-list">${blanks}</div>
-      <div class="article-actions">
-        <button class="btn soft sm" data-toggle-trans="${c.id}">显示中文译文</button>
-        <span class="cloze-score" id="score-${c.id}">0 / ${c.blanks.length}</span>
-      </div>
-      <div class="trans" id="trans-${c.id}" hidden>${(c.translation || '').split('\n\n').map((p) => `<p>${esc(p)}</p>`).join('')}</div>
-    </div>`;
-  };
-
-  const body = `
-<div class="page-head">
-  <div class="crumb"><a href="index.html">首页</a> / 完形填空</div>
-  <h1>完形填空</h1>
-  <p class="lede">北京卷第二部分 <b>8 小题 × 1 分 = 8 分</b>。完形不是「逐空选词」，而是<b>先通读抓主线，再回填</b>——8 个空通常覆盖动词 2–3 个、名词 1–2 个、形容词/副词 1–2 个、连词或介词 1 个、固定搭配 1 个。每题答完给出上下文依据。</p>
-</div>
-
-<section class="section" style="margin-top:22px">
-  <div class="kv">
-    <div class="k"><b data-count="${CLOZE.length}">${CLOZE.length}</b><span>篇目</span></div>
-    <div class="k"><b data-count="${totalBlanks}">${totalBlanks}</b><span>空格</span></div>
-    <div class="k"><b>8</b><span>对应分值</span></div>
-  </div>
-</section>
-
-<section class="section" style="margin-top:20px">
-  <div class="card">
-    <h3>🧩 三步做完形</h3>
-    <div class="strategy-grid">
-      <div class="strategy-item"><b>① 通读不看选项</b><span>先花 1 分钟读完，抓住「谁、做了什么、结果如何」这条主线。</span></div>
-      <div class="strategy-item"><b>② 逐空找依据</b><span>每空都要能在上下文找到线索：前文交代、后文呼应、或固定搭配。</span></div>
-      <div class="strategy-item"><b>③ 回读查逻辑</b><span>填完全文再读一遍，检查时态、人称、褒贬是否一致。这步最容易被跳过，也最容易丢分。</span></div>
-    </div>
-  </div>
-</section>
-
-<section class="section" style="margin-top:26px">
-  ${CLOZE.map(clozeHtml).join('')}
-</section>
-`;
-
-  const script = `
-ZK.ready(function(){
-  var P = window.ZK;
-  document.querySelectorAll('.cloze-item').forEach(function(item){
-    var ans = parseInt(item.getAttribute('data-ans'), 10);
-    var card = item.closest('.article-card');
-    item.querySelectorAll('.qopt').forEach(function(b){
-      b.addEventListener('click', function(){
-        if (item.__done) return;
-        item.__done = true;
-        var k = parseInt(b.getAttribute('data-k'), 10);
-        var ok = k === ans;
-        item.querySelectorAll('.qopt').forEach(function(x){
-          var xi = parseInt(x.getAttribute('data-k'), 10);
-          x.classList.add('locked');
-          if (xi === ans) x.classList.add('right');
-          else if (xi === k) x.classList.add('wrong');
-        });
-        var pid = card.id, n = parseInt(item.getAttribute('data-n'), 10);
-        var passage = (window.ZK_DATA.CLOZE || []).find(function(c){ return c.id === pid; });
-        var blank = passage && passage.blanks.find(function(b){ return b.n === n; });
-        var fb = item.querySelector('.cloze-fb');
-        var html = '<div class="feedback ' + (ok ? 'auto-next' : 'bad') + '">';
-        html += '<b>' + (ok ? '✓ 正确' : '✕ 正确答案是 ' + 'ABCD'[ans]) + '</b>';
-        if (blank) {
-          html += '<div class="explain"><div class="exp-row exp-why"><span class="exp-tag">依据</span><span>' + P.esc(blank.why) + '</span></div></div>';
-        }
-        html += '</div>';
-        fb.innerHTML = html;
-        P.sfx(ok ? 'ok' : 'bad');
-        P.bumpDay('questions', 1);
-        P.qRecord('cloze-' + pid, ok, pid + '-' + n);
-        // 更新得分
-        var okN = 0;
-        card.querySelectorAll('.cloze-item').forEach(function(ci){
-          if (ci.__done && !ci.querySelector('.qopt.wrong')) okN++;
-        });
-        var el = document.getElementById('score-' + pid);
-        if (el) el.textContent = okN + ' / ' + card.querySelectorAll('.cloze-item').length;
-      });
-    });
-  });
-
-  document.querySelectorAll('[data-toggle-trans]').forEach(function(b){
-    b.addEventListener('click', function(){
-      var id = b.getAttribute('data-toggle-trans');
-      var el = document.getElementById('trans-' + id);
-      if (!el) return;
-      el.hidden = !el.hidden;
-      b.textContent = el.hidden ? '显示中文译文' : '隐藏中文译文';
-    });
-  });
-});
-`;
-
-  write('cloze.html', page({
-    title: '完形填空 · 8 分',
-    desc: `北京中考英语完形填空 ${CLOZE.length} 篇 ${totalBlanks} 空，每题附上下文依据与中文译文。`,
-    active: 'cloze', body, script, dataKeys: ['CLOZE'],
-  }));
-}
-
 /* ==========================================================
    书面表达页（北京卷第五部分，10 分）
    ========================================================== */
@@ -1411,6 +1279,17 @@ ZK.ready(function(){
 
 /* 四类文章的解题方法（每类独立成卡，放在该类型篇目之前） */
 const READING_METHODS = {
+  CZ: {
+    name: '完形填空',
+    icon: '🧩',
+    tagline: '语境还原型 —— 考的是「前后呼应、词义辨析、情感线索」',
+    steps: [
+      { t: '先通读，不看选项', d: '花 1 分钟读完，抓住「谁、做了什么、结果如何」这条主线。不看选项时反而更容易读懂。' },
+      { t: '逐空找依据', d: '每个空都要在上下文找到线索：前文交代、后文呼应、固定搭配、或情感色彩一致。找不到依据就先空着。' },
+      { t: '回读查逻辑', d: '填完把全文再读一遍，检查时态、人称、褒贬是否一致。这步最容易被跳过，也最容易丢分。' },
+    ],
+    trap: '完形 8 个空通常覆盖动词 2–3、名词 1–2、形容词/副词 1–2、连词或介词 1、固定搭配 1。选项看着都通顺时，回原文找「谁和谁呼应」。',
+  },
   A: {
     name: '应用文',
     icon: '📋',
@@ -1460,22 +1339,54 @@ const READING_METHODS = {
 };
 
 function buildReading() {
-  const totalQ = PASSAGES.reduce((s, p) => s + p.questions.length, 0);
-  const totalE = PASSAGES.reduce((s, p) => s + (p.express || []).length, 0);
-  const levels = ['A', 'B', 'C', 'D'];
+  /* 把完形填空转成与阅读理解同构的数据，这样三级导航、一题一屏舞台、
+     错题本、判分逻辑全部复用，不用维护两套。
+     完形的「空」在渲染时用 ___（n）___ 占位，题干取「第 n 空」。 */
+  const CLOZE_AS_PASSAGES = CLOZE.map((c) => ({
+    id: c.id,
+    level: 'CZ',
+    type: '完形填空',
+    title: c.title,
+    intro: c.intro,
+    passage: c.passage,
+    translation: c.translation,
+    questions: c.blanks.map((b) => ({
+      q: '第 (' + b.n + ') 空',
+      options: b.options,
+      answer: b.answer,
+      why: b.why,
+      locate: '',
+      trap: '',
+      isCloze: true,
+      blankNo: b.n,
+    })),
+    express: [],
+  }));
+
+  const ALL_PASSAGES = CLOZE_AS_PASSAGES.concat(PASSAGES);
+  const totalQ = ALL_PASSAGES.reduce((s, p) => s + p.questions.length, 0);
+  const totalE = ALL_PASSAGES.reduce((s, p) => s + (p.express || []).length, 0);
+  const totalCz = CLOZE_AS_PASSAGES.length;
+  const levels = ['CZ', 'A', 'B', 'C', 'D'];
 
   /* 单篇渲染：原文 + 一题一屏的答题区
      交互改进：不再把所有题铺开，而是一次只显示一题，
      上一题/下一题翻页，进度可见，避免长页面滚动疲劳。 */
   const passageHtml = (p) => {
-    const paras = p.passage.split('\n\n').map((x) => `<p class="passage-p">${esc(x)}</p>`).join('');
+    const isCloze = p.level === 'CZ';
+    const paras = p.passage.split('\n\n').map((x) => {
+      let t = esc(x);
+      // 完形：把 ___（n）___ 换成可点的高亮空位标号
+      if (isCloze) t = t.replace(/___\((\d+)\)___/g, '<span class="cz-blank" data-b="$1">$1</span>');
+      return `<p class="passage-p">${t}</p>`;
+    }).join('');
 
     const qCards = p.questions.map((q, qi) => {
       const opts = q.options.map((o, k) =>
         `<button class="qopt" data-k="${k}"><span class="key">${'ABCD'[k]}</span><span>${esc(o)}</span></button>`
       ).join('');
       return `<div class="read-q" data-ans="${q.answer}" data-id="${p.id}-${qi + 1}" data-qi="${qi}">
-        <div class="read-q-stem"><b>${qi + 1}.</b> ${esc(q.q)}</div>
+        <div class="read-q-stem"><b>${isCloze ? '(' + q.blankNo + ')' : (qi + 1) + '.'}</b> ${isCloze ? '选出最合适的一项填入空位' : esc(q.q)}</div>
         <div class="qopts">${opts}</div>
         <div class="read-fb"></div>
       </div>`;
@@ -1506,6 +1417,10 @@ function buildReading() {
 
       <div class="passage-wrap">
         <div class="passage">${paras}</div>
+        ${p.translation ? `<div class="cz-trans-wrap">
+          <button class="btn soft sm" type="button" data-toggle-trans>显示中文译文</button>
+          <div class="trans" hidden>${p.translation.split('\n\n').map((x) => `<p>${esc(x)}</p>`).join('')}</div>
+        </div>` : ''}
       </div>
 
       <div class="quiz-stage">
@@ -1531,7 +1446,7 @@ function buildReading() {
   /* 单篇：方法卡 + 答题舞台，进入后只显示这一篇 */
   const passagePage = (p, lv) => {
     const m = READING_METHODS[lv];
-    const siblings = PASSAGES.filter((x) => x.level === lv);
+    const siblings = ALL_PASSAGES.filter((x) => x.level === lv);
     const idx = siblings.findIndex((x) => x.id === p.id);
     const totalItems = p.questions.length + (p.express || []).length;
     return `<div class="passage-page" data-lv="${lv}" data-pid="${p.id}">
@@ -1558,17 +1473,17 @@ function buildReading() {
 
   const body = `
 <div class="page-head reader-head">
-  <div class="crumb"><a href="index.html">首页</a> / 阅读理解</div>
-  <h1>阅读理解与阅读表达</h1>
-  <p class="lede">北京卷第三部分阅读理解 <b>13 小题 × 2 分 = 26 分</b>，第四部分阅读表达 <b>4 小题 × 1 分 = 4 分</b>，合计 <b>30 分</b>，是笔试里分值最高的板块。四类文章读法不同，先选类型，再选篇章。</p>
+  <div class="crumb"><a href="index.html">首页</a> / 篇章阅读</div>
+  <h1>篇章阅读</h1>
+  <p class="lede">北京卷第二部分完形填空 <b>8 分</b>，第三部分阅读理解 <b>26 分</b>，第四部分阅读表达 <b>4 分</b>，合计 <b>38 分</b>，是笔试里分值最高的板块。完形与四类文章读法各不相同，先选类型，再选篇章。</p>
 </div>
 
 <section class="section reader-stats" style="margin-top:22px">
   <div class="kv">
-    <div class="k"><b data-count="${PASSAGES.length}">${PASSAGES.length}</b><span>阅读篇目</span></div>
+    <div class="k"><b data-count="${ALL_PASSAGES.length}">${ALL_PASSAGES.length}</b><span>篇章总数</span></div>
     <div class="k"><b data-count="${totalQ}">${totalQ}</b><span>选择题</span></div>
     <div class="k"><b data-count="${totalE}">${totalE}</b><span>阅读表达</span></div>
-    <div class="k"><b>30</b><span>对应分值</span></div>
+    <div class="k"><b>38</b><span>对应分值</span></div>
   </div>
 </section>
 
@@ -1577,14 +1492,14 @@ function buildReading() {
   <div class="section-head">
     <div class="section-head-left">
       <span class="kicker">第一步 · 选类型</span>
-      <h2>四类文章，四种读法</h2>
-      <span class="sub">每类 ${PASSAGES.filter((p) => p.level === 'A').length} 篇，选一个类型开始</span>
+      <h2>五种类型，五种读法</h2>
+      <span class="sub">共 ${ALL_PASSAGES.length} 篇：完形 ${totalCz} 篇 + 阅读 ${PASSAGES.length} 篇，选一个类型开始</span>
     </div>
   </div>
   <div class="grid c4 level-cards">
     ${levels.map((lv) => {
       const m = READING_METHODS[lv];
-      const list = PASSAGES.filter((p) => p.level === lv);
+      const list = ALL_PASSAGES.filter((p) => p.level === lv);
       const qn = list.reduce((s, p) => s + p.questions.length + (p.express || []).length, 0);
       return `<button class="card level-card" type="button" data-open-level="${lv}">
         <div class="level-badge">${lv}</div>
@@ -1600,7 +1515,7 @@ function buildReading() {
 <!-- ========== 第二级：篇章选择 ========== -->
 ${levels.map((lv) => {
   const m = READING_METHODS[lv];
-  const list = PASSAGES.filter((p) => p.level === lv);
+  const list = ALL_PASSAGES.filter((p) => p.level === lv);
   return `<section class="section reader-level" data-level="${lv}" hidden>
     <div class="passage-nav">
       <button class="btn ghost sm" type="button" data-back-home>← 返回类型列表</button>
@@ -1629,7 +1544,7 @@ ${levels.map((lv) => {
 
 <!-- ========== 第三级：单篇练习 ========== -->
 <div class="reader-passage" hidden>
-  ${levels.map((lv) => PASSAGES.filter((p) => p.level === lv).map((p) => passagePage(p, lv)).join('')).join('')}
+  ${levels.map((lv) => ALL_PASSAGES.filter((p) => p.level === lv).map((p) => passagePage(p, lv)).join('')).join('')}
 </div>
 
 <section class="section reader-foot">
@@ -1704,16 +1619,21 @@ ZK.ready(function(){
           else if (xi === k) x.classList.add('wrong');
         });
         var pid = card.id, qidx = parseInt(item.getAttribute('data-id').split('-').pop(), 10) - 1;
-        var passage = (window.ZK_DATA.PASSAGES || []).find(function(p){ return p.id === pid; });
+        var passage = (window.ZK_DATA.READ_ALL || window.ZK_DATA.PASSAGES || []).find(function(p){ return p.id === pid; });
         var q = passage && passage.questions[qidx];
         var fb = item.querySelector('.read-fb');
         var html = '<div class="feedback ' + (ok ? 'auto-next' : 'bad') + '">';
         html += '<b>' + (ok ? '✓ 正确' : '✕ 正确答案是 ' + 'ABCD'[ans]) + '</b>';
         if (q) {
           html += '<div class="explain">';
-          html += '<div class="exp-row exp-locate"><span class="exp-tag">原文定位</span><span>' + P.esc(q.locate) + '</span></div>';
-          html += '<div class="exp-row exp-why"><span class="exp-tag">为什么对</span><span>' + P.esc(q.why) + '</span></div>';
-          html += '<div class="exp-row exp-trap"><span class="exp-tag">错项分析</span><span>' + P.esc(q.trap) + '</span></div>';
+          // 完形题没有 locate / trap，只有上下文依据（why），按需渲染
+          if (q.locate) {
+            html += '<div class="exp-row exp-locate"><span class="exp-tag">原文定位</span><span>' + P.esc(q.locate) + '</span></div>';
+          }
+          html += '<div class="exp-row exp-why"><span class="exp-tag">' + (q.isCloze ? '上下文依据' : '为什么对') + '</span><span>' + P.esc(q.why) + '</span></div>';
+          if (q.trap) {
+            html += '<div class="exp-row exp-trap"><span class="exp-tag">错项分析</span><span>' + P.esc(q.trap) + '</span></div>';
+          }
           html += '</div>';
         }
         html += '</div>';
@@ -1747,7 +1667,7 @@ ZK.ready(function(){
   document.querySelectorAll('.express-q').forEach(function(item){
     var card = item.closest('.reading-stage');
     var pid0 = card.id, eidx0 = parseInt(item.getAttribute('data-id').split('-e').pop(), 10) - 1;
-    var pass0 = (window.ZK_DATA.PASSAGES || []).find(function(p){ return p.id === pid0; });
+    var pass0 = (window.ZK_DATA.READ_ALL || window.ZK_DATA.PASSAGES || []).find(function(p){ return p.id === pid0; });
     var accept = (pass0 && pass0.express && pass0.express[eidx0] && pass0.express[eidx0].accept) || [];
     var inp = item.querySelector('.express-in');
     var submit = function(){
@@ -1759,7 +1679,7 @@ ZK.ready(function(){
       item.querySelector('.express-sub').disabled = true;
       var fb = item.querySelector('.read-fb');
       var pid = card.id, eidx = parseInt(item.getAttribute('data-id').split('-e').pop(), 10) - 1;
-      var passage = (window.ZK_DATA.PASSAGES || []).find(function(p){ return p.id === pid; });
+      var passage = (window.ZK_DATA.READ_ALL || window.ZK_DATA.PASSAGES || []).find(function(p){ return p.id === pid; });
       var e = passage && passage.express && passage.express[eidx];
       var html = '<div class="feedback ' + (ok ? 'auto-next' : 'bad') + '">';
       html += '<b>' + (ok ? '✓ 正确' : '✕ 参考答案') + '</b>';
@@ -1776,6 +1696,17 @@ ZK.ready(function(){
     };
     item.querySelector('.express-sub').addEventListener('click', submit);
     inp.addEventListener('keydown', function(ev){ if (ev.key === 'Enter') submit(); });
+  });
+
+  /* ---------- 完形译文切换 ---------- */
+  document.querySelectorAll('[data-toggle-trans]').forEach(function(b){
+    b.addEventListener('click', function(){
+      var wrap = b.parentElement;
+      var box = wrap.querySelector('.trans');
+      if (!box) return;
+      box.hidden = !box.hidden;
+      b.textContent = box.hidden ? '显示中文译文' : '隐藏中文译文';
+    });
   });
 
   /* ---------- 折叠原文（二刷用） ---------- */
@@ -1907,9 +1838,9 @@ ZK.ready(function(){
 `;
 
   write('reading.html', page({
-    title: '阅读理解与阅读表达 · 30 分',
-    desc: `北京中考英语阅读理解 ${totalQ} 题与阅读表达 ${totalE} 题，四类文章各有解题方法与原文定位解析。`,
-    active: 'reading', body, script, dataKeys: ['PASSAGES'],
+    title: '篇章阅读 · 完形 + 阅读 + 阅读表达 · 38 分',
+    desc: `北京中考英语篇章阅读：完形填空 + 阅读理解 + 阅读表达，共 ${totalQ} 题，每类都有解题方法与原文定位解析。`,
+    active: 'reading', body, script, dataKeys: ['PASSAGES'], dataExtra: { READ_ALL: ALL_PASSAGES },
   }));
 }
 
@@ -2331,7 +2262,7 @@ const PLAN = [
     tasks: [
       '读「形容词与副词」「介词」「数词」三族。',
       '「练语法」练「语法填空」题型 15 题。',
-      '「完形填空」做第 1 篇，做完先别对答案，回读全文检查逻辑，再看解析。',
+      '「篇章阅读」→ 完形填空，做第 1 篇，做完先别对答案，回读全文检查逻辑，再看解析。',
     ],
     focus: ['adjadv', 'prep', 'cloze'],
   },
@@ -2351,7 +2282,7 @@ const PLAN = [
     tasks: [
       '读「书面表达」的通知与书信两篇，各抄一遍范文，标出连接词。',
       '自己限时 20 分钟写一篇议论文，再对照范文与评分要点改。',
-      '「完形填空」做第 2 篇，限时 10 分钟，做完回读全文查逻辑。',
+      '「篇章阅读」→ 完形填空，做第 2 篇，限时 10 分钟，做完回读全文查逻辑。',
     ],
     focus: ['writing', 'cloze'],
   },
@@ -2382,7 +2313,7 @@ function buildPlan() {
       const map = {
         mock: ['review.html', '全真练习'],
         reading: ['reading.html', '阅读理解'],
-        cloze: ['cloze.html', '完形填空'],
+        cloze: ['reading.html#level=CZ', '完形填空'],
         writing: ['writing.html', '书面表达'],
       };
       const m = map[f];
@@ -2694,7 +2625,6 @@ buildThemes();
 buildQuiz();
 buildGrammar();
 buildReading();
-buildCloze();
 buildWriting();
 buildReview();
 buildWrong();
