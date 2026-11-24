@@ -378,11 +378,9 @@ a.card:hover { transform: translateY(-3px); box-shadow: var(--shadow-3); border-
   background: var(--accent-soft); color: var(--accent); margin-bottom: 12px;
 }
 
-/* FAQ 手风琴 */
+/* FAQ 手风琴：单列，一行一个问题。两列会让问题长短不一时左右错位，
+   读起来像漏了一行，单列顺序更清楚。 */
 .faq-list { display: grid; gap: 10px; }
-/* 折叠态走两列，9 条 FAQ 从 680px 压到约 300px；展开的项占满整行，答案不用挤在半栏里读 */
-.faq-list.cols2 { grid-template-columns: 1fr 1fr; align-items: start; }
-.faq-list.cols2 .faq-item[open] { grid-column: 1 / -1; }
 .faq-item {
   border: 1px solid var(--border); border-radius: var(--r);
   background: var(--surface); overflow: hidden;
@@ -395,7 +393,6 @@ a.card:hover { transform: translateY(-3px); box-shadow: var(--shadow-3); border-
 .faq-item summary::after { content: "+"; font-size: 1.2rem; color: var(--accent); font-weight: 500; transition: transform .2s; }
 .faq-item[open] summary::after { transform: rotate(45deg); }
 .faq-item p { padding: 0 20px 18px; margin: 0; font-size: .9rem; color: var(--text-2); line-height: 1.72; }
-@media (max-width: 760px) { .faq-list.cols2 { grid-template-columns: 1fr; } }
 
 /* ---------------- 单词行 ---------------- */
 .wordlist { border: 1px solid var(--border); border-radius: var(--r); overflow: hidden; background: var(--surface); box-shadow: var(--shadow-1); }
