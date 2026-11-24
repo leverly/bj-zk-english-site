@@ -358,7 +358,7 @@ function buildHome() {
   </div>
 </section>
 
-<!-- ========== 为什么背了单词还是提不上去：三个问题 → 三个机制 + 与普通题库的区别 ========== -->
+<!-- ========== 为什么背了单词还是提不上去：三个问题 → 三个机制 ========== -->
 <section class="section reveal" id="why">
   <div class="section-head">
     <div class="section-head-left">
@@ -404,19 +404,6 @@ function buildHome() {
         <a class="sell-link" href="reading.html">看我的能力诊断 →</a>
       </div>
     </div>
-  </div>
-
-  <div class="tbl-wrap" style="margin-top:32px">
-    <table class="gtable diff-table">
-      <thead><tr><th style="width:20%"></th><th style="width:36%">普通题库</th><th style="width:44%">本站</th></tr></thead>
-      <tbody>
-        <tr><td class="diff-k">解析深度</td><td class="diff-old">给正确答案，最多一句「因为原文说了」</td><td class="diff-new"><b>三层解析：定位句 + 为什么对 + 错项为什么错</b></td></tr>
-        <tr><td class="diff-k">错题</td><td class="diff-old">收集起来，自己去翻</td><td class="diff-new"><b>自动收纳 + 按遗忘曲线排期重做</b></td></tr>
-        <tr><td class="diff-k">能力诊断</td><td class="diff-old">只有一个总分</td><td class="diff-new"><b>六项能力分维度正确率，指出最弱项</b></td></tr>
-        <tr><td class="diff-k">写作</td><td class="diff-old">给范文让你背</td><td class="diff-new"><b>方法 + 模板 + 句型库 + ${WRITING_N} 篇范文逐句拆</b></td></tr>
-        <tr><td class="diff-k">内容口径</td><td class="diff-old">通用中考题</td><td class="diff-new"><b>对齐北京卷笔试 60 分五道大题结构</b></td></tr>
-      </tbody>
-    </table>
   </div>
 </section>
 

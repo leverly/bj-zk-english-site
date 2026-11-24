@@ -1802,13 +1802,6 @@ a.coverage-row:hover { border-color: var(--accent); transform: translateX(3px); 
 }
 .sell-link:hover { text-decoration: underline; }
 
-/* 对比表：普通题库 vs 本站 */
-.diff-table td { vertical-align: middle; }
-.diff-k { font-weight: 700; color: var(--text); white-space: nowrap; }
-.diff-old { color: var(--text-3); font-size: .88rem; }
-.diff-new { color: var(--text); font-size: .88rem; }
-.diff-new b { color: var(--accent); }
-
 /* 三层目标卡：送分区 / 中档区 / 区分区 */
 .tier-minis { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
 .tier-mini {
