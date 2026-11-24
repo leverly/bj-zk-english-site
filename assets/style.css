@@ -1607,6 +1607,87 @@ a.coverage-row:hover { border-color: var(--accent); transform: translateX(3px); 
 }
 
 /* ==========================================================
+   学情档案：今日复习卡 + 薄弱项诊断清单
+   ========================================================== */
+.review-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+.review-card {
+  display: flex; gap: 14px; align-items: flex-start;
+  padding: 20px; border: 1px solid var(--border); border-radius: var(--r);
+  background: var(--surface); box-shadow: var(--shadow-1);
+  transition: transform .16s var(--ease), box-shadow .16s, border-color .16s;
+}
+.review-card:hover {
+  transform: translateY(-2px); box-shadow: var(--shadow-2);
+  border-color: color-mix(in srgb, var(--accent) 32%, transparent);
+}
+/* 有到期内容的卡片左侧加一条强调边，扫一眼就知道今天哪块欠账 */
+.review-card.hot { border-left: 3px solid var(--accent); }
+.rc-ico {
+  width: 40px; height: 40px; border-radius: 12px; flex: none;
+  display: grid; place-items: center; font-size: 1.1rem;
+  background: var(--accent-soft); color: var(--accent);
+}
+.rc-ico.rose { background: var(--rose-soft); color: var(--rose); }
+.rc-ico.purple { background: var(--accent-2-soft); color: var(--accent-2); }
+.rc-ico.blue { background: var(--accent-soft); color: var(--accent); }
+.rc-body { display: flex; flex-direction: column; gap: 5px; min-width: 0; flex: 1; }
+.rc-top { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; }
+.rc-top b { font-size: .95rem; }
+.rc-n { font-family: var(--display); font-size: 1.35rem; font-weight: 800; color: var(--accent); line-height: 1; }
+.review-card.hot .rc-n { color: var(--rose); }
+.rc-desc { font-size: .82rem; color: var(--text-3); line-height: 1.55; }
+.rc-go { font-size: .82rem; font-weight: 700; color: var(--accent); margin-top: 2px; }
+
+.weak-summary {
+  display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap;
+  padding: 14px 18px; margin-bottom: 16px; border-radius: var(--r-sm);
+  background: var(--rose-soft); border-left: 3px solid var(--rose);
+}
+.weak-summary b { font-size: .95rem; color: var(--rose); }
+.weak-summary span { font-size: .84rem; color: var(--text-2); }
+.weak-summary.ok { background: var(--ok-soft); border-left-color: var(--ok); }
+.weak-summary.ok b { color: var(--ok); }
+
+.weak-list { display: grid; gap: 8px; }
+.weak-row {
+  display: grid;
+  grid-template-columns: 26px minmax(150px, 1.5fr) 1fr 84px 52px auto;
+  align-items: center; gap: 14px;
+  padding: 12px 16px; border: 1px solid var(--border); border-radius: var(--r-sm);
+  background: var(--surface);
+}
+.weak-row.is-thin { opacity: .62; }
+.weak-rank {
+  font-family: var(--display); font-size: .82rem; font-weight: 800;
+  color: var(--rose); text-align: center;
+}
+.weak-rank.ghost { color: var(--border-2); }
+.weak-name { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.weak-name b { font-size: .9rem; }
+.weak-group { font-size: .74rem; color: var(--text-3); }
+.weak-bar { height: 8px; background: var(--bg-3); border-radius: 99px; overflow: hidden; }
+.weak-bar i { display: block; height: 100%; border-radius: 99px; background: var(--accent-grad); }
+.weak-bar.rose i { background: var(--rose); }
+.weak-bar.warn i { background: var(--gold-grad); }
+.weak-bar.ok i { background: var(--ok); }
+.weak-num { font-family: var(--mono); font-size: .76rem; color: var(--text-3); text-align: right; }
+.weak-pct { font-family: var(--mono); font-size: .85rem; font-weight: 700; text-align: right; color: var(--accent); }
+.weak-pct.rose { color: var(--rose); }
+.weak-pct.warn { color: var(--gold); }
+.weak-pct.ok { color: var(--ok); }
+.weak-go { white-space: nowrap; }
+
+@media (max-width: 1024px) {
+  .review-cards { grid-template-columns: 1fr; }
+}
+@media (max-width: 760px) {
+  .weak-row { grid-template-columns: 22px 1fr 48px; gap: 10px; row-gap: 6px; }
+  .weak-bar { grid-column: 2 / -1; }
+  .weak-num { display: none; }
+  .weak-go { grid-column: 2 / -1; justify-self: start; }
+}
+
+/* ==========================================================
    首页：痛点 → 机制（对齐数学站的说服链结构）
    左栏「你遇到的问题」灰底，右栏「本站怎么解」白底
    ========================================================== */

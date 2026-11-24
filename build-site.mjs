@@ -146,7 +146,7 @@ const NAV = [
   { href: 'grammar.html', label: '语法', key: 'grammar' },
   { href: 'writing.html', label: '写作', key: 'writing' },
   { href: 'wrong.html', label: '错题本', key: 'wrong' },
-  { href: 'stats.html', label: '学习数据', key: 'stats' },
+  { href: 'stats.html', label: '学情档案', key: 'stats' },
 ];
 
 const LOGO_SVG = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>`;
@@ -198,7 +198,7 @@ const FOOTER = (base) => `<footer class="foot">
     </div>
     <div class="col">
       <h4>数据与说明</h4>
-      <a href="${base}stats.html">学习数据</a>
+      <a href="${base}stats.html">学情档案</a>
       <a href="${base}content.html">内容说明</a>
       <a href="${base}index.html#faq">常见问题</a>
     </div>
@@ -321,7 +321,7 @@ function buildHome() {
           <div class="bar"><i id="tBar" style="width:0%"></i></div>
           <div class="cockpit-sub">
             <span id="cTarget">目标：115 分以上</span>
-            <a href="stats.html" style="font-weight:600">查看学习数据 →</a>
+            <a href="stats.html" style="font-weight:600">查看学情档案 →</a>
           </div>
         </div>
       </div>
@@ -623,7 +623,7 @@ function buildHome() {
     </details>
     <details class="faq-item">
       <summary>孩子的背词进度和错题本会丢失吗？换设备怎么办？</summary>
-      <p>学习记录实时保存在当前浏览器中，离线也能用。如果需要在电脑和 iPad 之间切换，或担心清缓存丢失，可以随时在「学习数据」页点击<b>一键导出学习档案</b>，在新设备上导入即可无缝恢复。</p>
+      <p>学习记录实时保存在当前浏览器中，离线也能用。如果需要在电脑和 iPad 之间切换，或担心清缓存丢失，可以随时在「学情档案」页点击<b>一键导出学习档案</b>，在新设备上导入即可无缝恢复。</p>
     </details>
     <details class="faq-item">
       <summary>词表和语法点是官方发布的吗？</summary>
@@ -3028,28 +3028,56 @@ ZK.ready(function(){
 }
 
 /* ==========================================================
-   9. 学习数据
+   9. 学情档案
    ========================================================== */
 function buildStats() {
   const body = `
 <div class="page-head">
-  <div class="crumb"><a href="index.html">首页</a> / 学习数据</div>
-  <h1>学习数据与档案备份</h1>
-  <p class="lede">所有学习记录保存在当前浏览器本地，不上传服务器。换设备或清缓存前，建议先导出备份。</p>
+  <div class="crumb"><a href="index.html">首页</a> / 学情档案</div>
+  <h1>学情档案</h1>
+  <p class="lede">不看总分，看<b>弱在哪</b>。这里把语法考点与六项阅读能力的正确率排成一张待补清单，正确率越低越靠前——<b>照着清单从上往下练，就是当前最省时间的复习路径</b>。</p>
 </div>
 
 <section class="section" style="margin-top:22px">
   <div class="kv">
     <div class="k"><b id="sKnown">0</b><span>已掌握词条</span></div>
     <div class="k"><b id="sSrs">0</b><span>记忆库词条</span></div>
-    <div class="k"><b id="sMature">0</b><span>牢固掌握（≥21 天）</span></div>
     <div class="k"><b id="sQn">0</b><span>累计练题</span></div>
-    <div class="k"><b id="sRate" style="color:var(--accent)">—</b><span>语法正确率</span></div>
+    <div class="k"><b id="sRate" style="color:var(--accent)">—</b><span>总体正确率</span></div>
     <div class="k"><b id="sStreak">0</b><span>连续打卡天数</span></div>
   </div>
 </section>
 
-<section class="section" style="margin-top:24px">
+<!-- ========== 今日复习：按遗忘曲线算出来今天该做什么 ========== -->
+<section class="section" style="margin-top:26px" id="todayPlan">
+  <div class="section-head">
+    <div class="section-head-left">
+      <span class="kicker">高效复习</span>
+      <h2>今天该练什么</h2>
+      <span class="sub">按遗忘曲线算出的到期内容，做完这一轮再看新题，比盲目刷题省一半时间</span>
+    </div>
+  </div>
+  <div class="review-cards" id="planCards"></div>
+</section>
+
+<!-- ========== 薄弱项诊断：整页的核心 ========== -->
+<section class="section" style="margin-top:26px" id="weakZone">
+  <div class="section-head">
+    <div class="section-head-left">
+      <span class="kicker">薄弱项诊断</span>
+      <h2>按正确率排出该补的顺序</h2>
+      <span class="sub">语法考点与阅读能力合并排序，正确率低于 80% 的标红。每项后面直接给入口，点进去就是专项练</span>
+    </div>
+    <div class="chips" id="weakFilter">
+      <button class="chip on" data-wf="all">全部</button>
+      <button class="chip" data-wf="grammar">语法考点</button>
+      <button class="chip" data-wf="skill">阅读能力</button>
+    </div>
+  </div>
+  <div id="weakList"></div>
+</section>
+
+<section class="section" style="margin-top:26px">
   <div class="section-head">
     <div class="section-head-left">
       <h2 style="font-size:1.15rem">最近 7 天学习量</h2>
@@ -3059,21 +3087,11 @@ function buildStats() {
   <div class="card"><div id="chart" class="chart"></div></div>
 </section>
 
-<section class="section" style="margin-top:24px">
+<section class="section" style="margin-top:26px">
   <div class="section-head">
     <div class="section-head-left">
-      <h2 style="font-size:1.15rem">各考点掌握诊断</h2>
-      <span class="sub">按正确率从低到高排序，正确率低于 70% 的建议重点复习</span>
-    </div>
-  </div>
-  <div id="diag"></div>
-</section>
-
-<section class="section" style="margin-top:24px">
-  <div class="section-head">
-    <div class="section-head-left">
-      <h2 style="font-size:1.15rem">学习档案备份</h2>
-      <span class="sub">导出为 JSON 文件，可在另一台设备导入恢复</span>
+      <h2 style="font-size:1.15rem">档案备份</h2>
+      <span class="sub">记录只存当前浏览器，换设备或清缓存前先导出</span>
     </div>
   </div>
   <div class="card">
@@ -3088,11 +3106,152 @@ function buildStats() {
 `;
   const script = `
 ZK.ready(function(){
+  var GRAMMAR = ZK_DATA.GRAMMAR;
+  var gt = {};
+  GRAMMAR.forEach(function(g){
+    g.topics.forEach(function(t){ gt[t.id] = { name: t.name, family: g.name }; });
+  });
+
+  /* ---------------- 今日复习：到期单词 / 到期错题 / 到期语法题 ---------------- */
+  function drawPlan(){
+    var srs = ZK.srsStats();
+    var wbN = ZK.wordBookCount();
+    var wrongIds = ZK.wrongIds();
+    var wrongN = wrongIds.length;
+    var dueMap = ZK.qDueMap();
+    var now = Date.now();
+    var wrongSet = {};
+    wrongIds.forEach(function(id){ wrongSet[id] = 1; });
+    /* 「待复习」只算真正到期的：已答对排了下次复习时间的题，没到期不该催。
+       错题（wrongIds）本来 due 就是 0，单独归到「错题待清」，这里排除掉，免得重复计数。 */
+    var dueQ = 0;
+    Object.keys(dueMap).forEach(function(id){
+      if (wrongSet[id]) return;
+      var d = dueMap[id];
+      if (d && (d.due || 0) > 0 && d.due <= now) dueQ++;
+    });
+
+    var cards = [
+      { key:'word', icon:'🎧', cls:'blue', title:'到期单词', n: srs.due,
+        desc: srs.due ? '记忆库里到期该复习的词，按遗忘曲线排的' : '今天没有到期单词，可以背新词',
+        href:'quiz.html', go: srs.due ? '去复习 →' : '去背新词 →', hot: srs.due > 0 },
+      { key:'wrong', icon:'🎯', cls:'rose', title:'错题待清', n: wbN + wrongN,
+        desc: wbN + wrongN ? '单词错题 ' + wbN + ' 条 · 语法错题 ' + wrongN + ' 条' : '错题本是空的，保持住',
+        href:'wrong.html', go: wbN + wrongN ? '去清错题 →' : '看看错题本 →', hot: (wbN + wrongN) > 0 },
+      { key:'gram', icon:'⚡', cls:'purple', title:'语法待复习', n: dueQ,
+        desc: dueQ ? '按 0.5 / 1 / 3 / 7 / 21 天排期，到期的题该重做一遍' : '没有到期的语法题',
+        href:'review.html', go: dueQ ? '去重做 →' : '去练新题 →', hot: dueQ > 0 },
+    ];
+
+    document.getElementById('planCards').innerHTML = cards.map(function(c){
+      return '<a class="review-card' + (c.hot ? ' hot' : '') + '" href="' + c.href + '">' +
+        '<span class="rc-ico ' + c.cls + '">' + c.icon + '</span>' +
+        '<span class="rc-body">' +
+          '<span class="rc-top"><b>' + c.title + '</b><span class="rc-n">' + c.n + '</span></span>' +
+          '<span class="rc-desc">' + c.desc + '</span>' +
+          '<span class="rc-go">' + c.go + '</span>' +
+        '</span></a>';
+    }).join('');
+  }
+
+  /* ---------------- 薄弱项诊断 ---------------- */
+  var wf = 'all';
+
+  function collectWeak(){
+    var rows = [];
+
+    ZK.topicRates().forEach(function(r){
+      var info = gt[r.id];
+      if (!info) return;
+      rows.push({
+        kind:'grammar', name: info.name, group: '语法 · ' + info.family,
+        n: r.total, ok: r.right, rate: r.rate,
+        href: 'review.html?topic=' + encodeURIComponent(r.id), go: '练这个考点 →',
+      });
+    });
+
+    ZK.pSkillStats().forEach(function(r){
+      rows.push({
+        kind:'skill', name: r.name, group: '阅读能力',
+        n: r.n, ok: r.ok, rate: r.rate,
+        href: 'reading.html', go: '去练阅读 →',
+      });
+    });
+
+    // 正确率低的在前；样本太少的（<3 题）排在同正确率的后面，避免 1 题错就排第一
+    rows.sort(function(a, b){
+      if (Math.abs(a.rate - b.rate) > 0.001) return a.rate - b.rate;
+      return (b.n >= 3 ? 1 : 0) - (a.n >= 3 ? 1 : 0);
+    });
+    return rows;
+  }
+
+  function drawWeak(){
+    var all = collectWeak();
+    var rows = wf === 'all' ? all : all.filter(function(x){ return x.kind === wf; });
+    var host = document.getElementById('weakList');
+
+    if (!all.length) {
+      host.innerHTML = '<div class="empty"><b>还没有练习记录</b>' +
+        '先做一组题，这里就会排出你该补的顺序：<a href="quiz.html">背单词</a> · ' +
+        '<a href="review.html">练语法</a> · <a href="reading.html">学阅读</a></div>';
+      return;
+    }
+    if (!rows.length) {
+      host.innerHTML = '<div class="empty"><b>这一类还没有记录</b>换个筛选，或去练几题</div>';
+      return;
+    }
+
+    var weak = rows.filter(function(x){ return x.rate < 0.8 && x.n >= 3; });
+    var head = '';
+    if (weak.length) {
+      head = '<div class="weak-summary">' +
+        '<b>' + weak.length + ' 项待补</b>' +
+        '<span>按顺序练完，正确率整体能上一个台阶。先攻第一项，别同时开五个。</span></div>';
+    } else {
+      head = '<div class="weak-summary ok"><b>暂无明显薄弱项</b>' +
+        '<span>已练过的项目正确率都在 80% 以上。继续扩大练习面，让诊断更准。</span></div>';
+    }
+
+    /* 序号只给真正待补的项（正确率 <80% 且样本 >=3），从 1 连续编号。
+       注意不能用 map 的索引自增——那会改写索引、把后面的编号也带偏。 */
+    var rankNo = 0;
+    host.innerHTML = head + '<div class="weak-list">' + rows.map(function(x){
+      var pct = Math.round(x.rate * 100);
+      var cls = pct < 60 ? 'rose' : pct < 80 ? 'warn' : 'ok';
+      var thin = x.n < 3;
+      var needFix = x.rate < 0.8 && !thin;
+      var rank = needFix
+        ? '<span class="weak-rank">' + (++rankNo) + '</span>'
+        : '<span class="weak-rank ghost">·</span>';
+      return '<div class="weak-row' + (thin ? ' is-thin' : '') + '">' +
+        rank +
+        '<span class="weak-name">' +
+          '<b>' + ZK.esc(x.name) + '</b>' +
+          '<span class="weak-group">' + ZK.esc(x.group) + (thin ? ' · 样本少，仅供参考' : '') + '</span>' +
+        '</span>' +
+        '<span class="weak-bar ' + cls + '"><i style="width:' + pct + '%"></i></span>' +
+        '<span class="weak-num">' + x.ok + ' / ' + x.n + ' 题</span>' +
+        '<span class="weak-pct ' + cls + '">' + pct + '%</span>' +
+        '<a class="btn xs soft weak-go" href="' + x.href + '">' + x.go + '</a>' +
+      '</div>';
+    }).join('') + '</div>';
+  }
+
+  document.querySelectorAll('#weakFilter .chip').forEach(function(c){
+    c.addEventListener('click', function(){
+      document.querySelectorAll('#weakFilter .chip').forEach(function(x){ x.classList.remove('on'); });
+      c.classList.add('on');
+      wf = c.getAttribute('data-wf');
+      drawWeak();
+    });
+  });
+
+  /* ---------------- 概览 + 7 日图 ---------------- */
   function refresh(){
     document.getElementById('sKnown').textContent = ZK.knownCount();
     var st = ZK.srsStats();
     document.getElementById('sSrs').textContent = st.total;
-    document.getElementById('sMature').textContent = st.mature;
     var ql = ZK.qLog(), n = 0, right = 0;
     Object.keys(ql.topicStats).forEach(function(k){ var t = ql.topicStats[k]; n += t.right + t.wrong; right += t.right; });
     document.getElementById('sQn').textContent = n;
@@ -3112,24 +3271,8 @@ ZK.ready(function(){
         '</div>';
     }).join('') + '</div>';
 
-    // 考点诊断
-    var rates = ZK.topicRates();
-    var host = document.getElementById('diag');
-    if (!rates.length) {
-      host.innerHTML = '<div class="empty"><b>还没有练习记录</b>去<a href="review.html">练语法</a>，这里会显示各考点的掌握情况</div>';
-      return;
-    }
-    var gt = {};
-    ZK_DATA.GRAMMAR.forEach(function(g){ g.topics.forEach(function(t){ gt[t.id] = { name:t.name, family:g.name }; }); });
-    host.innerHTML = '<div class="card"><table class="tbl"><thead><tr><th>考点</th><th>所属语法族</th><th>答对/总数</th><th>正确率</th></tr></thead><tbody>' +
-      rates.map(function(r){
-        var info = gt[r.id] || { name: r.id, family: '—' };
-        var pct = Math.round(r.rate*100);
-        var color = pct >= 80 ? 'var(--ok)' : pct >= 60 ? 'var(--gold)' : 'var(--rose)';
-        return '<tr><td><b>' + ZK.esc(info.name) + '</b></td><td>' + ZK.esc(info.family) + '</td>' +
-          '<td>' + r.right + ' / ' + r.total + '</td>' +
-          '<td style="color:' + color + ';font-weight:700">' + pct + '%</td></tr>';
-      }).join('') + '</tbody></table></div>';
+    drawPlan();
+    drawWeak();
   }
 
   document.getElementById('exportBtn').addEventListener('click', function(){ ZK.exportBackup(); });
@@ -3158,8 +3301,8 @@ ZK.ready(function(){
 });
 `;
   write('stats.html', page({
-    title: '学习数据与档案备份',
-    desc: '北京中考英语学习数据统计、各考点掌握诊断与学习档案备份。',
+    title: '学情档案 · 薄弱项诊断与复习计划',
+    desc: '北京中考英语学情档案：把语法考点与六项阅读能力按正确率排成待补清单，按遗忘曲线给出今日复习计划，让复习只花在薄弱项上。',
     active: 'stats', body, script, dataKeys: ['GRAMMAR'],
   }));
 }
@@ -3238,7 +3381,7 @@ function buildContent() {
       <li>写作部分提供方法体系与 <b>${WRITING_N} 篇原创高分范文</b>，<b>不做自动批改</b>：写完请对照范文的评分要点与 ${WRITING_TRAPS.length} 个失分点自查。范文是原创仿写，不是官方发布的满分作文。</li>
       <li>听说机考 40 分需要专用音频与录音评测，<b>不在本站范围</b>，请配合北京教育考试院官方体验系统或真题练习。</li>
       <li>词频分档是启发式推断，不要当作官方难度等级使用。</li>
-      <li>学习记录保存在浏览器 localStorage，换浏览器或清缓存会丢失，请用「学习数据」页的导出备份。</li>
+      <li>学习记录保存在浏览器 localStorage，换浏览器或清缓存会丢失，请用「学情档案」页的导出备份。</li>
       <li>单词与写作部分（范文、句型）的朗读音频由 <b>Edge TTS（en-GB-SoniaNeural，英式女声）预生成</b>，共 ${Object.keys(AUDIO).length} 条、约 17MB，音色全站统一；仅在新增文本尚未生成音频时，才退回浏览器自带语音合成。阅读与完形的原文不提供朗读，专注读法训练。</li>
     </ul>
   </div>
