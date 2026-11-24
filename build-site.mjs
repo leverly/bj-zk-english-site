@@ -2014,18 +2014,6 @@ ZK.ready(function(){
     </a>`;
   }).join('');
 
-  /* 完形填空：4 篇直接铺在首页，每篇一张卡，不必再点一层 */
-  const homeCzCards = CLOZE.map((c, i) => {
-    const tag = c.level === '基础' ? '基础' : c.level === '重点' ? '重点' : '难点';
-    return `<a class="card passage-card" href="reading/${c.id}.html">
-      <span class="passage-no">第 ${i + 1} 篇</span>
-      <h3>${esc(c.title)}</h3>
-      <p class="desc">${esc(c.intro)}</p>
-      <div class="meta">${c.blanks.length} 空 · ${esc(c.level)}</div>
-      <span class="level-go">开始练习 →</span>
-    </a>`;
-  }).join('');
-
   write('reading.html', page({
     title: '整篇理解学阅读 · 完形 + 阅读理解 + 阅读表达 · 38 分',
     desc: `北京中考英语整篇理解学阅读：${CLOZE.length} 篇完形（${CLOZE_N} 空）、${PASSAGES.length} 篇阅读理解（${READ_Q} 题）、${EXPRESS_Q} 道阅读表达，共 38 分。完形与四类阅读各有读法，每题给原文定位与错项分析。`,
@@ -2048,22 +2036,15 @@ ZK.ready(function(){
 </section>
 
 <section class="section">
-  <div class="section-head">
-    <div class="section-head-left">
-      <span class="kicker">完形填空 · 独立题型</span>
-      <h2>完形填空：考上下文，不考单句</h2>
-      <span class="sub">北京卷第二部分 8 分，每篇 8 空，考的是前后呼应、词汇复现与情感线索，和阅读理解是两种不同的读法</span>
-    </div>
-    <a class="btn sm soft" href="reading/cz.html">进入完形填空 →</a>
-  </div>
-  <div class="section-head" style="margin-top:26px">
-    <div class="section-head-left">
-      <span class="kicker">篇目 · 共 ${CLOZE.length} 篇 ${CLOZE_N} 空</span>
-      <h2>点开一篇开始练</h2>
-      <span class="sub">每篇 8 空，先通读全文再逐空选择，每空给上下文依据并附全文译文</span>
-    </div>
-  </div>
-  <div class="grid c4 passage-cards">${homeCzCards}</div>
+  <a class="cz-entry" href="reading/cz.html">
+    <span class="cz-entry-ico">🧩</span>
+    <span class="cz-entry-body">
+      <span class="kicker">完形填空 · 独立题型 · 北京卷第二部分 8 分</span>
+      <span class="cz-entry-title">完形填空：考上下文，不考单句</span>
+      <span class="cz-entry-desc">${CLOZE.length} 篇 ${CLOZE_N} 空。每篇 8 空，先通读全文再逐空选择，每空给上下文依据并附全文译文——和阅读理解是两种不同的读法。</span>
+    </span>
+    <span class="cz-entry-go">进入完形填空 <span aria-hidden="true">→</span></span>
+  </a>
 </section>
 
 <section class="section">
