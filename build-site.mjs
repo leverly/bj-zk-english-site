@@ -1997,53 +1997,6 @@ ZK.ready(function(){
 });
 `;
 
-  /* 能力诊断面板脚本（只在一级页用）
-     六项固定展示（对齐河北）：未作答的项显示 0 / 0 题与 0%，不让面板忽隐忽现。
-     排序：有作答记录且正确率低的排前面，未作答的排最后。 */
-  const skillPanelScript = `
-ZK.ready(function(){
-  var P = window.ZK;
-  var ORDER = ${JSON.stringify(SKILL_ORDER)};
-  var LABEL = ${JSON.stringify(SKILL_LABEL)};
-  function draw(){
-    var panel = document.getElementById('skillPanel');
-    var host = document.getElementById('skillBars');
-    if (!panel || !host || !P.pSkillStats) return;
-    var stats = P.pSkillStats();
-    var byKey = {};
-    stats.forEach(function(x){ byKey[x.skill] = x; });
-    var rows = ORDER.map(function(k){
-      var x = byKey[k] || { n: 0, ok: 0, rate: 0 };
-      return { skill: k, name: LABEL[k] || k, n: x.n || 0, ok: x.ok || 0, rate: x.rate || 0 };
-    });
-    // 有记录的按正确率升序（最弱在前），没记录的保持原顺序排在后面
-    rows.sort(function(a, b){
-      if (a.n === 0 && b.n !== 0) return 1;
-      if (b.n === 0 && a.n !== 0) return -1;
-      if (a.n === 0 && b.n === 0) return ORDER.indexOf(a.skill) - ORDER.indexOf(b.skill);
-      return a.rate - b.rate;
-    });
-    var total = rows.reduce(function(s, x){ return s + x.n; }, 0);
-    panel.style.display = '';
-    host.innerHTML = '<div class="skill-bars">' + rows.map(function(x){
-      var pct = Math.round(x.rate * 100);
-      var cls = x.n === 0 ? 'none' : pct < 60 ? 'rose' : pct < 80 ? 'warn' : 'ok';
-      return '<div class="skill-row' + (x.n === 0 ? ' is-empty' : '') + '">' +
-        '<span class="sk-name">' + P.esc(x.name) + '</span>' +
-        '<span class="sk-bar ' + cls + '"><i style="width:' + pct + '%"></i></span>' +
-        '<span class="sk-num">' + x.ok + ' / ' + x.n + ' 题</span>' +
-        '<span class="sk-pct ' + cls + '">' + (x.n === 0 ? '—' : pct + '%') + '</span>' +
-      '</div>';
-    }).join('') + '</div>' +
-    '<p class="skill-hint">' + (total === 0
-      ? '还没有作答记录。做几篇完形或阅读后，这里会按六项能力统计正确率。'
-      : '共作答 ' + total + ' 题，红色项是下一步该专攻的方向。') + '</p>';
-  }
-  draw();
-  document.addEventListener('zk:qlog', draw);
-});
-`;
-
   /* ==========================================================
      一级：reading.html —— 类型索引 + 能力诊断
      ========================================================== */
@@ -2094,17 +2047,6 @@ ZK.ready(function(){
   </div>
 </section>
 
-<section class="section" id="skillPanel" style="display:none">
-  <div class="section-head">
-    <div class="section-head-left">
-      <span class="kicker">我的阅读能力</span>
-      <h2>六项能力正确率</h2>
-      <span class="sub">按你的作答记录实时统计，红色项就是下一步该专攻的方向</span>
-    </div>
-  </div>
-  <div class="card"><div id="skillBars"></div></div>
-</section>
-
 <section class="section">
   <div class="section-head">
     <div class="section-head-left">
@@ -2140,7 +2082,7 @@ ZK.ready(function(){
     <div class="section-head-left">
       <span class="kicker">能力维度</span>
       <h2>六项能力，各有练法</h2>
-      <span class="sub">与上方诊断面板一一对应。前三项靠阅读理解练，后三项靠完形填空练</span>
+      <span class="sub">前三项靠阅读理解练，后三项靠完形填空练。你的六项正确率见<a href="stats.html" style="font-weight:600">学情档案</a></span>
     </div>
   </div>
   <div class="grid c3">
@@ -2190,7 +2132,6 @@ ZK.ready(function(){
   </div>
 </section>
 `,
-    script: skillPanelScript,
   }));
 
   /* ==========================================================
@@ -3035,7 +2976,7 @@ function buildStats() {
 <div class="page-head">
   <div class="crumb"><a href="index.html">首页</a> / 学情档案</div>
   <h1>学情档案</h1>
-  <p class="lede">不看总分，看<b>弱在哪</b>。这里把语法考点与六项阅读能力的正确率排成一张待补清单，正确率越低越靠前——<b>照着清单从上往下练，就是当前最省时间的复习路径</b>。</p>
+  <p class="lede">不看总分，看<b>弱在哪</b>。这里按遗忘曲线排出<b>今天该练什么</b>，再把语法考点与六项阅读能力的正确率摊开——正确率越低越靠前，<b>照着从上往下练，就是当前最省时间的复习路径</b>。</p>
 </div>
 
 <section class="section" style="margin-top:22px">
@@ -3060,21 +3001,29 @@ function buildStats() {
   <div class="review-cards" id="planCards"></div>
 </section>
 
-<!-- ========== 薄弱项诊断：整页的核心 ========== -->
+<!-- ========== 薄弱项诊断：语法考点按正确率排序 ========== -->
 <section class="section" style="margin-top:26px" id="weakZone">
   <div class="section-head">
     <div class="section-head-left">
-      <span class="kicker">薄弱项诊断</span>
+      <span class="kicker">语法薄弱项</span>
       <h2>按正确率排出该补的顺序</h2>
-      <span class="sub">语法考点与阅读能力合并排序，正确率低于 80% 的标红。每项后面直接给入口，点进去就是专项练</span>
-    </div>
-    <div class="chips" id="weakFilter">
-      <button class="chip on" data-wf="all">全部</button>
-      <button class="chip" data-wf="grammar">语法考点</button>
-      <button class="chip" data-wf="skill">阅读能力</button>
+      <span class="sub">练过的考点按正确率升序排列，低于 80% 的标红并给出序号。点进去直接锁定该考点出题</span>
     </div>
   </div>
   <div id="weakList"></div>
+</section>
+
+<!-- ========== 六项阅读能力：从阅读页移过来的诊断面板 ========== -->
+<section class="section" style="margin-top:26px" id="skillZone">
+  <div class="section-head">
+    <div class="section-head-left">
+      <span class="kicker">我的阅读能力</span>
+      <h2>六项能力正确率</h2>
+      <span class="sub">按你的作答记录实时统计，红色项就是下一步该专攻的方向</span>
+    </div>
+    <a class="btn sm soft" href="reading.html">去练阅读 →</a>
+  </div>
+  <div class="card"><div id="skillBars"></div></div>
 </section>
 
 <section class="section" style="margin-top:26px">
@@ -3154,9 +3103,7 @@ ZK.ready(function(){
     }).join('');
   }
 
-  /* ---------------- 薄弱项诊断 ---------------- */
-  var wf = 'all';
-
+  /* ---------------- 语法薄弱项诊断 ---------------- */
   function collectWeak(){
     var rows = [];
 
@@ -3170,14 +3117,6 @@ ZK.ready(function(){
       });
     });
 
-    ZK.pSkillStats().forEach(function(r){
-      rows.push({
-        kind:'skill', name: r.name, group: '阅读能力',
-        n: r.n, ok: r.ok, rate: r.rate,
-        href: 'reading.html', go: '去练阅读 →',
-      });
-    });
-
     // 正确率低的在前；样本太少的（<3 题）排在同正确率的后面，避免 1 题错就排第一
     rows.sort(function(a, b){
       if (Math.abs(a.rate - b.rate) > 0.001) return a.rate - b.rate;
@@ -3186,19 +3125,51 @@ ZK.ready(function(){
     return rows;
   }
 
+  /* ---------------- 六项阅读能力（从阅读页移过来） ----------------
+     六项固定展示：未作答的项显示 0 / 0 题与 —，不让面板忽隐忽现。
+     排序：有作答记录且正确率低的排前面，未作答的按固定顺序排最后。 */
+  var SKILL_ORDER = ${JSON.stringify(SKILL_ORDER)};
+  var SKILL_LABEL = ${JSON.stringify(SKILL_LABEL)};
+
+  function drawSkill(){
+    var host = document.getElementById('skillBars');
+    if (!host) return;
+    var stats = ZK.pSkillStats();
+    var byKey = {};
+    stats.forEach(function(x){ byKey[x.skill] = x; });
+    var rows = SKILL_ORDER.map(function(k){
+      var x = byKey[k] || { n: 0, ok: 0, rate: 0 };
+      return { skill: k, name: SKILL_LABEL[k] || k, n: x.n || 0, ok: x.ok || 0, rate: x.rate || 0 };
+    });
+    rows.sort(function(a, b){
+      if (a.n === 0 && b.n !== 0) return 1;
+      if (b.n === 0 && a.n !== 0) return -1;
+      if (a.n === 0 && b.n === 0) return SKILL_ORDER.indexOf(a.skill) - SKILL_ORDER.indexOf(b.skill);
+      return a.rate - b.rate;
+    });
+    var total = rows.reduce(function(s, x){ return s + x.n; }, 0);
+    host.innerHTML = '<div class="skill-bars">' + rows.map(function(x){
+      var pct = Math.round(x.rate * 100);
+      var cls = x.n === 0 ? 'none' : pct < 60 ? 'rose' : pct < 80 ? 'warn' : 'ok';
+      return '<div class="skill-row' + (x.n === 0 ? ' is-empty' : '') + '">' +
+        '<span class="sk-name">' + ZK.esc(x.name) + '</span>' +
+        '<span class="sk-bar ' + cls + '"><i style="width:' + pct + '%"></i></span>' +
+        '<span class="sk-num">' + x.ok + ' / ' + x.n + ' 题</span>' +
+        '<span class="sk-pct ' + cls + '">' + (x.n === 0 ? '—' : pct + '%') + '</span>' +
+      '</div>';
+    }).join('') + '</div>' +
+    '<p class="skill-hint">' + (total === 0
+      ? '还没有作答记录。做几篇完形或阅读后，这里会按六项能力统计正确率。'
+      : '共作答 ' + total + ' 题，红色项是下一步该专攻的方向。') + '</p>';
+  }
+
   function drawWeak(){
-    var all = collectWeak();
-    var rows = wf === 'all' ? all : all.filter(function(x){ return x.kind === wf; });
+    var rows = collectWeak();
     var host = document.getElementById('weakList');
 
-    if (!all.length) {
-      host.innerHTML = '<div class="empty"><b>还没有练习记录</b>' +
-        '先做一组题，这里就会排出你该补的顺序：<a href="quiz.html">背单词</a> · ' +
-        '<a href="review.html">练语法</a> · <a href="reading.html">学阅读</a></div>';
-      return;
-    }
     if (!rows.length) {
-      host.innerHTML = '<div class="empty"><b>这一类还没有记录</b>换个筛选，或去练几题</div>';
+      host.innerHTML = '<div class="empty"><b>还没有语法练习记录</b>' +
+        '去<a href="review.html">练语法</a>做几题，这里会按正确率排出你该补的考点顺序</div>';
       return;
     }
 
@@ -3238,15 +3209,6 @@ ZK.ready(function(){
     }).join('') + '</div>';
   }
 
-  document.querySelectorAll('#weakFilter .chip').forEach(function(c){
-    c.addEventListener('click', function(){
-      document.querySelectorAll('#weakFilter .chip').forEach(function(x){ x.classList.remove('on'); });
-      c.classList.add('on');
-      wf = c.getAttribute('data-wf');
-      drawWeak();
-    });
-  });
-
   /* ---------------- 概览 + 7 日图 ---------------- */
   function refresh(){
     document.getElementById('sKnown').textContent = ZK.knownCount();
@@ -3273,6 +3235,7 @@ ZK.ready(function(){
 
     drawPlan();
     drawWeak();
+    drawSkill();
   }
 
   document.getElementById('exportBtn').addEventListener('click', function(){ ZK.exportBackup(); });
@@ -3302,7 +3265,7 @@ ZK.ready(function(){
 `;
   write('stats.html', page({
     title: '学情档案 · 薄弱项诊断与复习计划',
-    desc: '北京中考英语学情档案：把语法考点与六项阅读能力按正确率排成待补清单，按遗忘曲线给出今日复习计划，让复习只花在薄弱项上。',
+    desc: '北京中考英语学情档案：按遗忘曲线给出今日复习计划，把语法考点与六项阅读能力按正确率排成待补清单，让复习只花在薄弱项上。',
     active: 'stats', body, script, dataKeys: ['GRAMMAR'],
   }));
 }

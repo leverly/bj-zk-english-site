@@ -48,17 +48,6 @@
   </div>
 </section>
 
-<section class="section" id="skillPanel" style="display:none">
-  <div class="section-head">
-    <div class="section-head-left">
-      <span class="kicker">我的阅读能力</span>
-      <h2>六项能力正确率</h2>
-      <span class="sub">按你的作答记录实时统计，红色项就是下一步该专攻的方向</span>
-    </div>
-  </div>
-  <div class="card"><div id="skillBars"></div></div>
-</section>
-
 <section class="section">
   <div class="section-head">
     <div class="section-head-left">
@@ -142,7 +131,7 @@
     <div class="section-head-left">
       <span class="kicker">能力维度</span>
       <h2>六项能力，各有练法</h2>
-      <span class="sub">与上方诊断面板一一对应。前三项靠阅读理解练，后三项靠完形填空练</span>
+      <span class="sub">前三项靠阅读理解练，后三项靠完形填空练。你的六项正确率见<a href="stats.html" style="font-weight:600">学情档案</a></span>
     </div>
   </div>
   <div class="grid c3">
@@ -232,49 +221,6 @@
   </div>
 </footer>
 <script src="assets/app.js?v=7681f7d9"></script>
-<script>window.ZK_DATA=window.ZK_DATA||{};
-</script><script>
-ZK.ready(function(){
-  var P = window.ZK;
-  var ORDER = ["detail","mainidea","inference","context","collocation","grammar"];
-  var LABEL = {"detail":"细节定位","inference":"推理判断","mainidea":"主旨与观点","context":"上下文逻辑","collocation":"固定搭配","grammar":"语法与词形"};
-  function draw(){
-    var panel = document.getElementById('skillPanel');
-    var host = document.getElementById('skillBars');
-    if (!panel || !host || !P.pSkillStats) return;
-    var stats = P.pSkillStats();
-    var byKey = {};
-    stats.forEach(function(x){ byKey[x.skill] = x; });
-    var rows = ORDER.map(function(k){
-      var x = byKey[k] || { n: 0, ok: 0, rate: 0 };
-      return { skill: k, name: LABEL[k] || k, n: x.n || 0, ok: x.ok || 0, rate: x.rate || 0 };
-    });
-    // 有记录的按正确率升序（最弱在前），没记录的保持原顺序排在后面
-    rows.sort(function(a, b){
-      if (a.n === 0 && b.n !== 0) return 1;
-      if (b.n === 0 && a.n !== 0) return -1;
-      if (a.n === 0 && b.n === 0) return ORDER.indexOf(a.skill) - ORDER.indexOf(b.skill);
-      return a.rate - b.rate;
-    });
-    var total = rows.reduce(function(s, x){ return s + x.n; }, 0);
-    panel.style.display = '';
-    host.innerHTML = '<div class="skill-bars">' + rows.map(function(x){
-      var pct = Math.round(x.rate * 100);
-      var cls = x.n === 0 ? 'none' : pct < 60 ? 'rose' : pct < 80 ? 'warn' : 'ok';
-      return '<div class="skill-row' + (x.n === 0 ? ' is-empty' : '') + '">' +
-        '<span class="sk-name">' + P.esc(x.name) + '</span>' +
-        '<span class="sk-bar ' + cls + '"><i style="width:' + pct + '%"></i></span>' +
-        '<span class="sk-num">' + x.ok + ' / ' + x.n + ' 题</span>' +
-        '<span class="sk-pct ' + cls + '">' + (x.n === 0 ? '—' : pct + '%') + '</span>' +
-      '</div>';
-    }).join('') + '</div>' +
-    '<p class="skill-hint">' + (total === 0
-      ? '还没有作答记录。做几篇完形或阅读后，这里会按六项能力统计正确率。'
-      : '共作答 ' + total + ' 题，红色项是下一步该专攻的方向。') + '</p>';
-  }
-  draw();
-  document.addEventListener('zk:qlog', draw);
-});
-</script>
+
 </body>
 </html>
