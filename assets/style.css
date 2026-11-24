@@ -326,7 +326,7 @@ button { font: inherit; color: inherit; }
 
 /* ---------------- 数据背书带 ---------------- */
 .stats {
-  display: grid; grid-template-columns: repeat(5, 1fr);
+  display: grid; grid-template-columns: repeat(4, 1fr);
   gap: 12px; margin-top: 34px;
 }
 .stat {
@@ -680,6 +680,21 @@ table.gtable td:first-child { font-weight: 600; }
 .kv .k .bar { margin-top: 10px; }
 .kv .k.k-wide b { font-size: 1.05rem; font-weight: 650; line-height: 1.4; word-break: break-word; }
 
+/* 学情诊断的六张概览卡固定列数，不用 auto-fit：auto-fit 在 900px 附近
+   会排成 5+1，最后一张单独掉到第二行。按 6 / 3 / 2 三档分，永远是整行。
+   6 列时卡片只有 ~170px 宽，内边距收到 16px，副标签才不会折行。 */
+.kv.kv-6 { grid-template-columns: repeat(6, 1fr); }
+.kv.kv-6 .k { padding: 16px; }
+.kv.kv-6 .k b { font-size: 1.5rem; }
+.kv.kv-6 .k span { font-size: .76rem; white-space: nowrap; }
+@media (max-width: 1100px) {
+  .kv.kv-6 { grid-template-columns: repeat(3, 1fr); }
+  .kv.kv-6 .k { padding: 18px 20px; }
+  .kv.kv-6 .k b { font-size: 1.65rem; }
+  .kv.kv-6 .k span { font-size: .8rem; white-space: normal; }
+}
+@media (max-width: 640px) { .kv.kv-6 { grid-template-columns: repeat(2, 1fr); } }
+
 /* ---------------- 页面头部 ---------------- */
 .page-head { padding: 40px 0 6px; }
 .page-head h1 { font-size: clamp(1.65rem, 3.6vw, 2.35rem); letter-spacing: -.025em; }
@@ -931,6 +946,21 @@ table.gtable td:first-child { font-weight: 600; }
 .sev-mid { background: var(--gold-soft); color: var(--gold); }
 .sev-low { background: var(--ok-soft); color: var(--ok); }
 .sev-na { background: var(--bg-3); color: var(--text-3); }
+
+/* 诊断列表折叠：超过 10 项时只露前 10 行，其余收进「展开」。
+   .diag-more 用 display:none 真正隐藏，避免占位与 tab 焦点漏进去。 */
+.diag-foldable[data-folded="1"] .diag-more { display: none; }
+/* 折叠按钮前面始终需要一条分隔线：行本身自带 border-bottom，
+   但展开后 .diag-more 的最后一行会命中 :last-child 而丢线，这里补回来。 */
+.diag-more .diag-row:last-child { border-bottom: 1px solid var(--border); }
+.diag-toggle {
+  display: block; width: 100%; padding: 11px 18px; border: 0;
+  background: var(--surface-2);
+  color: var(--accent); font: inherit; font-size: .84rem; font-weight: 650;
+  cursor: pointer; text-align: center; transition: background .18s var(--ease-out);
+}
+.diag-toggle:hover { background: var(--accent-soft); }
+.diag-toggle-arrow { display: inline-block; margin-left: 2px; font-size: .9em; }
 
 @media (max-width: 900px) {
   .rx-grid { grid-template-columns: 1fr; }

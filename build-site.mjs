@@ -349,6 +349,13 @@ function buildHome() {
       </div>
     </div>
   </div>
+
+  <div class="stats reveal">
+    <div class="stat"><b data-count="${STATS.total}">${STATS.total}</b><span>课标词条</span><small>全部附英音朗读</small></div>
+    <div class="stat"><b data-count="${GRAMMAR_STATS.topics}">${GRAMMAR_STATS.topics}</b><span>语法考点</span><small>${GRAMMAR_STATS.families} 族 · 含情景交际</small></div>
+    <div class="stat"><b data-count="${Q_STATS.total + READING_ITEM_N}">${Q_STATS.total + READING_ITEM_N}</b><span>总题量</span><small>语法 · 完形 · 阅读 · 表达</small></div>
+    <div class="stat"><b data-count="${WRITING_N}">${WRITING_N}</b><span>写作范文</span><small>${WRITING_PHRASE_N} 个高分句型</small></div>
+  </div>
 </section>
 
 <!-- ========== 为什么背了单词还是提不上去：三个问题 → 三个机制 + 与普通题库的区别 ========== -->
@@ -2950,7 +2957,7 @@ function buildStats() {
 <div class="page-head">
   <div class="crumb"><a href="index.html">首页</a> / 学情诊断</div>
   <h1>学情诊断</h1>
-  <p class="lede">这里不做泛泛的数据统计，只回答一个问题：<b>你现在还漏着哪些薄弱项</b>。练习中做错的题会自动按 <b>语法考点 · 阅读能力 · 词汇话题</b> 三条线归档，算出每处遗留漏洞的错题量与正确率，并直接给出今天的复习顺序——<b>先清错题，再攻最弱，最后补到期</b>。</p>
+  <p class="lede">这里不做泛泛的数据统计，只回答一个问题：<b>你现在还漏着哪些薄弱项</b>。先把三条线的数据摊开——<b>词汇 · 语法 · 阅读</b>，再据此给出结论与复习顺序：<b>先清错题，再攻最弱，最后补到期</b>。</p>
 </div>
 
 <section class="section" style="margin-top:24px">
@@ -2970,32 +2977,39 @@ function buildStats() {
 <section class="section" style="margin-top:26px">
   <div class="section-head">
     <div class="section-head-left">
-      <span class="kicker">诊断结论</span>
-      <h2>当前遗留的薄弱项</h2>
-      <span class="sub" id="dxVerdict">—</span>
+      <span class="kicker">数据总览</span>
+      <h2>练习积累了什么</h2>
+      <span class="sub">下面三条线的诊断都建立在这些记录上——记录越多，结论越准</span>
     </div>
   </div>
-  <div class="rx-grid" id="rxGrid"></div>
-  <div class="note" id="dxDueNote" style="display:none;margin-top:16px"></div>
-</section>
-
-<section class="section" style="margin-top:26px">
-  <div class="kv">
+  <div class="kv kv-6">
     <div class="k"><b id="rLevel">Lv.1</b><span id="rXp">中考萌新 · 0 XP</span></div>
     <div class="k"><b id="rStreak" style="color:var(--gold)">0 天</b><span>当前连续打卡</span></div>
-    <div class="k"><b id="rWords" style="color:var(--accent)">0</b><span id="rWordsSub">已学词数（牢固 0）</span></div>
-    <div class="k"><b id="rQRate" style="color:var(--ok)">—</b><span id="rQSub">语法精练总正确率</span></div>
+    <div class="k"><b id="rWords" style="color:var(--accent)">0</b><span id="rWordsSub">已学词数 · 牢固 0</span></div>
+    <div class="k"><b id="rQRate" style="color:var(--ok)">—</b><span id="rQSub">语法正确率</span></div>
     <div class="k"><b id="rPassage" style="color:var(--accent-2)">—</b><span id="rPassageSub">篇章题正确率</span></div>
     <div class="k"><b id="rWrong" style="color:var(--rose)">0</b><span>错题待清理</span></div>
   </div>
 </section>
 
+<section class="section" id="wDiagSection" style="margin-top:30px">
+  <div class="section-head">
+    <div class="section-head-left">
+      <span class="kicker">第一条线 · 词汇</span>
+      <h2>错词集中在哪些话题</h2>
+      <span class="sub">条形长度＝该话题错词占全部错词的比重；话题越集中，越适合成组重记</span>
+    </div>
+    <a class="btn sm soft" href="wrong.html">去清错词 →</a>
+  </div>
+  <div id="wDiagList"></div>
+</section>
+
 <section class="section" id="gDiagSection" style="margin-top:30px">
   <div class="section-head">
     <div class="section-head-left">
-      <span class="kicker">第一条线 · 语法考点</span>
+      <span class="kicker">第二条线 · 语法</span>
       <h2>语法错题落在哪些考点</h2>
-      <span class="sub">按错题量从多到少排；红色＝错题未清且正确率偏低，优先专攻</span>
+      <span class="sub">按正确率从低到高排；红色＝正确率低于 60% 且已练满 3 题，优先专攻</span>
     </div>
     <a class="btn sm soft" href="review.html">去练语法 →</a>
   </div>
@@ -3005,25 +3019,13 @@ function buildStats() {
 <section class="section" id="rDiagSection" style="margin-top:30px">
   <div class="section-head">
     <div class="section-head-left">
-      <span class="kicker">第二条线 · 阅读能力</span>
-      <h2>篇章错题卡在哪项能力</h2>
+      <span class="kicker">第三条线 · 阅读</span>
+      <h2>篇章题卡在哪项能力</h2>
       <span class="sub">六项能力：细节定位 / 推理判断 / 主旨与观点 / 上下文逻辑 / 固定搭配 / 语法与词形</span>
     </div>
     <a class="btn sm soft" href="reading.html">去练阅读 →</a>
   </div>
   <div id="rDiagList"></div>
-</section>
-
-<section class="section" id="wDiagSection" style="margin-top:30px">
-  <div class="section-head">
-    <div class="section-head-left">
-      <span class="kicker">第三条线 · 词汇</span>
-      <h2>错词集中在哪些话题</h2>
-      <span class="sub">条形长度＝该话题错词占全部错词的比重；话题越集中，越适合成组重记</span>
-    </div>
-    <a class="btn sm soft" href="wrong.html">去清错词 →</a>
-  </div>
-  <div id="wDiagList"></div>
 </section>
 
 <section class="section" style="margin-top:30px">
@@ -3033,6 +3035,19 @@ function buildStats() {
     <p class="meta" id="chartSummary">每天保持节奏，记忆效果远胜考前突击</p>
     <div class="chart-bars" id="chartBars"></div>
   </div>
+</section>
+
+<!-- 数据看完再看结论：结论是对上面三条线的归纳，放最后才不会读起来像凭空断言 -->
+<section class="section" style="margin-top:30px">
+  <div class="section-head">
+    <div class="section-head-left">
+      <span class="kicker">诊断结论</span>
+      <h2>当前最该补的三件事</h2>
+      <span class="sub" id="dxVerdict">—</span>
+    </div>
+  </div>
+  <div class="rx-grid" id="rxGrid"></div>
+  <div class="note" id="dxDueNote" style="display:none;margin-top:16px"></div>
 </section>
 
 <section class="section">
@@ -3081,6 +3096,43 @@ ZK.ready(function(){
     return '<div class="empty"><b>' + P.esc(text) + '</b>' +
       (href ? '去<a href="' + href + '">' + P.esc(label) + '</a>，做错的题会自动归到这里' : '') + '</div>';
   }
+
+  /* 诊断列表：超过 10 行时默认只露前 10 行，其余收进「展开全部」。
+     三个诊断项（词汇 / 语法 / 阅读）都走这里，保证折叠行为一致。
+     key 用于记住展开状态——记录变化会整体重绘列表，不能把用户刚展开的又收回去。 */
+  var DIAG_LIMIT = 10;
+  var diagOpen = {};
+  function diagList(key, rows){
+    if (rows.length <= DIAG_LIMIT) {
+      return '<div class="diag-list">' + rows.join('') + '</div>';
+    }
+    var open = !!diagOpen[key];
+    var hidden = rows.length - DIAG_LIMIT;
+    return '<div class="diag-list diag-foldable" data-diag-key="' + key + '" data-folded="' + (open ? '0' : '1') + '">' +
+      rows.slice(0, DIAG_LIMIT).join('') +
+      '<div class="diag-more">' + rows.slice(DIAG_LIMIT).join('') + '</div>' +
+      '<button class="diag-toggle" type="button" aria-expanded="' + (open ? 'true' : 'false') + '">' +
+        (open ? '收起' : '展开其余 ' + hidden + ' 项') +
+        ' <span class="diag-toggle-arrow">' + (open ? '▴' : '▾') + '</span>' +
+      '</button>' +
+    '</div>';
+  }
+
+  /* 折叠按钮只绑定一次：列表会在每次记录变化时整体重绘 */
+  document.addEventListener('click', function(e){
+    var btn = e.target.closest && e.target.closest('.diag-toggle');
+    if (!btn) return;
+    var list = btn.closest('.diag-foldable');
+    if (!list) return;
+    var key = list.getAttribute('data-diag-key') || '';
+    var open = list.getAttribute('data-folded') === '1';
+    diagOpen[key] = open;
+    list.setAttribute('data-folded', open ? '0' : '1');
+    btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+    var n = list.querySelectorAll('.diag-more .diag-row').length;
+    btn.innerHTML = (open ? '收起' : '展开其余 ' + n + ' 项') +
+      ' <span class="diag-toggle-arrow">' + (open ? '▴' : '▾') + '</span>';
+  });
 
   /* ---------- 语法考点 ---------- */
   function grammarRows(){
@@ -3165,6 +3217,18 @@ ZK.ready(function(){
 
     var cards = [];
 
+    // 顺序与上面三条线一致：词汇 → 语法 → 阅读
+    if (wTop) {
+      cards.push(card({
+        cls: 't-word', tag: '词汇', title: wordGroupName(wTop.id),
+        desc: '错词 <b>' + wTop.n + '</b> 个 · 累计答错 ' + wTop.times + ' 次 · 占全部错词 ' +
+          (wData.total ? Math.round(wTop.n / wData.total * 100) : 0) + '%',
+        href: 'wrong.html', act: '重做这些错词 →'
+      }));
+    } else {
+      cards.push(card({ cls: 't-word', tag: '词汇', title: '错词本是空的', desc: '背单词时答错的词会自动进来，连续答对 2 次才移出。', idle: '暂无诊断' }));
+    }
+
     if (gTop) {
       var gp = gTop.rate === null ? null : Math.round(gTop.rate * 100);
       cards.push(card({
@@ -3187,17 +3251,6 @@ ZK.ready(function(){
       cards.push(card({ cls: 't-read', tag: '阅读能力', title: '还没有篇章记录', desc: '做完形或阅读，六项能力哪项最弱会直接算出来。', idle: '暂无诊断' }));
     }
 
-    if (wTop) {
-      cards.push(card({
-        cls: 't-word', tag: '词汇', title: wordGroupName(wTop.id),
-        desc: '错词 <b>' + wTop.n + '</b> 个 · 累计答错 ' + wTop.times + ' 次 · 占全部错词 ' +
-          (wData.total ? Math.round(wTop.n / wData.total * 100) : 0) + '%',
-        href: 'wrong.html', act: '重做这些错词 →'
-      }));
-    } else {
-      cards.push(card({ cls: 't-word', tag: '词汇', title: '错词本是空的', desc: '背单词时答错的词会自动进来，连续答对 2 次才移出。', idle: '暂无诊断' }));
-    }
-
     var host = document.querySelector('#rxGrid');
     if (host) host.innerHTML = cards.join('');
   }
@@ -3218,12 +3271,12 @@ ZK.ready(function(){
     setText('#rXp', lv.name + ' · ' + lv.xp + ' XP');
     setText('#rStreak', P.streak() + ' 天');
     setText('#rWords', srs.total);
-    setText('#rWordsSub', '已学词数（已牢固 ' + srs.mature + ' 词）');
+    setText('#rWordsSub', '已学词数 · 牢固 ' + srs.mature);
     setText('#rQRate', qN ? Math.round(qOk / qN * 100) + '%' : '—');
-    setText('#rQSub', qN ? '语法精练正确率（累计 ' + qN + ' 题）' : '暂未开始语法练习');
+    setText('#rQSub', qN ? '语法正确率 · ' + qN + ' 题' : '暂未开始语法练习');
     var pt = P.pTotal ? P.pTotal() : { n: 0, rate: 0 };
     setText('#rPassage', pt.n ? Math.round(pt.rate * 100) + '%' : '—');
-    setText('#rPassageSub', pt.n ? '篇章题正确率（' + pt.n + ' 题）' : '篇章题正确率');
+    setText('#rPassageSub', pt.n ? '篇章题正确率 · ' + pt.n + ' 题' : '篇章题正确率');
     var wbN = P.wordBookCount(), qwN = P.wrongIds().length;
     setText('#rWrong', wbN + qwN);
 
@@ -3240,15 +3293,16 @@ ZK.ready(function(){
     if (!totalWrong && !qN && !pt.n) {
       verdict = '还没有练习记录 —— 先做 10 道语法题，这里立刻给出诊断';
     } else {
+      // 顺序与上面三条线一致：词汇 → 语法 → 阅读
       var bits = [];
       bits.push('共 <b>' + totalWrong + '</b> 条错题待清理');
-      if (gBad) bits.push('语法最弱是 <b>' + P.esc(gBad.name) + '</b>');
-      if (rBad) bits.push('阅读最弱是 <b>' + P.esc(rBad.name) + '</b>');
       if (wData.rows[0]) {
         var wn0 = wData.rows[0];
         bits.push('错词集中在 <b>' + P.esc(wordGroupName(wn0.id)) + '</b>（' + wn0.n + ' 个）');
       }
-      verdict = bits.join(' · ') + '。按下面三条线逐项清掉，下次诊断会直接看到正确率回升。';
+      if (gBad) bits.push('语法最弱是 <b>' + P.esc(gBad.name) + '</b>');
+      if (rBad) bits.push('阅读最弱是 <b>' + P.esc(rBad.name) + '</b>');
+      verdict = bits.join(' · ') + '。按上面三条线逐项清掉，下次诊断会直接看到正确率回升。';
     }
     var vEl = document.querySelector('#dxVerdict');
     if (vEl) vEl.innerHTML = verdict;
@@ -3281,7 +3335,7 @@ ZK.ready(function(){
     var gHost = document.querySelector('#gDiagList');
     if (gHost) {
       gHost.innerHTML = gRows.length
-        ? '<div class="diag-list">' + gRows.map(function(x){
+        ? diagList('grammar', gRows.map(function(x){
             return diagRow({
               name: x.name,
               sub: x.n ? ('已练 ' + x.n + ' 题') : '还没练过',
@@ -3290,7 +3344,7 @@ ZK.ready(function(){
               sevCls: SEV_CLS[x.sev], sevLabel: SEV_LABEL[x.sev],
               href: 'review.html?topic=' + encodeURIComponent(x.id), act: '专攻 →'
             });
-          }).join('') + '</div>'
+          }))
         : emptyBox('还没有语法练习记录', 'review.html', '练语法');
     }
 
@@ -3298,7 +3352,7 @@ ZK.ready(function(){
     var rHost = document.querySelector('#rDiagList');
     if (rHost) {
       rHost.innerHTML = rRows.length
-        ? '<div class="diag-list">' + rRows.map(function(x){
+        ? diagList('reading', rRows.map(function(x){
             return diagRow({
               name: x.name,
               sub: x.n ? ('已练 ' + x.n + ' 题') : '还没练过',
@@ -3307,7 +3361,7 @@ ZK.ready(function(){
               sevCls: SEV_CLS[x.sev], sevLabel: SEV_LABEL[x.sev],
               href: 'reading.html', act: '去练 →'
             });
-          }).join('') + '</div>'
+          }))
         : emptyBox('还没有篇章练习记录', 'reading.html', '练阅读');
     }
 
@@ -3316,7 +3370,7 @@ ZK.ready(function(){
     if (wHost) {
       var wt = wData.total;
       wHost.innerHTML = wData.rows.length
-        ? '<div class="diag-list">' + wData.rows.map(function(x){
+        ? diagList('words', wData.rows.map(function(x){
             var share = wt ? x.n / wt : 0;
             var sev = x.n >= 5 ? 'high' : x.n >= 3 ? 'mid' : 'low';
             return diagRow({
@@ -3330,7 +3384,7 @@ ZK.ready(function(){
               href: wordGroupHref(x.id),
               act: '看词表 →'
             });
-          }).join('') + '</div>'
+          }))
         : emptyBox('错词本是空的', 'quiz.html', '背单词');
     }
 
